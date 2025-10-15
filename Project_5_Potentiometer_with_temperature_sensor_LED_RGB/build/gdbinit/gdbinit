@@ -1,2 +1,2 @@
-source /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/gdbinit/symbols
-source /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/gdbinit/connect
+source C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/gdbinit/symbols
+source C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/gdbinit/connect
