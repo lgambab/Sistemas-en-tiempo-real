@@ -13,7 +13,7 @@ static const char *TAG = "POT";
 
 // ADC pin: GPIO34 -> ADC1_CH6
 static const adc_channel_t POT_CHANNEL = ADC_CHANNEL_6;
-static adc_oneshot_unit_handle_t adc1_handle;
+adc_oneshot_unit_handle_t adc1_handle; // Made global for sharing
 static adc_cali_handle_t adc1_cali_handle = NULL;
 static bool do_calibration_init = false;
 
@@ -76,12 +76,12 @@ void pot_init(void)
     //-------------ADC1 Config---------------//
     adc_oneshot_chan_cfg_t config = {
         .bitwidth = ADC_BITWIDTH_DEFAULT,
-        .atten = ADC_ATTEN_DB_11, // para rango hasta ~3.3V
+        .atten = ADC_ATTEN_DB_12, // para rango hasta ~3.3V (ADC_ATTEN_DB_11 está obsoleto)
     };
     ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, POT_CHANNEL, &config));
 
     //-------------ADC1 Calibration Init---------------//
-    do_calibration_init = adc_calibration_init(ADC_UNIT_1, ADC_ATTEN_DB_11, &adc1_cali_handle);
+    do_calibration_init = adc_calibration_init(ADC_UNIT_1, ADC_ATTEN_DB_12, &adc1_cali_handle);
 
     ESP_LOGI(TAG, "Potenciometer inicializado (ADC1 channel %d)", POT_CHANNEL);
 }

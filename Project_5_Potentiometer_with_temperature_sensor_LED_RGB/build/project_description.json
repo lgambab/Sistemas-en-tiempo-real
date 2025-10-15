@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "Project_5_Potentiometer_with_temperature_sensor_LED_RGB",
-    "project_version":    "a1a1a49-dirty",
+    "project_version":    "91d1ca0-dirty",
     "project_path":       "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB",
     "idf_path":           "C:/Users/lgamb/esp/v5.5.1/esp-idf",
     "build_dir":          "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build",
@@ -715,7 +715,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/main.c", "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/potentiometer.c", "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/rgb_led.c" ],
+            "sources": [ "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/main.c", "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/potentiometer.c", "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/rgb_led.c", "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/ntc_temp.c" ],
             "include_dirs": []
         },
         "mbedtls": {
