@@ -3,20 +3,25 @@
 
 cmake_minimum_required(VERSION 3.5)
 
+# If CMAKE_DISABLE_SOURCE_CHANGES is set to true and the source directory is an
+# existing directory in our source tree, calling file(MAKE_DIRECTORY) on it
+# would cause a fatal error, even though it would be a no-op.
+if(NOT EXISTS "C:/Users/lgamb/esp/v5.5.1/esp-idf/components/bootloader/subproject")
+  file(MAKE_DIRECTORY "C:/Users/lgamb/esp/v5.5.1/esp-idf/components/bootloader/subproject")
+endif()
 file(MAKE_DIRECTORY
-  "/home/zerendor/esp/esp-idf/components/bootloader/subproject"
-  "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader"
-  "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix"
-  "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/tmp"
-  "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp"
-  "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src"
-  "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader"
+  "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix"
+  "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/tmp"
+  "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src"
+  "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

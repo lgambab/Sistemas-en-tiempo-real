@@ -1,4 +1,4 @@
-/* * Data converted from /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 #if !defined (__APPLE__) && !defined (__linux__)
