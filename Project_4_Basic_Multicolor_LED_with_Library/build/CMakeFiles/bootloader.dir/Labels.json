@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/CMakeFiles/bootloader"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/CMakeFiles/bootloader.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/CMakeFiles/bootloader-complete.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+		},
+		{
+			"file" : "/home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"bootloader"
+		],
+		"name" : "bootloader"
+	}
+}

@@ -1,0 +1,14 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/home/zerendor/.espressif/python_env/idf5.5_py3.12_env/bin/python -DESP_PLATFORM=1 -DCCACHE_ENABLE=0 /home/zerendor/Documents/RTOS_Raiz/Project_3_Basic_Multicolor_LED
+CMake Error at /home/zerendor/esp/esp-idf/tools/cmake/build.cmake:629 (message):
+  WARNING: Component "espressif/esp_driver_ledc" not found
+
+  WARNING: Component "espressif/esp_driver_ledc" not found
+
+  ERROR: Because project depends on espressif/esp_driver_ledc (^2.0.0) which
+  doesn't match any versions, version solving failed.
+
+Call Stack (most recent call first):
+  /home/zerendor/esp/esp-idf/tools/cmake/project.cmake:740 (idf_build_process)
+  CMakeLists.txt:8 (project)
+
+

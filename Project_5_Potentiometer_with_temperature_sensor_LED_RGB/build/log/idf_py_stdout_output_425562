@@ -1,0 +1,42 @@
+Command: ninja all
+[0/1] Re-running CMake...
+-- Minimal build - ON
+-- Building ESP-IDF components for target esp32
+-- Project sdkconfig file /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/sdkconfig
+-- Compiler supported targets: xtensa-esp-elf
+-- USING O3
+-- App "Project_5_Potentiometer_with_te" version: d2cec20-dirty
+-- Adding linker script /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/esp-idf/esp_system/ld/memory.ld
+-- Adding linker script /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/esp-idf/esp_system/ld/sections.ld.in
+-- Adding linker script /home/zerendor/esp/esp-idf/components/esp_rom/esp32/ld/esp32.rom.ld
+-- Adding linker script /home/zerendor/esp/esp-idf/components/esp_rom/esp32/ld/esp32.rom.api.ld
+-- Adding linker script /home/zerendor/esp/esp-idf/components/esp_rom/esp32/ld/esp32.rom.libgcc.ld
+-- Adding linker script /home/zerendor/esp/esp-idf/components/esp_rom/esp32/ld/esp32.rom.newlib-data.ld
+-- Adding linker script /home/zerendor/esp/esp-idf/components/esp_rom/esp32/ld/esp32.rom.syscalls.ld
+-- Adding linker script /home/zerendor/esp/esp-idf/components/esp_rom/esp32/ld/esp32.rom.libc-funcs.ld
+-- Adding linker script /home/zerendor/esp/esp-idf/components/esp_rom/esp32/ld/esp32.rom.newlib-reent-funcs.ld
+-- Adding linker script /home/zerendor/esp/esp-idf/components/soc/esp32/ld/esp32.peripherals.ld
+-- Components: app_update bootloader bootloader_support cxx driver efuse esp_adc esp_app_format esp_bootloader_format esp_common esp_driver_ana_cmpr esp_driver_bitscrambler esp_driver_dac esp_driver_gpio esp_driver_gptimer esp_driver_i2c esp_driver_i2s esp_driver_ledc esp_driver_mcpwm esp_driver_parlio esp_driver_pcnt esp_driver_rmt esp_driver_sdio esp_driver_sdm esp_driver_sdmmc esp_driver_sdspi esp_driver_spi esp_driver_tsens esp_driver_twai esp_driver_uart esp_driver_usb_serial_jtag esp_hw_support esp_mm esp_partition esp_pm esp_ringbuf esp_rom esp_security esp_system esp_timer esptool_py freertos hal heap log main mbedtls newlib partition_table pthread sdmmc soc spi_flash xtensa
+-- Component paths: /home/zerendor/esp/esp-idf/components/app_update /home/zerendor/esp/esp-idf/components/bootloader /home/zerendor/esp/esp-idf/components/bootloader_support /home/zerendor/esp/esp-idf/components/cxx /home/zerendor/esp/esp-idf/components/driver /home/zerendor/esp/esp-idf/components/efuse /home/zerendor/esp/esp-idf/components/esp_adc /home/zerendor/esp/esp-idf/components/esp_app_format /home/zerendor/esp/esp-idf/components/esp_bootloader_format /home/zerendor/esp/esp-idf/components/esp_common /home/zerendor/esp/esp-idf/components/esp_driver_ana_cmpr /home/zerendor/esp/esp-idf/components/esp_driver_bitscrambler /home/zerendor/esp/esp-idf/components/esp_driver_dac /home/zerendor/esp/esp-idf/components/esp_driver_gpio /home/zerendor/esp/esp-idf/components/esp_driver_gptimer /home/zerendor/esp/esp-idf/components/esp_driver_i2c /home/zerendor/esp/esp-idf/components/esp_driver_i2s /home/zerendor/esp/esp-idf/components/esp_driver_ledc /home/zerendor/esp/esp-idf/components/esp_driver_mcpwm /home/zerendor/esp/esp-idf/components/esp_driver_parlio /home/zerendor/esp/esp-idf/components/esp_driver_pcnt /home/zerendor/esp/esp-idf/components/esp_driver_rmt /home/zerendor/esp/esp-idf/components/esp_driver_sdio /home/zerendor/esp/esp-idf/components/esp_driver_sdm /home/zerendor/esp/esp-idf/components/esp_driver_sdmmc /home/zerendor/esp/esp-idf/components/esp_driver_sdspi /home/zerendor/esp/esp-idf/components/esp_driver_spi /home/zerendor/esp/esp-idf/components/esp_driver_tsens /home/zerendor/esp/esp-idf/components/esp_driver_twai /home/zerendor/esp/esp-idf/components/esp_driver_uart /home/zerendor/esp/esp-idf/components/esp_driver_usb_serial_jtag /home/zerendor/esp/esp-idf/components/esp_hw_support /home/zerendor/esp/esp-idf/components/esp_mm /home/zerendor/esp/esp-idf/components/esp_partition /home/zerendor/esp/esp-idf/components/esp_pm /home/zerendor/esp/esp-idf/components/esp_ringbuf /home/zerendor/esp/esp-idf/components/esp_rom /home/zerendor/esp/esp-idf/components/esp_security /home/zerendor/esp/esp-idf/components/esp_system /home/zerendor/esp/esp-idf/components/esp_timer /home/zerendor/esp/esp-idf/components/esptool_py /home/zerendor/esp/esp-idf/components/freertos /home/zerendor/esp/esp-idf/components/hal /home/zerendor/esp/esp-idf/components/heap /home/zerendor/esp/esp-idf/components/log /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main /home/zerendor/esp/esp-idf/components/mbedtls /home/zerendor/esp/esp-idf/components/newlib /home/zerendor/esp/esp-idf/components/partition_table /home/zerendor/esp/esp-idf/components/pthread /home/zerendor/esp/esp-idf/components/sdmmc /home/zerendor/esp/esp-idf/components/soc /home/zerendor/esp/esp-idf/components/spi_flash /home/zerendor/esp/esp-idf/components/xtensa
+-- Configuring done (2.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build
+[1/11] Building C object esp-idf/esp_app_format/CMakeFiles/__idf_esp_app_format.dir/esp_app_desc.c.obj
+[2/11] Performing build step for 'bootloader'
+[1/1] cd /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader/esp-idf/esptool_py && /home/zerendor/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/zerendor/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader/bootloader.bin
+Bootloader binary size 0x6680 bytes. 0x980 bytes (8%) free.
+[3/11] No install step for 'bootloader'
+[4/11] Linking C static library esp-idf/esp_app_format/libesp_app_format.a
+[5/11] Completed 'bootloader'
+[6/11] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[7/11] Linking C static library esp-idf/main/libmain.a
+[8/11] Generating esp-idf/esp_system/ld/sections.ld
+[9/11] Linking CXX executable Project_5_Potentiometer_with_temperature_sensor_LED_RGB.elf
+[10/11] Generating binary image from built executable
+esptool.py v4.10.dev2
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/Project_5_Potentiometer_with_temperature_sensor_LED_RGB.bin
+[11/11] cd /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/esp-idf/esptool_py && /home/zerendor/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/zerendor/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/partition_table/partition-table.bin /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/Project_5_Potentiometer_with_temperature_sensor_LED_RGB.bin
+Project_5_Potentiometer_with_temperature_sensor_LED_RGB.bin binary size 0x2b580 bytes. Smallest app partition is 0x100000 bytes. 0xd4a80 bytes (83%) free.

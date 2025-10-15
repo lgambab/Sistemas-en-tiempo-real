@@ -1,0 +1,2 @@
+source /home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader/gdbinit/symbols
+source /home/zerendor/Documents/RTOS_Raiz/Project_4_Basic_Multicolor_LED_with_Library/build/bootloader/gdbinit/connect

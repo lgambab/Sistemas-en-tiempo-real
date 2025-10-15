@@ -1,0 +1,7 @@
+Command: ninja all
+[0/1] Re-running CMake...
+-- Minimal build - ON
+-- Building ESP-IDF components for target esp32
+-- Configuring incomplete, errors occurred!
+FAILED: build.ninja 
+/usr/bin/cmake --regenerate-during-build -S/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB -B/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build

@@ -1,0 +1,34 @@
+Command: ninja all
+[1/10] Performing build step for 'bootloader'
+[1/1] cd /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader/esp-idf/esptool_py && /home/zerendor/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/zerendor/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader/bootloader.bin
+Bootloader binary size 0x6680 bytes. 0x980 bytes (8%) free.
+[2/10] No install step for 'bootloader'
+[3/10] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/potentiometer.c.obj
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/potentiometer.c: In function 'pot_init':
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/potentiometer.c:79:9: warning: 'ADC_ATTEN_DB_11' is deprecated [-Wdeprecated-declarations]
+   79 |         .atten = ADC_ATTEN_DB_11, // para rango hasta ~3.3V
+      |         ^
+In file included from /home/zerendor/esp/esp-idf/components/esp_adc/include/esp_adc/adc_oneshot.h:12,
+                 from /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/potentiometer.c:3:
+/home/zerendor/esp/esp-idf/components/hal/include/hal/adc_types.h:51:5: note: declared here
+   51 |     ADC_ATTEN_DB_11 __attribute__((deprecated)) = ADC_ATTEN_DB_12,  ///<This is deprecated, it behaves the same as `ADC_ATTEN_DB_12`
+      |     ^~~~~~~~~~~~~~~
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/main/potentiometer.c:84:5: warning: 'ADC_ATTEN_DB_11' is deprecated [-Wdeprecated-declarations]
+   84 |     do_calibration_init = adc_calibration_init(ADC_UNIT_1, ADC_ATTEN_DB_11, &adc1_cali_handle);
+      |     ^~~~~~~~~~~~~~~~~~~
+/home/zerendor/esp/esp-idf/components/hal/include/hal/adc_types.h:51:5: note: declared here
+   51 |     ADC_ATTEN_DB_11 __attribute__((deprecated)) = ADC_ATTEN_DB_12,  ///<This is deprecated, it behaves the same as `ADC_ATTEN_DB_12`
+      |     ^~~~~~~~~~~~~~~
+[4/10] Linking C static library esp-idf/main/libmain.a
+[5/10] Completed 'bootloader'
+[6/10] Generating esp-idf/esp_system/ld/sections.ld
+[7/10] Building C object CMakeFiles/Project_5_Potentiometer_with_temperature_sensor_LED_RGB.elf.dir/project_elf_src_esp32.c.obj
+[8/10] Linking CXX executable Project_5_Potentiometer_with_temperature_sensor_LED_RGB.elf
+[9/10] Generating binary image from built executable
+esptool.py v4.10.dev2
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/Project_5_Potentiometer_with_temperature_sensor_LED_RGB.bin
+[10/10] cd /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/esp-idf/esptool_py && /home/zerendor/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/zerendor/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/partition_table/partition-table.bin /home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/Project_5_Potentiometer_with_temperature_sensor_LED_RGB.bin
+Project_5_Potentiometer_with_temperature_sensor_LED_RGB.bin binary size 0x2b240 bytes. Smallest app partition is 0x100000 bytes. 0xd4dc0 bytes (83%) free.

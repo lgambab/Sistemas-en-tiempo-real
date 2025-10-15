@@ -1,0 +1,2 @@
+source /home/zerendor/Documents/RTOS_Raiz/Project_1.5_Basic_LED_Blink/build/bootloader/gdbinit/symbols
+source /home/zerendor/Documents/RTOS_Raiz/Project_1.5_Basic_LED_Blink/build/bootloader/gdbinit/connect

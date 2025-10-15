@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/CMakeFiles/bootloader
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/CMakeFiles/bootloader.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/CMakeFiles/bootloader-complete.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/zerendor/Documents/RTOS_Raiz/Project_5_Potentiometer_with_temperature_sensor_LED_RGB/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

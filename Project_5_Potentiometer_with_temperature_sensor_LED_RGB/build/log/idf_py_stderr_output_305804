@@ -1,0 +1,12 @@
+Command: ninja all
+CMake Error at /home/zerendor/esp/esp-idf/tools/cmake/build.cmake:328 (message):
+  Failed to resolve component 'esp_driver_adc' required by component 'main':
+  unknown name.
+Call Stack (most recent call first):
+  /home/zerendor/esp/esp-idf/tools/cmake/build.cmake:377 (__build_resolve_and_add_req)
+  /home/zerendor/esp/esp-idf/tools/cmake/build.cmake:685 (__build_expand_requirements)
+  /home/zerendor/esp/esp-idf/tools/cmake/project.cmake:740 (idf_build_process)
+  CMakeLists.txt:8 (project)
+
+
+ninja: error: rebuilding 'build.ninja': subcommand failed
