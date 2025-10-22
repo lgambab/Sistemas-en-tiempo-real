@@ -1,0 +1,2 @@
+source /home/zerendor/Documents/RTOS_Raiz/Project_6_Control_Temp_RGB/build/bootloader/gdbinit/symbols
+source /home/zerendor/Documents/RTOS_Raiz/Project_6_Control_Temp_RGB/build/bootloader/gdbinit/connect
