@@ -5,7 +5,7 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "esp_log.h"
-
+#include "uart_commands.h"
 #include "ntc_sensor.h"
 #include "button_control.h"
 #include "potentiometer.h"
@@ -170,11 +170,11 @@ void app_main(void)
         return;
     }
     
-    // Comentado: Listo para usar con conversor USB-Serial en UART1 (GPIO16/17)
-    // if (xTaskCreate(uart_commands_task, "uart_commands_task", 4096, NULL, 3, NULL) != pdPASS) {
-    //     ESP_LOGE(TAG, "Error creando tarea de comandos UART");
-    //     return;
-    // }
+     //Comentado: Listo para usar con conversor USB-Serial en UART1 (GPIO16/17)
+     if (xTaskCreate(uart_commands_task, "uart_commands_task", 4096, NULL, 3, NULL) != pdPASS) {
+         ESP_LOGE(TAG, "Error creando tarea de comandos UART");
+         return;
+     }
     
     // ===== SISTEMA INICIADO EXITOSAMENTE =====
     ESP_LOGI(TAG, "=== SISTEMA RTOS INICIADO EXITOSAMENTE ===");
