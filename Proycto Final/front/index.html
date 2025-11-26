@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>ESP32 Retro Terminal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="bar-left">ESP32 RETRO TERMINAL</div>
+        <div class="bar-center">
+            <span id="clock">00:00:00</span><span>|</span>
+            <span id="tempDisplay">Temp: --°C</span>
+        </div>
+        <div class="bar-right"><button class="logout-btn" onclick="doLogout()">LOGOUT</button></div>
+    </div>
+    <div id="term"></div>
+    <div class="input-container">
+        <span class="prompt">root@esp32:~$ </span>
+        <input id="inputLine" autocomplete="off" autofocus />
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

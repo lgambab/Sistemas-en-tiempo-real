@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "Soft_ap",
-    "project_version":    "79d8420",
+    "project_version":    "303ed03-dirty",
     "project_path":       "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo_Limpio/Project_7_Acces_Poin/Soft_ap",
     "idf_path":           "C:/Users/lgamb/esp/v5.5.1/esp-idf",
     "build_dir":          "C:/Users/lgamb/Documents/Uni/RTOS/Repositorio/RTOS_Repo_Limpio/Project_7_Acces_Poin/Soft_ap/build",

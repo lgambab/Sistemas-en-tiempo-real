@@ -1,0 +1,2 @@
+source /home/zerendor/Documents/RTOS_Raiz/Project_7_Retro_Web_Terminal/build/bootloader/gdbinit/symbols
+source /home/zerendor/Documents/RTOS_Raiz/Project_7_Retro_Web_Terminal/build/bootloader/gdbinit/connect
