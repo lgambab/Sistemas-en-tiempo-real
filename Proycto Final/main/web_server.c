@@ -13,11 +13,32 @@
 #include <math.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/queue.h"
+#include "freertos/semphr.h"
 #include "lwip/inet.h"
 #include "lwip/sockets.h"
 
 static const char *TAG = "WEB_SERVER";
 static httpd_handle_t server = NULL;
+
+// --- SISTEMA DE COLAS PARA COMANDOS ---
+// Estructura para comandos GPIO
+typedef struct {
+    uint32_t command_id;  // ID único para emparejar comando-respuesta
+    char command[100];
+    char response[512];
+} gpio_command_t;
+
+// Colas para comunicación entre tareas
+static QueueHandle_t gpio_command_queue = NULL;
+static QueueHandle_t gpio_response_queue = NULL;
+
+// Semáforo para proteger acceso a sesiones
+static SemaphoreHandle_t session_mutex = NULL;
+
+// Contador para IDs únicos de comandos
+static uint32_t command_id_counter = 0;
+static SemaphoreHandle_t command_id_mutex = NULL;
 
 // --- GESTIÓN DE SESIONES SIMPLE (IP based) ---
 #define MAX_SESSIONS 5
@@ -32,6 +53,99 @@ typedef struct {
 } session_t;
 
 static session_t sessions[MAX_SESSIONS];
+
+// Obtener tiempo actual en milisegundos
+static int64_t get_time_ms(void) {
+    return (int64_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
+}
+
+// --- TAREA DE PROCESAMIENTO DE COMANDOS GPIO ---
+static void gpio_command_task(void *pvParameters) {
+    gpio_command_t cmd;
+    ESP_LOGI(TAG, "Tarea de procesamiento de comandos GPIO iniciada");
+    
+    while (1) {
+        // Esperar comando de la cola (bloqueante)
+        if (xQueueReceive(gpio_command_queue, &cmd, portMAX_DELAY) == pdTRUE) {
+            // Procesar comando (mantener el command_id para la respuesta)
+            if (strcmp(cmd.command, "led y on") == 0) {
+                gpio_set_yellow(true);
+                strcpy(cmd.response, "[OK] LED amarillo encendido.");
+            } else if (strcmp(cmd.command, "led y off") == 0) {
+                gpio_set_yellow(false);
+                strcpy(cmd.response, "[OK] LED amarillo apagado.");
+            } else if (strcmp(cmd.command, "led b on") == 0) {
+                gpio_set_blue(true);
+                strcpy(cmd.response, "[OK] LED azul encendido.");
+            } else if (strcmp(cmd.command, "led b off") == 0) {
+                gpio_set_blue(false);
+                strcpy(cmd.response, "[OK] LED azul apagado.");
+            } else if (strcmp(cmd.command, "led all on") == 0) {
+                gpio_set_yellow(true);
+                gpio_set_blue(true);
+                strcpy(cmd.response, "[OK] Ambos LEDs encendidos.");
+            } else if (strcmp(cmd.command, "led all off") == 0) {
+                gpio_set_yellow(false);
+                gpio_set_blue(false);
+                strcpy(cmd.response, "[OK] Ambos LEDs apagados.");
+            } else if (strcmp(cmd.command, "status") == 0) {
+                const char *estadoAmarillo = gpio_get_yellow() ? "ON" : "OFF";
+                const char *estadoAzul = gpio_get_blue() ? "ON" : "OFF";
+                snprintf(cmd.response, sizeof(cmd.response), 
+                         "Estado de los LEDs:\n  - Amarillo: %s\n  - Azul:     %s",
+                         estadoAmarillo, estadoAzul);
+            } else if (strcmp(cmd.command, "help") == 0) {
+                strcpy(cmd.response, 
+                       "Comandos disponibles:\n\n"
+                       "  --- Control Individual ---\n"
+                       "  led y on          - Enciende el LED amarillo.\n"
+                       "  led y off         - Apaga el LED amarillo.\n"
+                       "  led b on          - Enciende el LED azul.\n"
+                       "  led b off         - Apaga el LED azul.\n\n"
+                       "  --- Control General ---\n"
+                       "  led all on        - Enciende ambos LEDs.\n"
+                       "  led all off       - Apaga ambos LEDs.\n\n"
+                       "  --- Sistema ---\n"
+                       "  status            - Muestra el estado de los LEDs.\n"
+                       "  help              - Muestra esta lista.\n"
+                       "  clear             - Limpia la pantalla.");
+            } else {
+                snprintf(cmd.response, sizeof(cmd.response), 
+                         "[?] Comando no reconocido: '%s'. Escribe 'help' para ver la lista.", cmd.command);
+            }
+            
+            // Enviar respuesta a la cola de respuestas (mantener el command_id)
+            if (xQueueSend(gpio_response_queue, &cmd, pdMS_TO_TICKS(100)) != pdTRUE) {
+                ESP_LOGW(TAG, "Error al enviar respuesta a la cola");
+            }
+        }
+    }
+}
+
+// --- TAREA DE GESTIÓN DE SESIONES (TIMEOUT) ---
+static void session_management_task(void *pvParameters) {
+    ESP_LOGI(TAG, "Tarea de gestión de sesiones iniciada");
+    
+    while (1) {
+        vTaskDelay(pdMS_TO_TICKS(2000)); // Verificar cada 2 segundos
+        
+        int64_t now = get_time_ms();
+        
+        // Proteger acceso a sesiones con mutex
+        if (session_mutex != NULL && xSemaphoreTake(session_mutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+            for (int i = 0; i < MAX_SESSIONS; i++) {
+                if (sessions[i].authenticated && 
+                    (now - sessions[i].last_activity > SESSION_TIMEOUT_MS)) {
+                    sessions[i].authenticated = false;
+                    gpio_set_yellow(false);
+                    gpio_set_blue(false);
+                    ESP_LOGI(TAG, "Sesión expirada para IP %s. LEDs apagados.", sessions[i].ip);
+                }
+            }
+            xSemaphoreGive(session_mutex);
+        }
+    }
+}
 
 // Obtener IP del cliente desde la request
 static void get_client_ip(httpd_req_t *req, char *ip_str, size_t len) {
@@ -48,39 +162,44 @@ static void get_client_ip(httpd_req_t *req, char *ip_str, size_t len) {
     snprintf(ip_str, len, "192.168.4.%d", (int)((uintptr_t)req % 255) + 1);
 }
 
-// Obtener tiempo actual en milisegundos
-static int64_t get_time_ms(void) {
-    return (int64_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
-}
-
 // Buscar o crear sesión para una IP
 static session_t* find_or_create_session(const char *ip) {
     int64_t now = get_time_ms();
+    session_t *session = NULL;
     
-    // Buscar sesión existente
-    for (int i = 0; i < MAX_SESSIONS; i++) {
-        if (strcmp(sessions[i].ip, ip) == 0) {
-            // Verificar timeout
-            if (now - sessions[i].last_activity > SESSION_TIMEOUT_MS) {
-                sessions[i].authenticated = false;
-                ESP_LOGI(TAG, "Sesión expirada para IP %s", ip);
+    // Proteger acceso con mutex
+    if (session_mutex != NULL && xSemaphoreTake(session_mutex, portMAX_DELAY) == pdTRUE) {
+        // Buscar sesión existente
+        for (int i = 0; i < MAX_SESSIONS; i++) {
+            if (strcmp(sessions[i].ip, ip) == 0) {
+                // Verificar timeout
+                if (now - sessions[i].last_activity > SESSION_TIMEOUT_MS) {
+                    sessions[i].authenticated = false;
+                    ESP_LOGI(TAG, "Sesión expirada para IP %s", ip);
+                }
+                session = &sessions[i];
+                break;
             }
-            return &sessions[i];
         }
+        
+        // Si no se encontró, buscar slot libre
+        if (session == NULL) {
+            for (int i = 0; i < MAX_SESSIONS; i++) {
+                if (!sessions[i].authenticated || (now - sessions[i].last_activity > SESSION_TIMEOUT_MS)) {
+                    strncpy(sessions[i].ip, ip, sizeof(sessions[i].ip) - 1);
+                    sessions[i].ip[sizeof(sessions[i].ip) - 1] = '\0';
+                    sessions[i].last_activity = now;
+                    sessions[i].authenticated = false;
+                    session = &sessions[i];
+                    break;
+                }
+            }
+        }
+        
+        xSemaphoreGive(session_mutex);
     }
     
-    // Buscar slot libre
-    for (int i = 0; i < MAX_SESSIONS; i++) {
-        if (!sessions[i].authenticated || (now - sessions[i].last_activity > SESSION_TIMEOUT_MS)) {
-            strncpy(sessions[i].ip, ip, sizeof(sessions[i].ip) - 1);
-            sessions[i].ip[sizeof(sessions[i].ip) - 1] = '\0';
-            sessions[i].last_activity = now;
-            sessions[i].authenticated = false;
-            return &sessions[i];
-        }
-    }
-    
-    return NULL; // No hay slots disponibles
+    return session; // NULL si no hay slots disponibles
 }
 
 bool is_authenticated(httpd_req_t *req) {
@@ -92,22 +211,29 @@ bool is_authenticated(httpd_req_t *req) {
         return false;
     }
     
-    if (!session->authenticated) {
-        return false;
+    // Proteger acceso con mutex
+    bool authenticated = false;
+    if (session_mutex != NULL && xSemaphoreTake(session_mutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+        if (!session->authenticated) {
+            authenticated = false;
+        } else {
+            // Actualizar última actividad
+            int64_t now = get_time_ms();
+            if (now - session->last_activity > SESSION_TIMEOUT_MS) {
+                session->authenticated = false;
+                gpio_set_yellow(false);
+                gpio_set_blue(false);
+                ESP_LOGI(TAG, "Sesión expirada para IP %s. LEDs apagados.", ip);
+                authenticated = false;
+            } else {
+                session->last_activity = now;
+                authenticated = true;
+            }
+        }
+        xSemaphoreGive(session_mutex);
     }
     
-    // Actualizar última actividad
-    int64_t now = get_time_ms();
-    if (now - session->last_activity > SESSION_TIMEOUT_MS) {
-        session->authenticated = false;
-        gpio_set_yellow(false);
-        gpio_set_blue(false);
-        ESP_LOGI(TAG, "Sesión expirada para IP %s. LEDs apagados.", ip);
-        return false;
-    }
-    
-    session->last_activity = now;
-    return true;
+    return authenticated;
 }
 
 // --- UTILIDAD PARA SERVIR ARCHIVOS DESDE SPIFFS ---
@@ -275,57 +401,55 @@ esp_err_t cmd_get_handler(httpd_req_t *req) {
                     }
                 }
                 
-                // Procesar comandos
-                char response[512] = {0};
-                
-                if (strcmp(cmd, "led y on") == 0) {
-                    gpio_set_yellow(true);
-                    strcpy(response, "[OK] LED amarillo encendido.");
-                } else if (strcmp(cmd, "led y off") == 0) {
-                    gpio_set_yellow(false);
-                    strcpy(response, "[OK] LED amarillo apagado.");
-                } else if (strcmp(cmd, "led b on") == 0) {
-                    gpio_set_blue(true);
-                    strcpy(response, "[OK] LED azul encendido.");
-                } else if (strcmp(cmd, "led b off") == 0) {
-                    gpio_set_blue(false);
-                    strcpy(response, "[OK] LED azul apagado.");
-                } else if (strcmp(cmd, "led all on") == 0) {
-                    gpio_set_yellow(true);
-                    gpio_set_blue(true);
-                    strcpy(response, "[OK] Ambos LEDs encendidos.");
-                } else if (strcmp(cmd, "led all off") == 0) {
-                    gpio_set_yellow(false);
-                    gpio_set_blue(false);
-                    strcpy(response, "[OK] Ambos LEDs apagados.");
-                } else if (strcmp(cmd, "status") == 0) {
-                    const char *estadoAmarillo = gpio_get_yellow() ? "ON" : "OFF";
-                    const char *estadoAzul = gpio_get_blue() ? "ON" : "OFF";
-                    snprintf(response, sizeof(response), 
-                             "Estado de los LEDs:\n  - Amarillo: %s\n  - Azul:     %s",
-                             estadoAmarillo, estadoAzul);
-                } else if (strcmp(cmd, "help") == 0) {
-                    strcpy(response, 
-                           "Comandos disponibles:\n\n"
-                           "  --- Control Individual ---\n"
-                           "  led y on          - Enciende el LED amarillo.\n"
-                           "  led y off         - Apaga el LED amarillo.\n"
-                           "  led b on          - Enciende el LED azul.\n"
-                           "  led b off         - Apaga el LED azul.\n\n"
-                           "  --- Control General ---\n"
-                           "  led all on        - Enciende ambos LEDs.\n"
-                           "  led all off       - Apaga ambos LEDs.\n\n"
-                           "  --- Sistema ---\n"
-                           "  status            - Muestra el estado de los LEDs.\n"
-                           "  help              - Muestra esta lista.\n"
-                           "  clear             - Limpia la pantalla.");
-                } else {
-                    snprintf(response, sizeof(response), 
-                             "[?] Comando no reconocido: '%s'. Escribe 'help' para ver la lista.", cmd);
+                // Si es "clear", no necesita procesamiento en el backend
+                if (strcmp(cmd, "clear") == 0) {
+                    httpd_resp_send(req, "[OK] Pantalla limpiada.", HTTPD_RESP_USE_STRLEN);
+                    return ESP_OK;
                 }
                 
-                httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-                return ESP_OK;
+                // Obtener ID único para el comando
+                uint32_t cmd_id = 0;
+                if (command_id_mutex != NULL && xSemaphoreTake(command_id_mutex, portMAX_DELAY) == pdTRUE) {
+                    cmd_id = ++command_id_counter;
+                    xSemaphoreGive(command_id_mutex);
+                }
+                
+                // Enviar comando a la cola para procesamiento por la tarea
+                gpio_command_t command;
+                command.command_id = cmd_id;
+                strncpy(command.command, cmd, sizeof(command.command) - 1);
+                command.command[sizeof(command.command) - 1] = '\0';
+                
+                if (gpio_command_queue != NULL && 
+                    xQueueSend(gpio_command_queue, &command, pdMS_TO_TICKS(1000)) == pdTRUE) {
+                    // Esperar respuesta de la tarea (con timeout)
+                    gpio_command_t response;
+                    bool response_received = false;
+                    
+                    // Intentar recibir respuesta hasta 3 veces (para manejar respuestas de otros comandos)
+                    for (int attempts = 0; attempts < 10 && !response_received; attempts++) {
+                        if (gpio_response_queue != NULL && 
+                            xQueueReceive(gpio_response_queue, &response, pdMS_TO_TICKS(500)) == pdTRUE) {
+                            // Verificar que la respuesta corresponde a nuestro comando
+                            if (response.command_id == cmd_id) {
+                                httpd_resp_send(req, response.response, HTTPD_RESP_USE_STRLEN);
+                                response_received = true;
+                                return ESP_OK;
+                            } else {
+                                // Respuesta de otro comando, devolverla a la cola
+                                xQueueSendToFront(gpio_response_queue, &response, 0);
+                            }
+                        }
+                    }
+                    
+                    // Timeout o error al recibir respuesta
+                    httpd_resp_send(req, "[ERROR] Timeout esperando respuesta del sistema.", HTTPD_RESP_USE_STRLEN);
+                    return ESP_OK;
+                } else {
+                    // Error al enviar a la cola
+                    httpd_resp_send(req, "[ERROR] Sistema ocupado. Intenta de nuevo.", HTTPD_RESP_USE_STRLEN);
+                    return ESP_OK;
+                }
             }
         }
     }
@@ -382,8 +506,12 @@ esp_err_t login_post_handler(httpd_req_t *req) {
         
         session_t *session = find_or_create_session(ip);
         if (session) {
-            session->authenticated = true;
-            session->last_activity = get_time_ms();
+            // Proteger acceso con mutex
+            if (session_mutex != NULL && xSemaphoreTake(session_mutex, portMAX_DELAY) == pdTRUE) {
+                session->authenticated = true;
+                session->last_activity = get_time_ms();
+                xSemaphoreGive(session_mutex);
+            }
             ESP_LOGI(TAG, "Login exitoso desde IP: %s", ip);
             httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
             return ESP_OK;
@@ -403,7 +531,11 @@ esp_err_t logout_get_handler(httpd_req_t *req) {
     
     session_t *session = find_or_create_session(ip);
     if (session) {
-        session->authenticated = false;
+        // Proteger acceso con mutex
+        if (session_mutex != NULL && xSemaphoreTake(session_mutex, portMAX_DELAY) == pdTRUE) {
+            session->authenticated = false;
+            xSemaphoreGive(session_mutex);
+        }
     }
     
     gpio_set_yellow(false);
@@ -428,6 +560,37 @@ esp_err_t catch_all_handler(httpd_req_t *req) {
 void start_webserver(void) {
     // 0. Inicializar sesiones
     memset(sessions, 0, sizeof(sessions));
+    
+    // 0.1. Crear mutex para sesiones
+    session_mutex = xSemaphoreCreateMutex();
+    if (session_mutex == NULL) {
+        ESP_LOGE(TAG, "Error al crear mutex para sesiones");
+        return;
+    }
+    
+    // 0.2. Crear mutex para IDs de comandos
+    command_id_mutex = xSemaphoreCreateMutex();
+    if (command_id_mutex == NULL) {
+        ESP_LOGE(TAG, "Error al crear mutex para IDs de comandos");
+        return;
+    }
+    
+    // 0.3. Crear colas para comandos GPIO
+    gpio_command_queue = xQueueCreate(10, sizeof(gpio_command_t));
+    gpio_response_queue = xQueueCreate(10, sizeof(gpio_command_t));
+    if (gpio_command_queue == NULL || gpio_response_queue == NULL) {
+        ESP_LOGE(TAG, "Error al crear colas para comandos GPIO");
+        return;
+    }
+    ESP_LOGI(TAG, "Colas de comandos GPIO creadas");
+    
+    // 0.4. Crear tarea de procesamiento de comandos GPIO
+    xTaskCreate(gpio_command_task, "gpio_cmd_task", 4096, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Tarea de comandos GPIO creada");
+    
+    // 0.5. Crear tarea de gestión de sesiones
+    xTaskCreate(session_management_task, "session_mgmt", 2048, NULL, 3, NULL);
+    ESP_LOGI(TAG, "Tarea de gestión de sesiones creada");
     
     // 1. Iniciar SPIFFS
     // Primero intentar montar sin formatear
