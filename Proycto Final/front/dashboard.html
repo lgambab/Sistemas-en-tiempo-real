@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="orientation" content="portrait" />
+    <title>Dashboard - ESP32 Terminal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <div class="dashboard-title">ESP32 RETRO TERMINAL</div>
+        <div class="dashboard-subtitle">Selecciona una opción</div>
+        
+        <div class="icons-container">
+            <!-- Icono de Terminal con cuadrado decorativo -->
+            <a href="/terminal" class="icon-link">
+                <div class="icon-wrapper">
+                    <div class="decorative-square"></div>
+                    <div class="icon-box terminal-icon">
+                        <svg viewBox="0 0 64 64" width="48" height="48" fill="none" stroke="#33ff33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="8" y="12" width="48" height="40" rx="2"/>
+                            <path d="M 16 24 L 32 24 M 16 32 L 48 32 M 16 40 L 40 40"/>
+                        </svg>
+                        <span class="icon-label">Terminal</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Icono de Slider con cuadrado decorativo -->
+            <a href="/slider" class="icon-link">
+                <div class="icon-wrapper">
+                    <div class="decorative-square"></div>
+                    <div class="icon-box slider-icon">
+                        <svg viewBox="0 0 64 64" width="48" height="48" fill="none" stroke="#33ff33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="12" y="20" width="40" height="24" rx="2"/>
+                            <circle cx="24" cy="32" r="3" fill="#33ff33"/>
+                            <path d="M 20 32 L 44 32" stroke-dasharray="2,2"/>
+                        </svg>
+                        <span class="icon-label">Slider</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="dashboard-actions">
+            <button class="suspend-btn" onclick="suspendSession()">
+                <span class="suspend-icon">⏾</span>
+                <span>Suspender sesión</span>
+            </button>
+            <p class="suspend-hint">Bloquea la sesión y vuelve al login.</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+

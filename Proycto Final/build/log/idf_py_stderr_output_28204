@@ -1,0 +1,2 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe -DESP_PLATFORM=1 -DSDKCONFIG='c:\Users\lgamb\Documents\Uni\RTOS\Repositorio\RTOS_Repo_Limpio\Proycto Final\sdkconfig' -DCCACHE_ENABLE=1 C:\Users\lgamb\Documents\Uni\RTOS\Repositorio\RTOS_Repo_Limpio\Proycto Final
+warning: user value 68 on the int symbol LWIP_DHCP_OPTIONS_LEN (defined at C:/Users/lgamb/esp/v5.5.1/esp-idf/components/lwip/Kconfig:364) ignored due to being outside the active range ([69, 255]) -- falling back on defaults

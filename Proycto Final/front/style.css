@@ -109,9 +109,34 @@ body {
     font-size: 0.95em;
 }
 
-.bar-right { }
+.bar-right { 
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
 
 /* Elementos individuales */
+.dashboard-btn {
+    background: none; 
+    border: 1px solid #33ff33; 
+    color: #33ff33;
+    padding: 2px 10px; 
+    border-radius: 3px; 
+    cursor: pointer; 
+    font-family: inherit; 
+    font-size: 0.8em;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dashboard-btn:hover { 
+    background: #33ff33; 
+    color: black; 
+    box-shadow: 0 0 8px rgba(51, 255, 51, 0.6);
+}
+
 .logout-btn {
     background: none; 
     border: 1px solid #ff5555; 
@@ -127,6 +152,7 @@ body {
 .logout-btn:hover { 
     background: #ff5555; 
     color: black; 
+    box-shadow: 0 0 8px rgba(255, 85, 85, 0.6);
 }
 
 /* Terminal Area */
@@ -163,10 +189,3010 @@ body {
     color: #44ee44; 
 }
 
+/* --- ESTILO MÓVIL MODERNO PARA LA TERMINAL --- */
+/* Media query para móviles - siempre vertical */
+@media screen and (max-width: 768px) {
+    /* Forzar orientación vertical - Solo para terminal (no dashboard ni slider) */
+    html, body:not(.slider-body):not(.dashboard-body) {
+        width: 100vw !important;
+        height: 100vh !important;
+        overflow: hidden !important;
+        position: fixed !important;
+        transform: rotate(0deg) !important;
+    }
+    
+    /* Fondo con gradiente sutil para móvil - Solo para terminal */
+    body:not(.slider-body):not(.dashboard-body) {
+        padding: 0 !important;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%) !important;
+        background-attachment: fixed !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
+    }
+    
+    /* FORZAR SCROLL en dashboard y slider - Muy importante */
+    /* HTML debe permitir scroll cuando hay slider o dashboard */
+    html {
+        overflow-y: auto !important;
+        height: auto !important;
+        position: relative !important;
+    }
+    
+    body.slider-body, body.dashboard-body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        max-height: none !important;
+        width: 100% !important;
+        display: block !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* Asegurar que los contenedores no bloqueen */
+    body.slider-body .slider-container,
+    body.dashboard-body .dashboard-container {
+        overflow: visible !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        position: relative !important;
+        padding-bottom: 120px !important; /* Espacio para botones fijos */
+    }
+    
+    /* Barra superior con diseño moderno - AZUL CIAN */
+    .top-bar {
+        height: auto !important;
+        min-height: auto !important;
+        flex-direction: column !important;
+        padding: 10px 12px !important;
+        gap: 8px !important;
+        font-size: 0.7em !important;
+        background: linear-gradient(180deg, rgba(0, 100, 200, 0.25) 0%, rgba(0, 50, 150, 0.15) 100%) !important;
+        border-bottom: 3px solid rgba(0, 191, 255, 0.6) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(0, 191, 255, 0.3) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+    
+    .bar-left {
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 0.85em !important;
+        order: 1 !important;
+        margin-bottom: 4px !important;
+        line-height: 1.3 !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.8), 0 0 20px rgba(0, 150, 255, 0.5) !important;
+        font-weight: 600 !important;
+        letter-spacing: 1px !important;
+    }
+    
+    .bar-center {
+        width: 100% !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        font-size: 0.8em !important;
+        order: 2 !important;
+        padding: 6px 0 !important;
+        border-top: 1px solid rgba(0, 191, 255, 0.4) !important;
+        border-bottom: 1px solid rgba(0, 191, 255, 0.4) !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+        border-radius: 6px !important;
+    }
+    
+    .bar-center span {
+        white-space: nowrap !important;
+        color: #87ceeb !important;
+    }
+    
+    .bar-right {
+        width: 100%;
+        justify-content: center;
+        gap: 8px;
+        order: 3;
+        margin-top: 4px;
+    }
+    
+    /* Botones con estilo moderno y táctil - AZUL CIAN */
+    .dashboard-btn {
+        padding: 8px 14px !important;
+        font-size: 0.8em !important;
+        min-height: 36px !important;
+        flex: 1 !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        border: 2px solid rgba(0, 191, 255, 0.7) !important;
+        background: linear-gradient(180deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+        color: #87ceeb !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(0, 191, 255, 0.4) !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .dashboard-btn:active {
+        background: linear-gradient(180deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+        transform: translateY(1px) !important;
+    }
+    
+    .logout-btn {
+        padding: 8px 14px !important;
+        font-size: 0.8em !important;
+        min-height: 36px !important;
+        flex: 1 !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        border: 2px solid rgba(255, 100, 100, 0.7) !important;
+        background: linear-gradient(180deg, rgba(200, 50, 50, 0.3) 0%, rgba(150, 30, 30, 0.2) 100%) !important;
+        color: #ffaaaa !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 100, 100, 0.4) !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .logout-btn:active {
+        background: linear-gradient(180deg, rgba(255, 100, 100, 0.5) 0%, rgba(200, 50, 50, 0.4) 100%) !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+        transform: translateY(1px) !important;
+    }
+    
+    /* Terminal area con estilo moderno - AZUL CIAN */
+    #term {
+        padding: 12px 10px !important;
+        font-size: 0.9em !important;
+        line-height: 1.5 !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        border-left: 3px solid rgba(0, 191, 255, 0.5) !important;
+        border-right: 3px solid rgba(0, 191, 255, 0.5) !important;
+        color: #b0e0e6 !important;
+        text-shadow: 0 0 5px rgba(0, 191, 255, 0.5) !important;
+    }
+    
+    /* Input area con diseño moderno - AZUL CIAN */
+    .input-container {
+        padding: 10px 8px !important;
+        flex-wrap: wrap !important;
+        background: linear-gradient(180deg, rgba(0, 50, 100, 0.3) 0%, rgba(0, 0, 0, 0.5) 100%) !important;
+        border-top: 3px solid rgba(0, 191, 255, 0.6) !important;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    .prompt {
+        font-size: 0.85em !important;
+        margin-bottom: 4px !important;
+        width: 100% !important;
+        display: block !important;
+        line-height: 1.4 !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.7) !important;
+        font-weight: 500 !important;
+    }
+    
+    #inputLine {
+        font-size: 0.95em !important;
+        padding: 10px 8px !important;
+        min-height: 40px !important;
+        width: 100% !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        border: 2px solid rgba(0, 191, 255, 0.5) !important;
+        border-radius: 8px !important;
+        color: #b0e0e6 !important;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 191, 255, 0.3) !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    #inputLine:focus {
+        border-color: rgba(0, 191, 255, 0.8) !important;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 191, 255, 0.5) !important;
+        outline: none !important;
+    }
+    
+    /* Separador con estilo moderno - AZUL CIAN */
+    .separator-line {
+        border-top: 2px dashed rgba(0, 191, 255, 0.5) !important;
+        opacity: 0.7 !important;
+    }
+    
+    /* --- ESTILOS MÓVILES PARA LOGIN --- */
+    .box {
+        border: 3px solid rgba(0, 191, 255, 0.7) !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 50, 100, 0.3) 100%) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 191, 255, 0.3) !important;
+    }
+    
+    .title {
+        color: #00bfff !important;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.8), 0 0 20px rgba(0, 150, 255, 0.5) !important;
+    }
+    
+    .input-field {
+        border: 2px solid rgba(0, 191, 255, 0.6) !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        color: #b0e0e6 !important;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 8px rgba(0, 191, 255, 0.2) !important;
+    }
+    
+    .input-field:focus {
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 191, 255, 0.5) !important;
+        outline: none !important;
+    }
+    
+    .btn {
+        border: 2px solid rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(180deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(0, 191, 255, 0.4) !important;
+    }
+    
+    .btn:active {
+        background: linear-gradient(180deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        color: #ffffff !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    .error {
+        color: #ffaaaa !important;
+        text-shadow: 0 0 5px rgba(255, 100, 100, 0.5) !important;
+    }
+    
+    .smiley svg {
+        stroke: rgba(0, 191, 255, 0.8) !important;
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .small {
+        color: #87ceeb !important;
+    }
+    
+    /* --- ESTILOS MÓVILES PARA DASHBOARD --- */
+    body.dashboard-body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%) !important;
+        background-attachment: fixed !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh !important;
+    }
+    
+    body.dashboard-body .dashboard-container {
+        background: transparent !important;
+        overflow: visible !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        position: relative !important;
+    }
+    
+    .dashboard-title {
+        color: #00bfff !important;
+        text-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 30px rgba(0, 150, 255, 0.5) !important;
+    }
+    
+    .dashboard-subtitle {
+        color: #87ceeb !important;
+    }
+    
+    .decorative-square {
+        border: 2px solid rgba(0, 191, 255, 0.6) !important;
+        box-shadow: 0 0 15px rgba(0, 191, 255, 0.4) !important;
+    }
+    
+    .icon-box {
+        border: 2px solid rgba(0, 191, 255, 0.7) !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        box-shadow: 0 0 15px rgba(0, 191, 255, 0.3) !important;
+    }
+    
+    .icon-box:active {
+        transform: scale(1.1) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.6), 0 0 50px rgba(0, 150, 255, 0.4) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        background: rgba(0, 0, 0, 0.8) !important;
+    }
+    
+    .icon-box svg {
+        stroke: rgba(0, 191, 255, 0.8) !important;
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .icon-label {
+        color: #87ceeb !important;
+    }
+    
+    .icon-box:active .icon-label {
+        color: #00bfff !important;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.8) !important;
+    }
+    
+    .suspend-btn {
+        border: 2px solid rgba(255, 187, 51, 0.7) !important;
+        color: #ffcc66 !important;
+        background: linear-gradient(180deg, rgba(200, 150, 50, 0.2) 0%, rgba(150, 100, 30, 0.1) 100%) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 187, 51, 0.4) !important;
+    }
+    
+    .suspend-btn:active {
+        background: linear-gradient(180deg, rgba(255, 187, 51, 0.4) 0%, rgba(200, 150, 50, 0.3) 100%) !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+        transform: translateY(1px) !important;
+    }
+    
+    .suspend-hint {
+        color: #87ceeb !important;
+    }
+    
+    /* --- ESTILOS MÓVILES PARA SLIDER - DISEÑO APP-LIKE --- */
+    body.slider-body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%) !important;
+        background-attachment: fixed !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh !important;
+    }
+    
+    /* Contenedor principal con scroll */
+    body.slider-body .slider-container {
+        padding: 0 !important;
+        max-width: 100% !important;
+        min-height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: visible !important;
+        position: relative !important;
+    }
+    
+    /* Header fijo estilo app */
+    .slider-header {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 100 !important;
+        background: linear-gradient(180deg, rgba(0, 50, 100, 0.95) 0%, rgba(0, 0, 0, 0.9) 100%) !important;
+        backdrop-filter: blur(20px) !important;
+        padding: 15px 20px !important;
+        margin: 0 !important;
+        margin-bottom: 0 !important;
+        border-bottom: 2px solid rgba(0, 191, 255, 0.5) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    .slider-title {
+        color: #00bfff !important;
+        text-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 30px rgba(0, 150, 255, 0.5) !important;
+        font-size: 1.4em !important;
+        margin: 0 !important;
+    }
+    
+    /* Grid vertical estilo app */
+    .slider-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 15px !important;
+        padding-bottom: 100px !important; /* Espacio para botones fijos */
+    }
+    
+    /* Tarjetas compactas estilo app */
+    .slider-box {
+        border: 2px solid rgba(0, 191, 255, 0.6) !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 30, 60, 0.4) 100%) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 191, 255, 0.2) !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        margin: 0 !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .slider-box:active {
+        transform: scale(0.98) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 191, 255, 0.4) !important;
+    }
+    
+    /* Header de tarjeta más compacto */
+    .slider-box-header {
+        border-bottom: 1px solid rgba(0, 191, 255, 0.3) !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+    
+    .slider-box-icon {
+        font-size: 1.4em !important;
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .slider-box-title {
+        color: #00bfff !important;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.7) !important;
+        font-size: 1em !important;
+        margin: 0 !important;
+    }
+    
+    .slider-box-content {
+        color: #b0e0e6 !important;
+    }
+    
+    /* Display de temperatura más compacto */
+    .temperature-display {
+        color: #00bfff !important;
+        text-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 30px rgba(0, 150, 255, 0.5) !important;
+        font-size: 2em !important;
+        padding: 10px 0 !important;
+    }
+    
+    /* Display de hora más compacto */
+    .time-display {
+        color: #00bfff !important;
+        text-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 30px rgba(0, 150, 255, 0.5) !important;
+        font-size: 2em !important;
+        padding: 10px 0 !important;
+    }
+    
+    .logs-display {
+        color: #87ceeb !important;
+        font-size: 0.9em !important;
+        padding: 8px 0 !important;
+        line-height: 1.5 !important;
+    }
+    
+    /* Botones del ventilador en grid 2x2 para móvil */
+    /* 4 botones: Apagado, Horario, Rendimiento, Manual */
+    .fan-buttons {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 12px !important;
+    }
+    
+    /* Botón Horario en móvil */
+    .fan-btn-schedule {
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+    }
+    
+    .fan-btn-schedule:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.6) !important;
+        color: #00bfff !important;
+        transform: scale(0.95) !important;
+    }
+    
+    .fan-btn-schedule.active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.4) 0%, rgba(0, 100, 200, 0.3) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7) !important;
+        color: #00bfff !important;
+    }
+    
+    /* Botón Manual ocupa todo el ancho en móvil (fila completa) */
+    .fan-btn-manual {
+        grid-column: 1 / -1 !important;
+        border-color: rgba(255, 187, 51, 0.7) !important;
+        color: #ffcc66 !important;
+        background: linear-gradient(135deg, rgba(200, 150, 50, 0.3) 0%, rgba(150, 100, 30, 0.2) 100%) !important;
+    }
+    
+    .fan-btn-manual:active {
+        background: linear-gradient(135deg, rgba(255, 187, 51, 0.5) 0%, rgba(200, 150, 50, 0.4) 100%) !important;
+        border-color: rgba(255, 204, 68, 0.9) !important;
+        box-shadow: 0 0 25px rgba(255, 187, 51, 0.6) !important;
+        color: #ffdd77 !important;
+        transform: scale(0.95) !important;
+    }
+    
+    .fan-btn-manual.active {
+        background: linear-gradient(135deg, rgba(255, 187, 51, 0.4) 0%, rgba(200, 150, 50, 0.3) 100%) !important;
+        border-color: rgba(255, 204, 68, 0.9) !important;
+        box-shadow: 0 0 30px rgba(255, 187, 51, 0.7) !important;
+        color: #ffdd77 !important;
+    }
+    
+    .fan-btn {
+        border: 2px solid rgba(0, 191, 255, 0.7) !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%) !important;
+        color: #87ceeb !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+        padding: 15px 10px !important;
+        border-radius: 10px !important;
+        min-height: 70px !important;
+    }
+    
+    .fan-btn:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.3) 0%, rgba(0, 100, 200, 0.2) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.6) !important;
+        color: #00bfff !important;
+        transform: scale(0.95) !important;
+    }
+    
+    .fan-btn.active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.4) 0%, rgba(0, 100, 200, 0.3) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7) !important;
+        color: #00bfff !important;
+    }
+    
+    .fan-btn-icon {
+        font-size: 1.8em !important;
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .fan-status {
+        border-top: none !important;
+        border: 2px solid rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        padding: 15px 10px !important;
+        margin-top: 15px !important;
+        font-size: 0.9em !important;
+        min-height: 70px !important;
+        border-radius: 10px !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    #fanStatusText {
+        color: #00bfff !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    /* Estilos del modo manual en móvil - dentro de la sección móvil principal */
+    .fan-normal-view,
+    .fan-manual-view {
+        width: 100% !important;
+    }
+    
+    .fan-manual-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+        margin-bottom: 15px !important;
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid rgba(0, 191, 255, 0.3) !important;
+    }
+    
+    .fan-back-btn {
+        padding: 10px 16px !important;
+        font-size: 0.9em !important;
+        min-height: 44px !important;
+        width: 100% !important;
+        justify-content: center !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+        border-radius: 10px !important;
+    }
+    
+    .fan-back-btn:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        transform: scale(0.98) !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-manual-title {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .fan-manual-content {
+        gap: 20px !important;
+        padding: 5px 0 !important;
+    }
+    
+    .fan-power-control {
+        gap: 12px !important;
+    }
+    
+    .fan-power-label {
+        font-size: 0.85em !important;
+        color: #87ceeb !important;
+    }
+    
+    .fan-power-toggle {
+        padding: 25px 30px !important;
+        min-width: 180px !important;
+        border-width: 3px !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%) !important;
+        color: #87ceeb !important;
+        border-radius: 12px !important;
+    }
+    
+    .fan-power-toggle:active {
+        transform: scale(0.98) !important;
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.3) 0%, rgba(0, 100, 200, 0.2) 100%) !important;
+    }
+    
+    .fan-power-toggle.fan-power-on {
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.3) 0%, rgba(0, 100, 200, 0.2) 100%) !important;
+        color: #00bfff !important;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7) !important;
+    }
+    
+    .fan-power-icon {
+        font-size: 2.2em !important;
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .fan-power-text {
+        font-size: 1em !important;
+        color: #87ceeb !important;
+        text-shadow: 0 0 5px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-power-toggle.fan-power-on .fan-power-text {
+        color: #00bfff !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.8) !important;
+    }
+    
+    .fan-slider-container {
+        gap: 12px !important;
+    }
+    
+    .fan-slider-label {
+        font-size: 0.9em !important;
+        color: #87ceeb !important;
+    }
+    
+    .fan-slider-value {
+        font-size: 1.2em !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-slider-wrapper {
+        padding: 20px 0 !important;
+    }
+    
+    .fan-slider {
+        height: 10px !important;
+    }
+    
+    .fan-slider::-webkit-slider-thumb {
+        width: 32px !important;
+        height: 32px !important;
+        border-width: 4px !important;
+        background: #00bfff !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.8), 0 0 40px rgba(0, 191, 255, 0.4) !important;
+    }
+    
+    .fan-slider::-webkit-slider-thumb:active {
+        transform: scale(1.15) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 1), 0 0 50px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-slider::-moz-range-thumb {
+        width: 32px !important;
+        height: 32px !important;
+        border-width: 4px !important;
+        background: #00bfff !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.8), 0 0 40px rgba(0, 191, 255, 0.4) !important;
+    }
+    
+    .fan-slider::-moz-range-thumb:active {
+        transform: scale(1.15) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 1), 0 0 50px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-slider-track {
+        height: 10px !important;
+        background: rgba(0, 191, 255, 0.2) !important;
+        border-radius: 5px !important;
+    }
+    
+    .fan-slider-fill {
+        background: linear-gradient(90deg, #00bfff 0%, #87ceeb 100%) !important;
+        box-shadow: 0 0 15px rgba(0, 191, 255, 0.6) !important;
+        border-radius: 5px !important;
+    }
+    
+    /* Estilos del modo horario en móvil - Optimizado */
+    .fan-schedule-view {
+        width: 100% !important;
+    }
+    
+    .fan-schedule-content {
+        gap: 18px !important;
+        padding: 8px 0 !important;
+    }
+    
+    /* Slider del modo horario en móvil */
+    .fan-schedule-content .fan-slider-container {
+        gap: 12px !important;
+    }
+    
+    .fan-schedule-content .fan-slider-label {
+        font-size: 0.9em !important;
+        color: #87ceeb !important;
+    }
+    
+    .fan-schedule-content .fan-slider-value {
+        font-size: 1.2em !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-schedule-content .fan-slider-wrapper {
+        padding: 20px 0 !important;
+    }
+    
+    .fan-schedule-controls {
+        gap: 16px !important;
+    }
+    
+    .fan-schedule-selectors {
+        gap: 14px !important;
+    }
+    
+    .fan-schedule-selector {
+        gap: 8px !important;
+    }
+    
+    .fan-schedule-label {
+        font-size: 0.85em !important;
+        color: #87ceeb !important;
+        letter-spacing: 0.5px !important;
+    }
+    
+    .fan-schedule-select,
+    .fan-schedule-time {
+        padding: 14px 16px !important;
+        font-size: 1em !important;
+        border-width: 2px !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%) !important;
+        border-radius: 10px !important;
+        min-height: 48px !important;
+        -webkit-tap-highlight-color: rgba(0, 191, 255, 0.3) !important;
+    }
+    
+    .fan-schedule-select:active,
+    .fan-schedule-time:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.3) 0%, rgba(0, 100, 200, 0.2) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        transform: scale(0.98) !important;
+    }
+    
+    .fan-schedule-select:focus,
+    .fan-schedule-time:focus {
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.6) !important;
+        outline: none !important;
+    }
+    
+    .fan-schedule-buttons {
+        gap: 12px !important;
+        margin-top: 10px !important;
+        flex-direction: column !important;
+    }
+    
+    .fan-schedule-btn {
+        padding: 20px 18px !important;
+        min-height: 85px !important;
+        border-width: 3px !important;
+        border-radius: 12px !important;
+        font-size: 0.95em !important;
+        gap: 10px !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    .fan-schedule-btn:active {
+        transform: scale(0.97) !important;
+    }
+    
+    .fan-schedule-btn-delete {
+        border-color: rgba(255, 85, 85, 0.7) !important;
+        color: #ff8888 !important;
+        background: linear-gradient(135deg, rgba(200, 50, 50, 0.3) 0%, rgba(150, 30, 30, 0.2) 100%) !important;
+    }
+    
+    .fan-schedule-btn-delete:active {
+        background: linear-gradient(135deg, rgba(255, 85, 85, 0.5) 0%, rgba(200, 50, 50, 0.4) 100%) !important;
+        box-shadow: 0 0 30px rgba(255, 85, 85, 0.7) !important;
+        border-color: rgba(255, 100, 100, 0.9) !important;
+    }
+    
+    .fan-schedule-btn-register {
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+    }
+    
+    .fan-schedule-btn-register:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+    }
+    
+    .fan-schedule-btn-icon {
+        font-size: 2em !important;
+        filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .fan-schedule-btn-label {
+        font-size: 1em !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Estilos para la lista de registros en móvil */
+    .logs-list {
+        max-height: 250px !important;
+    }
+    
+    .log-item {
+        padding: 10px 0 !important;
+    }
+    
+    .log-item-day {
+        font-size: 0.95em !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .log-item-time {
+        font-size: 1em !important;
+        color: #87ceeb !important;
+        text-shadow: 0 0 5px rgba(0, 191, 255, 0.5) !important;
+    }
+    
+    .log-item-details {
+        font-size: 0.8em !important;
+    }
+    
+    .log-item-speed {
+        color: #87ceeb !important;
+    }
+    
+    .log-item-date {
+        color: #aaa !important;
+        font-size: 0.85em !important;
+    }
+    
+    /* Mensaje de confirmación en móvil - Optimizado */
+    .schedule-confirmation-message {
+        top: 20px !important;
+        right: 15px !important;
+        left: 15px !important;
+        padding: 14px 20px !important;
+        font-size: 0.95em !important;
+        border-width: 3px !important;
+        border-radius: 12px !important;
+        text-align: center !important;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7), 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.25) 0%, rgba(0, 100, 200, 0.2) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.8) !important;
+        color: #87ceeb !important;
+        text-shadow: 0 0 12px rgba(0, 191, 255, 0.8) !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Barra de registros en móvil - Optimizado */
+    .logs-bar {
+        padding: 14px 15px !important;
+        border-width: 3px !important;
+        border-radius: 12px !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.4) 100%) !important;
+        min-height: 70px !important;
+        -webkit-tap-highlight-color: rgba(0, 191, 255, 0.2) !important;
+    }
+    
+    .logs-bar:active {
+        transform: scale(0.98) !important;
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.2) 0%, rgba(0, 100, 200, 0.15) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .logs-bar-content {
+        gap: 12px !important;
+        align-items: center !important;
+    }
+    
+    .logs-bar-icon {
+        font-size: 1.5em !important;
+        filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .logs-bar-text {
+        flex: 1 !important;
+        gap: 6px !important;
+    }
+    
+    .logs-bar-count {
+        font-size: 1em !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.7) !important;
+        font-weight: 600 !important;
+    }
+    
+    .logs-bar-latest {
+        font-size: 0.85em !important;
+        color: #87ceeb !important;
+        line-height: 1.4 !important;
+    }
+    
+    .logs-bar-arrow {
+        font-size: 1.3em !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.7) !important;
+        transition: transform 0.3s ease !important;
+    }
+    
+    .logs-bar:active .logs-bar-arrow {
+        transform: translateY(5px) !important;
+    }
+    
+    .logs-bar-empty {
+        padding: 18px !important;
+        font-size: 0.9em !important;
+        border-width: 2px !important;
+        border-color: rgba(0, 191, 255, 0.4) !important;
+        border-radius: 12px !important;
+        color: #87ceeb !important;
+        min-height: 60px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .logs-bar-empty:active {
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        background: rgba(0, 191, 255, 0.1) !important;
+    }
+    
+    /* Popup de registros en móvil - Optimizado */
+    .logs-popup {
+        padding: 10px !important;
+        align-items: flex-end !important;
+    }
+    
+    .logs-popup-content {
+        max-width: 100% !important;
+        max-height: 90vh !important;
+        width: 100% !important;
+        border-width: 3px !important;
+        border-radius: 16px 16px 0 0 !important;
+        border-bottom: none !important;
+        animation: slideUpMobile 0.3s ease !important;
+    }
+    
+    @keyframes slideUpMobile {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+    
+    .logs-popup-header {
+        padding: 15px 18px !important;
+        border-bottom-width: 2px !important;
+    }
+    
+    .logs-popup-title {
+        font-size: 1.15em !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 12px rgba(0, 191, 255, 0.7) !important;
+        font-weight: 600 !important;
+    }
+    
+    .logs-popup-close {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 1.5em !important;
+        border-width: 2px !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        min-height: 36px !important;
+        -webkit-tap-highlight-color: rgba(0, 191, 255, 0.3) !important;
+    }
+    
+    .logs-popup-close:active {
+        background: rgba(0, 191, 255, 0.3) !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.6) !important;
+        transform: rotate(90deg) scale(0.95) !important;
+    }
+    
+    .logs-popup-list {
+        padding: 15px 18px !important;
+        max-height: calc(90vh - 140px) !important;
+        gap: 10px !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    .logs-popup-item {
+        padding: 14px 12px !important;
+        gap: 12px !important;
+        border-width: 2px !important;
+        border-color: rgba(0, 191, 255, 0.4) !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        border-radius: 10px !important;
+        min-height: 70px !important;
+        -webkit-tap-highlight-color: rgba(0, 191, 255, 0.2) !important;
+    }
+    
+    .logs-popup-item:active {
+        background: rgba(0, 191, 255, 0.2) !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        transform: translateX(3px) scale(0.98) !important;
+    }
+    
+    .logs-popup-item-number {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.9em !important;
+        border-width: 2px !important;
+        border-color: rgba(0, 191, 255, 0.8) !important;
+        color: #87ceeb !important;
+        background: rgba(0, 191, 255, 0.25) !important;
+        font-weight: 600 !important;
+    }
+    
+    .logs-popup-item-day {
+        color: #00bfff !important;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.7) !important;
+        font-size: 1em !important;
+        font-weight: 600 !important;
+    }
+    
+    .logs-popup-item-time {
+        color: #87ceeb !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
+        font-size: 1.05em !important;
+        font-weight: 600 !important;
+    }
+    
+    .logs-popup-item-speed {
+        color: #87ceeb !important;
+        font-size: 0.85em !important;
+        font-weight: 500 !important;
+    }
+    
+    .logs-popup-item-date {
+        color: #aaa !important;
+        font-size: 0.8em !important;
+    }
+    
+    /* Estado seleccionado en móvil */
+    .logs-popup-item.selected {
+        background: rgba(0, 191, 255, 0.3) !important;
+        border-color: rgba(0, 191, 255, 1) !important;
+        border-width: 3px !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.6), inset 0 0 20px rgba(0, 191, 255, 0.2) !important;
+    }
+    
+    .logs-popup-item.selected:active {
+        transform: translateX(3px) scale(0.97) !important;
+    }
+    
+    .logs-popup-item-check {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.95em !important;
+        background: #00bfff !important;
+        color: #000 !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 1) !important;
+        top: 8px !important;
+        right: 8px !important;
+        font-weight: bold !important;
+    }
+    
+    /* Footer del popup en móvil */
+    .logs-popup-footer {
+        padding: 15px 18px !important;
+        border-top-width: 2px !important;
+        border-top-color: rgba(0, 191, 255, 0.4) !important;
+        background: rgba(0, 191, 255, 0.08) !important;
+    }
+    
+    .logs-popup-assign-btn {
+        padding: 16px 20px !important;
+        font-size: 1em !important;
+        border-width: 3px !important;
+        border-color: rgba(0, 191, 255, 0.8) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 100, 200, 0.4) 0%, rgba(0, 50, 150, 0.3) 100%) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.5) !important;
+        min-height: 56px !important;
+        width: 100% !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    .logs-popup-assign-btn:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        border-color: rgba(0, 191, 255, 1) !important;
+        box-shadow: 0 0 35px rgba(0, 191, 255, 0.7) !important;
+        color: #00bfff !important;
+        transform: scale(0.97) !important;
+    }
+    
+    .logs-popup-assign-icon {
+        font-size: 1.3em !important;
+        filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.7)) !important;
+    }
+    
+    .logs-popup-assign-label {
+        font-size: 1.05em !important;
+    }
+    
+    /* Optimizar animaciones para móvil - reducir animaciones complejas */
+    .fan-power-toggle.fan-power-on {
+        animation: pulseGlowMobile 2s ease-in-out infinite !important;
+    }
+    
+    @keyframes pulseGlowMobile {
+        0%, 100% {
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.7) !important;
+        }
+        50% {
+            box-shadow: 0 0 40px rgba(0, 191, 255, 0.9), 0 0 60px rgba(0, 191, 255, 0.5) !important;
+        }
+    }
+    
+    .fan-power-toggle.fan-power-on .fan-power-icon {
+        animation: rotateIconMobile 3s linear infinite !important;
+    }
+    
+    @keyframes rotateIconMobile {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    
+    /* Desactivar animación shimmer en móvil para mejor rendimiento */
+    .fan-slider-fill::after {
+        animation: none !important;
+    }
+    
+    /* Mejorar transiciones para toque */
+    .fan-back-btn,
+    .fan-power-toggle,
+    .fan-slider {
+        -webkit-tap-highlight-color: rgba(0, 191, 255, 0.3) !important;
+    }
+    
+    /* Asegurar que las transiciones sean suaves en móvil */
+    .fan-normal-view,
+    .fan-manual-view {
+        transition: opacity 0.25s ease, transform 0.25s ease !important;
+    }
+    
+    /* Botones de acción fijos en la parte inferior */
+    .slider-actions {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        display: flex !important;
+        gap: 10px !important;
+        padding: 15px !important;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 30, 60, 0.9) 100%) !important;
+        backdrop-filter: blur(20px) !important;
+        border-top: 2px solid rgba(0, 191, 255, 0.5) !important;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5) !important;
+        z-index: 100 !important;
+        margin: 0 !important;
+    }
+    
+    .slider-action-btn {
+        flex: 1 !important;
+        border: 2px solid !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+        padding: 14px 20px !important;
+        font-size: 0.95em !important;
+        border-radius: 10px !important;
+        min-height: 50px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .dashboard-action-btn {
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+    }
+    
+    .dashboard-action-btn:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+        transform: scale(0.95) !important;
+    }
+    
+    .suspend-action-btn {
+        border-color: rgba(255, 187, 51, 0.7) !important;
+        color: #ffcc66 !important;
+        background: linear-gradient(135deg, rgba(200, 150, 50, 0.3) 0%, rgba(150, 100, 30, 0.2) 100%) !important;
+    }
+    
+    .suspend-action-btn:active {
+        background: linear-gradient(135deg, rgba(255, 187, 51, 0.5) 0%, rgba(200, 150, 50, 0.4) 100%) !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+        transform: scale(0.95) !important;
+    }
+}
+
 /* Utilidades */
 .separator-line {
     border: 0;
     border-top: 1px dashed #33ff33;
     margin: 10px 0; 
     opacity: 0.5;
+}
+
+/* --- ESTILOS DEL DASHBOARD --- */
+body.dashboard-body {
+    overflow: auto;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: black;
+}
+
+.dashboard-title {
+    font-size: 2em;
+    font-weight: bold;
+    color: #44ee44;
+    text-shadow: 0 0 10px #33ff33;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.dashboard-subtitle {
+    font-size: 1.1em;
+    color: #aaa;
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+.icons-container {
+    display: flex;
+    gap: 80px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.icon-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Cuadrado decorativo para el icono de terminal */
+.decorative-square {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border: 2px solid #33ff33;
+    border-radius: 8px;
+    opacity: 0.6;
+    z-index: 0;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.icon-box {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #33ff33;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1;
+    animation: zoomIn 0.6s ease-out;
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.icon-box:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 20px #33ff33, 0 0 40px rgba(51, 255, 51, 0.5);
+    border-color: #44ee44;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.icon-box svg {
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.icon-box:hover svg {
+    stroke: #44ee44;
+    filter: drop-shadow(0 0 5px #33ff33);
+}
+
+.icon-label {
+    font-size: 0.9em;
+    color: #33ff33;
+    text-align: center;
+    margin-top: 5px;
+    transition: color 0.3s ease;
+}
+
+.icon-box:hover .icon-label {
+    color: #44ee44;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.dashboard-actions {
+    margin-top: 50px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.suspend-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: 1px solid #ffbb33;
+    color: #ffbb33;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.05em;
+}
+
+.suspend-btn:hover {
+    background: rgba(255, 187, 51, 0.15);
+    box-shadow: 0 0 18px rgba(255, 187, 51, 0.55);
+    transform: translateY(-2px);
+}
+
+.suspend-icon {
+    font-size: 1.2em;
+    filter: drop-shadow(0 0 4px rgba(255, 187, 51, 0.6));
+}
+
+.suspend-hint {
+    margin: 0;
+    font-size: 0.85em;
+    color: #bbbbbb;
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+    .icons-container {
+        gap: 40px;
+    }
+    
+    .dashboard-title {
+        font-size: 1.5em;
+    }
+    
+    .icon-box {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .decorative-square {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* --- ESTILOS DE LA PÁGINA SLIDER --- */
+body.slider-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: black;
+    height: auto;
+    min-height: 100vh;
+}
+
+.slider-container {
+    min-height: 100vh;
+    padding: 30px 40px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .slider-container {
+        padding: 20px 15px;
+        min-height: 100vh;
+        padding-bottom: 40px; /* Espacio extra al final para los botones */
+    }
+}
+
+.slider-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .slider-header {
+        margin-bottom: 25px;
+    }
+}
+
+.slider-title {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #44ee44;
+    text-shadow: 0 0 10px #33ff33;
+    margin: 0;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@media (max-width: 768px) {
+    .slider-title {
+        font-size: 1.6em;
+    }
+}
+
+.slider-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Diseño vertical para móvil */
+@media (max-width: 768px) {
+    .slider-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+}
+
+.slider-box {
+    border: 2px solid #33ff33;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 18px;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.6s ease-out;
+    box-shadow: 0 0 10px rgba(51, 255, 51, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .slider-box {
+        padding: 15px;
+        border-radius: 10px;
+    }
+}
+
+.slider-box:hover {
+    border-color: #44ee44;
+    box-shadow: 0 0 20px rgba(51, 255, 51, 0.4);
+    transform: translateY(-2px);
+}
+
+.slider-box-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .slider-box-header {
+        gap: 6px;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+    }
+}
+
+.slider-box-icon {
+    font-size: 1.5em;
+    filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6));
+}
+
+@media (max-width: 768px) {
+    .slider-box-icon {
+        font-size: 1.3em;
+    }
+}
+
+.slider-box-title {
+    font-size: 1.1em;
+    color: #00bfff;
+    margin: 0;
+    text-shadow: 0 0 8px rgba(0, 191, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+    .slider-box-title {
+        font-size: 1em;
+    }
+}
+
+.slider-box-content {
+    color: #87ceeb;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.temperature-display {
+    font-size: 2.2em;
+    font-weight: bold;
+    text-align: center;
+    color: #33ff33;
+    text-shadow: 0 0 10px #33ff33;
+    padding: 15px 0;
+}
+
+@media (max-width: 768px) {
+    .temperature-display {
+        font-size: 1.8em;
+        padding: 12px 0;
+    }
+}
+
+.time-display {
+    font-size: 2.2em;
+    font-weight: bold;
+    text-align: center;
+    color: #33ff33;
+    text-shadow: 0 0 10px #33ff33;
+    padding: 15px 0;
+    font-family: 'Courier New', monospace;
+}
+
+@media (max-width: 768px) {
+    .time-display {
+        font-size: 1.8em;
+        padding: 12px 0;
+    }
+}
+
+.logs-display {
+    font-size: 0.9em;
+    color: #aaa;
+    text-align: center;
+    padding: 15px 0;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .logs-display {
+        font-size: 0.85em;
+        padding: 12px 0;
+    }
+}
+
+.logs-display p {
+    margin: 0;
+}
+
+/* Estilos para el cuadro del ventilador */
+.fan-box {
+    grid-column: span 3;
+}
+
+@media (max-width: 768px) {
+    .fan-box {
+        grid-column: span 1;
+    }
+}
+
+.fan-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .fan-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+}
+
+.fan-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 15px 10px;
+    border: 2px solid rgba(0, 191, 255, 0.7);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%);
+    color: #87ceeb;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 0.85em;
+}
+
+@media (max-width: 768px) {
+    .fan-btn {
+        padding: 12px 8px;
+        font-size: 0.8em;
+        gap: 4px;
+    }
+}
+
+.fan-btn:hover {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.2) 0%, rgba(0, 100, 200, 0.15) 100%);
+    border-color: rgba(0, 191, 255, 0.9);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+    transform: translateY(-2px);
+    color: #00bfff;
+}
+
+.fan-btn.active {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.3) 0%, rgba(0, 100, 200, 0.2) 100%);
+    border-color: rgba(0, 191, 255, 0.9);
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.7);
+    color: #00bfff;
+}
+
+.fan-btn-icon {
+    font-size: 1.8em;
+    filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.6));
+}
+
+@media (max-width: 768px) {
+    .fan-btn-icon {
+        font-size: 1.5em;
+    }
+}
+
+.fan-btn-label {
+    font-weight: 500;
+}
+
+.fan-status {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid rgba(0, 191, 255, 0.3);
+    margin-top: 15px;
+    color: #87ceeb;
+    font-size: 1em;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 30, 60, 0.15) 100%);
+    border-radius: 8px;
+}
+
+
+#fanStatusText {
+    color: #00bfff;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 8px rgba(0, 191, 255, 0.6);
+}
+
+/* Estilos para el modo temperatura activo */
+#fanStatusText.fan-temp-active {
+    color: #00bfff;
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.8);
+    animation: pulseTemp 2s ease-in-out infinite;
+}
+
+@keyframes pulseTemp {
+    0%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.8);
+    }
+    50% {
+        opacity: 0.8;
+        text-shadow: 0 0 15px rgba(0, 191, 255, 1);
+    }
+}
+
+/* Estilos para el modo manual del ventilador (solo PC) */
+.fan-normal-view,
+.fan-manual-view {
+    width: 100%;
+}
+
+.fan-manual-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+}
+
+.fan-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 2px solid rgba(0, 191, 255, 0.7);
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%);
+    color: #87ceeb;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.fan-back-btn:hover {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.2) 0%, rgba(0, 100, 200, 0.15) 100%);
+    border-color: rgba(0, 191, 255, 0.9);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+    transform: translateX(-3px);
+    color: #00bfff;
+}
+
+.fan-back-btn:active {
+    transform: translateX(-3px) scale(0.98);
+}
+
+.fan-back-icon {
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.fan-back-btn:hover .fan-back-icon {
+    transform: translateX(-2px);
+}
+
+.fan-manual-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.fan-manual-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 10px 0;
+}
+
+/* Control de encendido/apagado */
+.fan-power-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.fan-power-label {
+    color: #aaa;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fan-power-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 40px;
+    border: 3px solid rgba(0, 191, 255, 0.7);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%);
+    color: #87ceeb;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    position: relative;
+    overflow: hidden;
+}
+
+.fan-power-toggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.fan-power-toggle:hover::before {
+    left: 100%;
+}
+
+.fan-power-toggle:hover {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.15) 0%, rgba(0, 100, 200, 0.1) 100%);
+    border-color: rgba(0, 191, 255, 0.9);
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.6);
+    transform: scale(1.05);
+    color: #00bfff;
+}
+
+.fan-power-toggle:active {
+    transform: scale(1.02);
+}
+
+.fan-power-toggle.fan-power-on {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.2) 0%, rgba(0, 100, 200, 0.15) 100%);
+    border-color: rgba(0, 191, 255, 0.9);
+    box-shadow: 0 0 25px rgba(0, 191, 255, 0.7);
+    color: #00bfff;
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(0, 191, 255, 0.9), 0 0 50px rgba(0, 191, 255, 0.5);
+    }
+}
+
+.fan-power-icon {
+    font-size: 2.5em;
+    filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6));
+    transition: transform 0.3s ease;
+}
+
+.fan-power-toggle:hover .fan-power-icon {
+    transform: scale(1.1);
+}
+
+.fan-power-toggle.fan-power-on .fan-power-icon {
+    animation: rotateIcon 2s linear infinite;
+}
+
+@keyframes rotateIcon {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.fan-power-text {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+/* Control de slider de velocidad */
+.fan-slider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.fan-slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #aaa;
+    font-size: 0.95em;
+}
+
+.fan-slider-value {
+    color: #33ff33;
+    font-weight: bold;
+    font-size: 1.3em;
+    text-shadow: 0 0 10px #33ff33;
+    min-width: 50px;
+    text-align: right;
+    transition: all 0.2s ease;
+}
+
+.fan-slider-wrapper {
+    position: relative;
+    padding: 15px 0;
+}
+
+.fan-slider {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.fan-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #33ff33;
+    border: 3px solid #0a0a0a;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.8), 0 0 30px rgba(51, 255, 51, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.fan-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(51, 255, 51, 1), 0 0 40px rgba(51, 255, 51, 0.6);
+}
+
+.fan-slider::-webkit-slider-thumb:active {
+    transform: scale(1.1);
+}
+
+.fan-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #33ff33;
+    border: 3px solid #0a0a0a;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.8), 0 0 30px rgba(51, 255, 51, 0.4);
+    transition: all 0.3s ease;
+}
+
+.fan-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(51, 255, 51, 1), 0 0 40px rgba(51, 255, 51, 0.6);
+}
+
+.fan-slider::-moz-range-thumb:active {
+    transform: scale(1.1);
+}
+
+.fan-slider:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.fan-slider:disabled::-webkit-slider-thumb {
+    background: #666;
+    box-shadow: none;
+}
+
+.fan-slider:disabled::-moz-range-thumb {
+    background: #666;
+    box-shadow: none;
+}
+
+.fan-slider-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: rgba(51, 255, 51, 0.2);
+    border-radius: 4px;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.fan-slider-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #33ff33 0%, #44ee44 100%);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(51, 255, 51, 0.6);
+    transition: width 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.fan-slider-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Estilos específicos para el botón Manual */
+.fan-btn-manual {
+    border-color: #ffbb33 !important;
+    color: #ffbb33 !important;
+}
+
+/* Estilos específicos para el botón Horario */
+.fan-btn-schedule {
+    border-color: #33bbff !important;
+    color: #33bbff !important;
+}
+
+.fan-btn-schedule:hover {
+    background: rgba(51, 187, 255, 0.15) !important;
+    border-color: #44ccff !important;
+    box-shadow: 0 0 15px rgba(51, 187, 255, 0.5) !important;
+}
+
+.fan-btn-schedule.active {
+    background: rgba(51, 187, 255, 0.25) !important;
+    border-color: #44ccff !important;
+    box-shadow: 0 0 20px rgba(51, 187, 255, 0.7) !important;
+    color: #44ccff !important;
+}
+
+/* Estilos para la vista del modo horario */
+.fan-schedule-view {
+    width: 100%;
+}
+
+.fan-schedule-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 10px 0;
+}
+
+.fan-schedule-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.fan-schedule-selectors {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.fan-schedule-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fan-schedule-label {
+    color: #aaa;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fan-schedule-select,
+.fan-schedule-time {
+    padding: 10px 12px;
+    border: 2px solid #33ff33;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #33ff33;
+    font-family: inherit;
+    font-size: 0.95em;
+    outline: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.fan-schedule-select:hover,
+.fan-schedule-time:hover {
+    border-color: #44ee44;
+    background: rgba(51, 255, 51, 0.1);
+    box-shadow: 0 0 10px rgba(51, 255, 51, 0.3);
+}
+
+.fan-schedule-select:focus,
+.fan-schedule-time:focus {
+    border-color: #44ee44;
+    background: rgba(51, 255, 51, 0.15);
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.5);
+}
+
+.fan-schedule-select option {
+    background: #0a0a0a;
+    color: #33ff33;
+}
+
+.fan-schedule-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.fan-schedule-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 20px;
+    border: 2px solid;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #33ff33;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    min-height: 70px;
+}
+
+.fan-schedule-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(51, 255, 51, 0.4);
+}
+
+.fan-schedule-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.fan-schedule-btn-delete {
+    border-color: #ff5555;
+    color: #ff5555;
+}
+
+.fan-schedule-btn-delete:hover {
+    background: rgba(255, 85, 85, 0.15);
+    border-color: #ff6666;
+    box-shadow: 0 0 20px rgba(255, 85, 85, 0.6);
+}
+
+.fan-schedule-btn-register {
+    border-color: #33ff33;
+    color: #33ff33;
+}
+
+.fan-schedule-btn-register:hover {
+    background: rgba(51, 255, 51, 0.15);
+    border-color: #44ee44;
+    box-shadow: 0 0 20px rgba(51, 255, 51, 0.6);
+}
+
+.fan-schedule-btn-icon {
+    font-size: 1.5em;
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+.fan-schedule-btn-label {
+    font-weight: 500;
+}
+
+/* Estilos para la lista de registros */
+.logs-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 5px 0;
+}
+
+.logs-empty {
+    color: #aaa;
+    text-align: center;
+    margin: 0;
+    padding: 15px 0;
+    font-style: italic;
+}
+
+.log-item {
+    border-bottom: 1px solid rgba(51, 255, 51, 0.2);
+    padding: 12px 0;
+    transition: background 0.2s ease;
+}
+
+.log-item:last-child {
+    border-bottom: none;
+}
+
+.log-item:hover {
+    background: rgba(51, 255, 51, 0.05);
+}
+
+.log-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.log-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.log-item-day {
+    color: #33ff33;
+    font-weight: bold;
+    font-size: 1em;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.log-item-time {
+    color: #44ee44;
+    font-size: 1.1em;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.log-item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85em;
+}
+
+.log-item-speed {
+    color: #aaa;
+}
+
+.log-item-date {
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* Estilos para el mensaje de confirmación */
+.schedule-confirmation-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, rgba(51, 255, 51, 0.2) 0%, rgba(68, 238, 68, 0.15) 100%);
+    border: 2px solid #33ff33;
+    border-radius: 8px;
+    padding: 15px 25px;
+    color: #33ff33;
+    font-family: inherit;
+    font-size: 0.95em;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(51, 255, 51, 0.6), 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    pointer-events: none;
+    text-shadow: 0 0 10px #33ff33;
+    backdrop-filter: blur(10px);
+}
+
+/* Estilos para la barra de registros clickeable */
+.logs-bar {
+    cursor: pointer;
+    border: 2px solid #33ff33;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.logs-bar:hover {
+    background: rgba(51, 255, 51, 0.1);
+    border-color: #44ee44;
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.4);
+    transform: translateY(-2px);
+}
+
+.logs-bar:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.logs-bar-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logs-bar-icon {
+    font-size: 1.5em;
+    filter: drop-shadow(0 0 5px #33ff33);
+}
+
+.logs-bar-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.logs-bar-count {
+    color: #33ff33;
+    font-weight: bold;
+    font-size: 1em;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.logs-bar-latest {
+    color: #aaa;
+    font-size: 0.85em;
+}
+
+.logs-bar-arrow {
+    color: #33ff33;
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.logs-bar:hover .logs-bar-arrow {
+    transform: translateY(3px);
+}
+
+.logs-bar-empty {
+    text-align: center;
+    color: #aaa;
+    padding: 15px;
+    font-style: italic;
+    cursor: pointer;
+    border: 2px dashed rgba(51, 255, 51, 0.3);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.logs-bar-empty:hover {
+    border-color: rgba(51, 255, 51, 0.6);
+    color: #888;
+}
+
+/* Estilos para el popup de registros */
+.logs-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.logs-popup-content {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+    border: 2px solid #33ff33;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(51, 255, 51, 0.5), 0 10px 40px rgba(0, 0, 0, 0.7);
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.logs-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(51, 255, 51, 0.3);
+    background: rgba(51, 255, 51, 0.05);
+}
+
+.logs-popup-title {
+    color: #33ff33;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 0 0 10px #33ff33;
+}
+
+.logs-popup-close {
+    background: none;
+    border: 2px solid #33ff33;
+    color: #33ff33;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5em;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    padding: 0;
+}
+
+.logs-popup-close:hover {
+    background: rgba(51, 255, 51, 0.2);
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.6);
+    transform: rotate(90deg);
+}
+
+.logs-popup-close:active {
+    transform: rotate(90deg) scale(0.9);
+}
+
+.logs-popup-list {
+    padding: 15px 20px;
+    overflow-y: auto;
+    max-height: calc(80vh - 80px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.logs-popup-empty {
+    text-align: center;
+    color: #aaa;
+    padding: 30px;
+    font-style: italic;
+}
+
+.logs-popup-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid rgba(51, 255, 51, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.logs-popup-item:hover {
+    background: rgba(51, 255, 51, 0.1);
+    border-color: rgba(51, 255, 51, 0.4);
+    transform: translateX(5px);
+}
+
+.logs-popup-item {
+    cursor: pointer;
+    position: relative;
+}
+
+.logs-popup-item.selected {
+    background: rgba(51, 255, 51, 0.2);
+    border-color: #33ff33;
+    border-width: 2px;
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.4);
+}
+
+.logs-popup-item.selected:hover {
+    background: rgba(51, 255, 51, 0.25);
+    border-color: #44ee44;
+    box-shadow: 0 0 20px rgba(51, 255, 51, 0.5);
+}
+
+.logs-popup-item-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: #33ff33;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: bold;
+    font-size: 0.9em;
+    box-shadow: 0 0 10px rgba(51, 255, 51, 0.8);
+    animation: checkPulse 0.3s ease;
+}
+
+@keyframes checkPulse {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.logs-popup-item-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(51, 255, 51, 0.2);
+    border: 1px solid #33ff33;
+    color: #33ff33;
+    font-weight: bold;
+    font-size: 0.9em;
+    flex-shrink: 0;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.logs-popup-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.logs-popup-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.logs-popup-item-day {
+    color: #33ff33;
+    font-weight: bold;
+    font-size: 1em;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.logs-popup-item-time {
+    color: #44ee44;
+    font-size: 1.1em;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.logs-popup-item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85em;
+}
+
+.logs-popup-item-speed {
+    color: #aaa;
+}
+
+.logs-popup-item-date {
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* Estilos para el footer del popup (botón Asignar) */
+.logs-popup-footer {
+    display: none;
+    padding: 15px 20px;
+    border-top: 1px solid rgba(51, 255, 51, 0.3);
+    background: rgba(51, 255, 51, 0.05);
+    justify-content: center;
+    align-items: center;
+}
+
+.logs-popup-assign-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    border: 2px solid #33ff33;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(51, 255, 51, 0.2) 0%, rgba(68, 238, 68, 0.15) 100%);
+    color: #33ff33;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.3);
+    text-shadow: 0 0 5px #33ff33;
+}
+
+.logs-popup-assign-btn:hover {
+    background: linear-gradient(135deg, rgba(51, 255, 51, 0.3) 0%, rgba(68, 238, 68, 0.25) 100%);
+    border-color: #44ee44;
+    box-shadow: 0 0 25px rgba(51, 255, 51, 0.6);
+    transform: translateY(-2px);
+}
+
+.logs-popup-assign-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.4);
+}
+
+.logs-popup-assign-icon {
+    font-size: 1.2em;
+    filter: drop-shadow(0 0 5px #33ff33);
+}
+
+.logs-popup-assign-label {
+    font-size: 1em;
+}
+
+.fan-btn-manual:hover {
+    background: rgba(255, 187, 51, 0.15) !important;
+    border-color: #ffcc44 !important;
+    box-shadow: 0 0 15px rgba(255, 187, 51, 0.5) !important;
+}
+
+.fan-btn-manual.active {
+    background: rgba(255, 187, 51, 0.25) !important;
+    border-color: #ffcc44 !important;
+    box-shadow: 0 0 20px rgba(255, 187, 51, 0.7) !important;
+    color: #ffcc44 !important;
+}
+
+/* Estilos móviles para el modo manual */
+@media (max-width: 768px) {
+    /* Ajustar grid de botones para móvil - 2 columnas, el Manual ocupa todo el ancho */
+    .fan-buttons {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .fan-btn-manual {
+        grid-column: 1 / -1 !important; /* Ocupa ambas columnas */
+        /* Mismo tamaño que los otros botones */
+        padding: 15px 10px !important;
+        min-height: 70px !important;
+        border-radius: 10px !important;
+        border-width: 2px !important;
+    }
+    
+    /* Estilos del botón Manual en móvil */
+    .fan-btn-manual {
+        border-color: rgba(255, 187, 51, 0.7) !important;
+        color: #ffcc66 !important;
+        background: linear-gradient(135deg, rgba(200, 150, 50, 0.3) 0%, rgba(150, 100, 30, 0.2) 100%) !important;
+    }
+    
+    .fan-btn-manual:active {
+        background: linear-gradient(135deg, rgba(255, 187, 51, 0.5) 0%, rgba(200, 150, 50, 0.4) 100%) !important;
+        border-color: rgba(255, 204, 68, 0.9) !important;
+        box-shadow: 0 0 25px rgba(255, 187, 51, 0.6) !important;
+        color: #ffdd77 !important;
+        transform: scale(0.95) !important;
+    }
+    
+    .fan-btn-manual.active {
+        background: linear-gradient(135deg, rgba(255, 187, 51, 0.4) 0%, rgba(200, 150, 50, 0.3) 100%) !important;
+        border-color: rgba(255, 204, 68, 0.9) !important;
+        box-shadow: 0 0 30px rgba(255, 187, 51, 0.7) !important;
+        color: #ffdd77 !important;
+    }
+    
+    /* Estilos específicos para el botón de temperatura en móvil */
+    .fan-btn[data-mode="temperature"] {
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+    }
+    
+    .fan-btn[data-mode="temperature"]:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 0.6) !important;
+        color: #00bfff !important;
+        transform: scale(0.95) !important;
+    }
+    
+    .fan-btn[data-mode="temperature"].active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.4) 0%, rgba(0, 100, 200, 0.3) 100%) !important;
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7) !important;
+        color: #00bfff !important;
+    }
+    
+    .fan-btn[data-mode="temperature"] .fan-btn-icon {
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .fan-btn[data-mode="temperature"].active .fan-btn-icon {
+        animation: pulseTempIcon 2s ease-in-out infinite !important;
+    }
+    
+    @keyframes pulseTempIcon {
+        0%, 100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6));
+        }
+        50% {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 12px rgba(0, 191, 255, 0.9));
+        }
+    }
+    
+    /* Estilos para el estado de temperatura en móvil */
+    #fanStatusText.fan-temp-active {
+        color: #00bfff !important;
+        text-shadow: 0 0 12px rgba(0, 191, 255, 0.8) !important;
+        font-size: 0.9em !important;
+        font-weight: 600 !important;
+        padding: 4px 8px !important;
+        border-radius: 6px !important;
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.15) 0%, rgba(0, 100, 200, 0.1) 100%) !important;
+        display: inline-block !important;
+        animation: pulseTempMobile 2s ease-in-out infinite !important;
+    }
+    
+    @keyframes pulseTempMobile {
+        0%, 100% {
+            opacity: 1;
+            text-shadow: 0 0 12px rgba(0, 191, 255, 0.8);
+        }
+        50% {
+            opacity: 0.9;
+            text-shadow: 0 0 18px rgba(0, 191, 255, 1);
+        }
+    }
+    
+    /* Optimización: reducir animaciones en móvil para mejor rendimiento */
+    @media (prefers-reduced-motion: reduce) {
+        #fanStatusText.fan-temp-active,
+        .fan-btn[data-mode="temperature"].active .fan-btn-icon {
+            animation: none !important;
+        }
+    }
+    
+    /* Header del modo manual en móvil */
+    .fan-manual-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+        margin-bottom: 15px !important;
+        padding-bottom: 10px !important;
+    }
+    
+    .fan-back-btn {
+        padding: 10px 16px !important;
+        font-size: 0.9em !important;
+        min-height: 44px !important;
+        width: 100% !important;
+        justify-content: center !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        color: #87ceeb !important;
+        background: linear-gradient(135deg, rgba(0, 100, 200, 0.3) 0%, rgba(0, 50, 150, 0.2) 100%) !important;
+    }
+    
+    .fan-back-btn:active {
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.5) 0%, rgba(0, 100, 200, 0.4) 100%) !important;
+        transform: scale(0.98) !important;
+    }
+    
+    .fan-manual-title {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    /* Contenido del modo manual en móvil */
+    .fan-manual-content {
+        gap: 20px !important;
+        padding: 5px 0 !important;
+    }
+    
+    /* Control de encendido/apagado en móvil */
+    .fan-power-control {
+        gap: 12px !important;
+    }
+    
+    .fan-power-label {
+        font-size: 0.85em !important;
+    }
+    
+    .fan-power-toggle {
+        padding: 25px 30px !important;
+        min-width: 180px !important;
+        border-width: 3px !important;
+        border-color: rgba(0, 191, 255, 0.7) !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 30, 60, 0.3) 100%) !important;
+        color: #87ceeb !important;
+    }
+    
+    .fan-power-toggle:active {
+        transform: scale(0.98) !important;
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.3) 0%, rgba(0, 100, 200, 0.2) 100%) !important;
+    }
+    
+    .fan-power-toggle.fan-power-on {
+        border-color: rgba(0, 191, 255, 0.9) !important;
+        background: linear-gradient(135deg, rgba(0, 191, 255, 0.3) 0%, rgba(0, 100, 200, 0.2) 100%) !important;
+        color: #00bfff !important;
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.7) !important;
+    }
+    
+    .fan-power-icon {
+        font-size: 2.2em !important;
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.6)) !important;
+    }
+    
+    .fan-power-text {
+        font-size: 1em !important;
+    }
+    
+    /* Slider en móvil */
+    .fan-slider-container {
+        gap: 12px !important;
+    }
+    
+    .fan-slider-label {
+        font-size: 0.9em !important;
+    }
+    
+    .fan-slider-value {
+        font-size: 1.2em !important;
+        color: #00bfff !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-slider-wrapper {
+        padding: 20px 0 !important;
+    }
+    
+    .fan-slider {
+        height: 10px !important;
+    }
+    
+    .fan-slider::-webkit-slider-thumb {
+        width: 32px !important;
+        height: 32px !important;
+        border-width: 4px !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.8), 0 0 40px rgba(0, 191, 255, 0.4) !important;
+    }
+    
+    .fan-slider::-webkit-slider-thumb:active {
+        transform: scale(1.15) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 1), 0 0 50px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-slider::-moz-range-thumb {
+        width: 32px !important;
+        height: 32px !important;
+        border-width: 4px !important;
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.8), 0 0 40px rgba(0, 191, 255, 0.4) !important;
+    }
+    
+    .fan-slider::-moz-range-thumb:active {
+        transform: scale(1.15) !important;
+        box-shadow: 0 0 25px rgba(0, 191, 255, 1), 0 0 50px rgba(0, 191, 255, 0.6) !important;
+    }
+    
+    .fan-slider-track {
+        height: 10px !important;
+        background: rgba(0, 191, 255, 0.2) !important;
+    }
+    
+    .fan-slider-fill {
+        background: linear-gradient(90deg, #00bfff 0%, #87ceeb 100%) !important;
+        box-shadow: 0 0 15px rgba(0, 191, 255, 0.6) !important;
+    }
+}
+
+/* Botones de acción del slider */
+.slider-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .slider-actions {
+        gap: 12px;
+        margin-top: 25px;
+    }
+}
+
+.slider-action-btn {
+    padding: 12px 24px;
+    border: 2px solid;
+    border-radius: 8px;
+    background: transparent;
+    color: #33ff33;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .slider-action-btn {
+        padding: 10px 18px;
+        font-size: 0.9em;
+        gap: 6px;
+        flex: 1;
+        min-width: 140px;
+        justify-content: center;
+    }
+}
+
+.dashboard-action-btn {
+    border-color: #33ff33;
+    color: #33ff33;
+}
+
+.dashboard-action-btn:hover {
+    background: rgba(51, 255, 51, 0.15);
+    box-shadow: 0 0 15px rgba(51, 255, 51, 0.5);
+    transform: translateY(-2px);
+}
+
+.suspend-action-btn {
+    border-color: #ffbb33;
+    color: #ffbb33;
+}
+
+.suspend-action-btn:hover {
+    background: rgba(255, 187, 51, 0.15);
+    box-shadow: 0 0 15px rgba(255, 187, 51, 0.5);
+    transform: translateY(-2px);
 }

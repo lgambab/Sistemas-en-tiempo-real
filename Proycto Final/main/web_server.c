@@ -271,8 +271,12 @@ esp_err_t root_get_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "GET / - URI: %s", req->uri);
     esp_err_t ret;
     if (is_authenticated(req)) {
-        ESP_LOGI(TAG, "Usuario autenticado, sirviendo index.html");
-        ret = send_file_from_spiffs(req, "/spiffs/index.html", "text/html");
+        // Redirigir al dashboard si está autenticado
+        ESP_LOGI(TAG, "Usuario autenticado, redirigiendo a /dashboard");
+        httpd_resp_set_hdr(req, "Location", "/dashboard");
+        httpd_resp_set_status(req, "302 Found");
+        httpd_resp_send(req, NULL, 0);
+        return ESP_OK;
     } else {
         ESP_LOGI(TAG, "Usuario no autenticado, sirviendo login.html");
         ret = send_file_from_spiffs(req, "/spiffs/login.html", "text/html");
@@ -298,6 +302,42 @@ esp_err_t style_get_handler(httpd_req_t *req) {
 esp_err_t script_get_handler(httpd_req_t *req) {
     ESP_LOGI(TAG, "GET /script.js");
     return send_file_from_spiffs(req, "/spiffs/script.js", "application/javascript");
+}
+
+// GET /dashboard
+esp_err_t dashboard_get_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "GET /dashboard");
+    if (!is_authenticated(req)) {
+        httpd_resp_set_hdr(req, "Location", "/");
+        httpd_resp_set_status(req, "302 Found");
+        httpd_resp_send(req, NULL, 0);
+        return ESP_OK;
+    }
+    return send_file_from_spiffs(req, "/spiffs/dashboard.html", "text/html");
+}
+
+// GET /terminal
+esp_err_t terminal_get_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "GET /terminal");
+    if (!is_authenticated(req)) {
+        httpd_resp_set_hdr(req, "Location", "/");
+        httpd_resp_set_status(req, "302 Found");
+        httpd_resp_send(req, NULL, 0);
+        return ESP_OK;
+    }
+    return send_file_from_spiffs(req, "/spiffs/index.html", "text/html");
+}
+
+// GET /slider
+esp_err_t slider_get_handler(httpd_req_t *req) {
+    ESP_LOGI(TAG, "GET /slider");
+    if (!is_authenticated(req)) {
+        httpd_resp_set_hdr(req, "Location", "/");
+        httpd_resp_set_status(req, "302 Found");
+        httpd_resp_send(req, NULL, 0);
+        return ESP_OK;
+    }
+    return send_file_from_spiffs(req, "/spiffs/slider.html", "text/html");
 }
 
 // GET /favicon.ico (evitar 404)
@@ -640,9 +680,10 @@ void start_webserver(void) {
     // Verificar que los archivos existan en SPIFFS
     ESP_LOGI(TAG, "Verificando archivos en SPIFFS...");
     const char *files_to_check[] = {"/spiffs/index.html", "/spiffs/login.html", 
+                                    "/spiffs/dashboard.html", "/spiffs/slider.html", 
                                     "/spiffs/style.css", "/spiffs/script.js"};
     int files_found = 0;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
         FILE *f = fopen(files_to_check[i], "r");
         if (f) {
             // Obtener tamaño del archivo
@@ -663,15 +704,15 @@ void start_webserver(void) {
         ESP_LOGE(TAG, "Los archivos deben ser flasheados a la partición SPIFFS");
         ESP_LOGE(TAG, "Ejecuta: ./flash_all.sh [PORT] o idf.py flash");
         ESP_LOGE(TAG, "==========================================");
-    } else if (files_found < 4) {
-        ESP_LOGW(TAG, "Advertencia: Solo %d de 4 archivos encontrados", files_found);
+    } else if (files_found < 6) {
+        ESP_LOGW(TAG, "Advertencia: Solo %d de 6 archivos encontrados", files_found);
     } else {
-        ESP_LOGI(TAG, "✓ Todos los archivos encontrados correctamente (%d/4)", files_found);
+        ESP_LOGI(TAG, "✓ Todos los archivos encontrados correctamente (%d/6)", files_found);
     }
 
     // 2. Configurar Server
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.max_uri_handlers = 10;
+    config.max_uri_handlers = 12;
     config.max_open_sockets = 7;
     config.lru_purge_enable = true; // Habilitar purga de conexiones inactivas
 
@@ -768,6 +809,42 @@ void start_webserver(void) {
         ESP_LOGI(TAG, "Ruta /temperature registrada");
     }
 
+    httpd_uri_t dashboard_uri = { 
+        .uri = "/dashboard", 
+        .method = HTTP_GET, 
+        .handler = dashboard_get_handler,
+        .user_ctx = NULL
+    };
+    if (httpd_register_uri_handler(server, &dashboard_uri) != ESP_OK) {
+        ESP_LOGE(TAG, "Error al registrar ruta /dashboard");
+    } else {
+        ESP_LOGI(TAG, "Ruta /dashboard registrada");
+    }
+
+    httpd_uri_t terminal_uri = { 
+        .uri = "/terminal", 
+        .method = HTTP_GET, 
+        .handler = terminal_get_handler,
+        .user_ctx = NULL
+    };
+    if (httpd_register_uri_handler(server, &terminal_uri) != ESP_OK) {
+        ESP_LOGE(TAG, "Error al registrar ruta /terminal");
+    } else {
+        ESP_LOGI(TAG, "Ruta /terminal registrada");
+    }
+
+    httpd_uri_t slider_uri = { 
+        .uri = "/slider", 
+        .method = HTTP_GET, 
+        .handler = slider_get_handler,
+        .user_ctx = NULL
+    };
+    if (httpd_register_uri_handler(server, &slider_uri) != ESP_OK) {
+        ESP_LOGE(TAG, "Error al registrar ruta /slider");
+    } else {
+        ESP_LOGI(TAG, "Ruta /slider registrada");
+    }
+
     // Handler para favicon.ico (evitar 404)
     httpd_uri_t favicon_uri = {
         .uri = "/favicon.ico",
@@ -792,5 +869,5 @@ void start_webserver(void) {
     // };
     
     ESP_LOGI(TAG, "Servidor Web Iniciado correctamente en puerto %d", config.server_port);
-    ESP_LOGI(TAG, "Total de handlers registrados: 7 (/, /style.css, /script.js, /cmd, /login, /logout, /temperature)");
+    ESP_LOGI(TAG, "Total de handlers registrados: 10 (/, /style.css, /script.js, /cmd, /login, /logout, /temperature, /dashboard, /terminal, /slider)");
 }

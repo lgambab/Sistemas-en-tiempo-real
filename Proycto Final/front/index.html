@@ -2,6 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="orientation" content="portrait" />
     <title>ESP32 Retro Terminal</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,7 +18,10 @@
             <span id="clock">00:00:00</span><span>|</span>
             <span id="tempDisplay">Temp: --°C</span>
         </div>
-        <div class="bar-right"><button class="logout-btn" onclick="doLogout()">LOGOUT</button></div>
+        <div class="bar-right">
+            <button class="dashboard-btn" onclick="goToDashboard()">← Dashboard</button>
+            <button class="logout-btn" onclick="doLogout()">LOGOUT</button>
+        </div>
     </div>
     <div id="term"></div>
     <div class="input-container">

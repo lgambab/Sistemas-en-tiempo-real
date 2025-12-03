@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="orientation" content="portrait" />
+    <title>Slider - ESP32 Terminal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="slider-body">
+    <div class="slider-container">
+        <div class="slider-header">
+            <h1 class="slider-title">ESP32 CONTROL PANEL</h1>
+        </div>
+
+        <div class="slider-grid">
+            <!-- Cuadro de Temperatura -->
+            <div class="slider-box">
+                <div class="slider-box-header">
+                    <span class="slider-box-icon">🌡️</span>
+                    <h2 class="slider-box-title">Temperatura</h2>
+                </div>
+                <div class="slider-box-content">
+                    <div class="temperature-display" id="sliderTemperature">--°C</div>
+                </div>
+            </div>
+
+            <!-- Cuadro de Hora -->
+            <div class="slider-box">
+                <div class="slider-box-header">
+                    <span class="slider-box-icon">🕐</span>
+                    <h2 class="slider-box-title">Hora</h2>
+                </div>
+                <div class="slider-box-content">
+                    <div class="time-display" id="sliderClock">00:00:00</div>
+                </div>
+            </div>
+
+            <!-- Cuadro de Registros -->
+            <div class="slider-box">
+                <div class="slider-box-header">
+                    <span class="slider-box-icon">📋</span>
+                    <h2 class="slider-box-title">Registros</h2>
+                </div>
+                <div class="slider-box-content">
+                    <div class="logs-display" id="logsDisplay">
+                        <div class="logs-list" id="logsList">
+                            <p class="logs-empty">No hay registros disponibles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cuadro de Ventilador -->
+            <div class="slider-box fan-box" id="fanBox">
+                <!-- Vista normal del ventilador -->
+                <div class="fan-normal-view" id="fanNormalView">
+                    <div class="slider-box-header">
+                        <span class="slider-box-icon">🌀</span>
+                        <h2 class="slider-box-title">Ventilador</h2>
+                    </div>
+                    <div class="slider-box-content">
+                        <div class="fan-buttons">
+                            <button class="fan-btn" data-mode="off" onclick="setFanMode('off')">
+                                <span class="fan-btn-icon">⏸</span>
+                                <span class="fan-btn-label">Apagado</span>
+                            </button>
+                            <button class="fan-btn fan-btn-schedule" data-mode="schedule" onclick="enterFanScheduleMode()">
+                                <span class="fan-btn-icon">🕐</span>
+                                <span class="fan-btn-label">Horario</span>
+                            </button>
+                            <button class="fan-btn" data-mode="temperature" onclick="setFanMode('temperature')">
+                                <span class="fan-btn-icon">🌡️</span>
+                                <span class="fan-btn-label">Temperatura</span>
+                            </button>
+                            <button class="fan-btn fan-btn-manual" data-mode="manual" onclick="enterFanManualMode()">
+                                <span class="fan-btn-icon">⚙️</span>
+                                <span class="fan-btn-label">Manual</span>
+                            </button>
+                        </div>
+                        <div class="fan-status" id="fanStatus">
+                            <span>Estado: <span id="fanStatusText">Selecciona un modo</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vista del modo manual -->
+                <div class="fan-manual-view" id="fanManualView" style="display: none;">
+                    <div class="fan-manual-header">
+                        <button class="fan-back-btn" onclick="exitFanManualMode()" title="Volver">
+                            <span class="fan-back-icon">←</span>
+                            <span class="fan-back-label">Atrás</span>
+                        </button>
+                        <div class="fan-manual-title">
+                            <span class="slider-box-icon">🌀</span>
+                            <h2 class="slider-box-title">Modo Manual</h2>
+                        </div>
+                    </div>
+                    <div class="fan-manual-content">
+                        <div class="fan-power-control">
+                            <div class="fan-power-label">Estado del Ventilador</div>
+                            <button class="fan-power-toggle" id="fanPowerToggle" onclick="toggleFanPower()">
+                                <span class="fan-power-icon" id="fanPowerIcon">⏸</span>
+                                <span class="fan-power-text" id="fanPowerText">Apagado</span>
+                            </button>
+                        </div>
+                        <div class="fan-slider-container">
+                            <div class="fan-slider-label">
+                                <span>Velocidad: </span>
+                                <span class="fan-slider-value" id="fanSliderValue">0%</span>
+                            </div>
+                            <div class="fan-slider-wrapper">
+                                <input type="range" 
+                                       class="fan-slider" 
+                                       id="fanSlider" 
+                                       min="0" 
+                                       max="100" 
+                                       value="0" 
+                                       step="1"
+                                       oninput="updateFanSlider(this.value)">
+                                <div class="fan-slider-track">
+                                    <div class="fan-slider-fill" id="fanSliderFill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vista del modo horario -->
+                <div class="fan-schedule-view" id="fanScheduleView" style="display: none;">
+                    <div class="fan-manual-header">
+                        <button class="fan-back-btn" onclick="exitFanScheduleMode()" title="Volver">
+                            <span class="fan-back-icon">←</span>
+                            <span class="fan-back-label">Atrás</span>
+                        </button>
+                        <div class="fan-manual-title">
+                            <span class="slider-box-icon">🌀</span>
+                            <h2 class="slider-box-title">Modo Horario</h2>
+                        </div>
+                    </div>
+                    <div class="fan-schedule-content">
+                        <div class="fan-slider-container">
+                            <div class="fan-slider-label">
+                                <span>Velocidad: </span>
+                                <span class="fan-slider-value" id="fanScheduleSliderValue">0%</span>
+                            </div>
+                            <div class="fan-slider-wrapper">
+                                <input type="range" 
+                                       class="fan-slider" 
+                                       id="fanScheduleSlider" 
+                                       min="0" 
+                                       max="100" 
+                                       value="0" 
+                                       step="1"
+                                       oninput="updateFanScheduleSlider(this.value)">
+                                <div class="fan-slider-track">
+                                    <div class="fan-slider-fill" id="fanScheduleSliderFill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fan-schedule-controls">
+                            <div class="fan-schedule-selectors">
+                                <div class="fan-schedule-selector">
+                                    <label class="fan-schedule-label">Día de la semana:</label>
+                                    <select class="fan-schedule-select" id="fanScheduleDay">
+                                        <option value="lunes">Lunes</option>
+                                        <option value="martes">Martes</option>
+                                        <option value="miercoles">Miércoles</option>
+                                        <option value="jueves">Jueves</option>
+                                        <option value="viernes">Viernes</option>
+                                        <option value="sabado">Sábado</option>
+                                        <option value="domingo">Domingo</option>
+                                    </select>
+                                </div>
+                                <div class="fan-schedule-selector">
+                                    <label class="fan-schedule-label">Hora:</label>
+                                    <input type="time" 
+                                           class="fan-schedule-time" 
+                                           id="fanScheduleTime" 
+                                           value="00:00">
+                                </div>
+                            </div>
+                            <div class="fan-schedule-buttons">
+                                <button class="fan-schedule-btn fan-schedule-btn-delete" onclick="clearFanSchedule()">
+                                    <span class="fan-schedule-btn-icon">🗑️</span>
+                                    <span class="fan-schedule-btn-label">Borrar</span>
+                                </button>
+                                <button class="fan-schedule-btn fan-schedule-btn-register" onclick="registerFanSchedule()">
+                                    <span class="fan-schedule-btn-icon">✓</span>
+                                    <span class="fan-schedule-btn-label">Registrar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="slider-actions">
+            <button class="slider-action-btn dashboard-action-btn" onclick="goToDashboard()">
+                <span>← Dashboard</span>
+            </button>
+            <button class="slider-action-btn suspend-action-btn" onclick="suspendSession()">
+                <span>⏾ Suspender</span>
+            </button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
