@@ -1,0 +1,15 @@
+# ESP-IDF build files
+build/
+sdkconfig.old
+*.bin
+*.elf
+*.map
+*.log
+
+# clang cache
+*.idx
+.cache/
+
+# Ninja build system
+.ninja_deps
+.ninja_log

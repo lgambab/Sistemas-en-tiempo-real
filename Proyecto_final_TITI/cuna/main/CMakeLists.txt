@@ -1,0 +1,32 @@
+idf_component_register(
+    SRCS
+        "softap_sta.c"
+        "wifi_app.c"
+        "http_server.c"
+        "pir_driver.c"
+        "ntc_driver.c"
+        "rgb_led.c"
+    INCLUDE_DIRS
+        "."
+    EMBED_FILES
+        webpage/app.css
+        webpage/app.js
+        webpage/favicon.ico
+        webpage/index.html
+        webpage/jquery-3.3.1.min.js
+    REQUIRES
+        esp_wifi
+        nvs_flash
+        esp_netif
+        esp_event
+        lwip
+        driver
+        esp_adc
+        esp_driver_ledc
+        esp_driver_gpio
+        esp_http_server
+        app_update
+        esp_timer
+        mqtt
+        
+)
