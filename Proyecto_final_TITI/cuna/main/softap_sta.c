@@ -7,8 +7,10 @@
 #include "wifi_app.h"
 #include "driver/gpio.h"
 
+#include "fan_driver.h"
 
-#define BLINK_GPIO				2
+
+#define BLINK_GPIO				48
 
 
 static void configure_led(void)
@@ -30,7 +32,9 @@ void app_main(void)
 		ret = nvs_flash_init();
 	}
 	ESP_ERROR_CHECK(ret);
-
+	 
+	fan_init();
+    
 	// Start Wifi
 	init_obtain_time();
 	configure_led();

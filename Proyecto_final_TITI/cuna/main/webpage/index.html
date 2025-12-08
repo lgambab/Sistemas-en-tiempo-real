@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <!-- Barra superior fija con nombre, fecha/hora, temperatura, PIR -->
+    <!-- Barra superior fija -->
     <div class="top-status">
         <div class="top-status__inner">
             <div class="top-status__device">
@@ -41,7 +41,7 @@
     </div>
 
     <div class="page">
-        <!-- Hero principal -->
+        <!-- Hero -->
         <header class="hero">
             <div class="hero__text">
                 <p class="eyebrow">ESP32 CONTROL</p>
@@ -55,8 +55,7 @@
                 </div>
 
                 <p class="subtitle">
-                    Administra firmware, Wi-Fi y horarios del ESP32 en una sola vista,
-                    con un estilo más relajado y muy visual.
+                    Administra firmware, Wi-Fi, ventilador y horarios del ESP32 en una sola vista.
                 </p>
             </div>
 
@@ -67,21 +66,63 @@
         </header>
 
         <!-- Contenido principal -->
-        <main class="grid">
-            <!-- OTA -->
-            <section class="card" id="OTA">
-                <div class="card__header">
-                    <p class="eyebrow">OTA</p>
-                    <h2>Actualización de firmware</h2>
+        <main class="main">
+
+            <!-- Control ventilador -->
+            <section class="section" id="ManualControl">
+                <div class="section__header">
+                    <span class="section__eyebrow">Ventilador</span>
+                    <h2 class="section__title">Control y modo de operación</h2>
                 </div>
-                <div class="card__content stack">
+                <div class="section__body">
+                    <label class="field">
+                        <span>Modo de funcionamiento</span>
+                        <select id="fan_mode" name="fan_mode">
+                            <option value="manual">Manual (control por barra)</option>
+                            <option value="auto">Automático por sensores</option>
+                            <option value="registros">Programado (registros)</option>
+                        </select>
+                    </label>
+
+                    <label class="field">
+                        <span>Velocidad del ventilador</span>
+                        <div class="range-row">
+                            <input
+                                type="range"
+                                id="fan_speed"
+                                name="fan_speed"
+                                min="0"
+                                max="100"
+                                value="50"
+                            >
+                            <span class="range-value" id="fan_speed_value">50%</span>
+                        </div>
+                    </label>
+
+                    <div class="actions">
+                        <button class="btn primary" type="button" onclick="apply_fan_control()">
+                            Aplicar modo y velocidad
+                        </button>
+                    </div>
+
+                    <div class="status" id="fan_status"></div>
+                </div>
+            </section>
+
+            <!-- OTA -->
+            <section class="section" id="OTA">
+                <div class="section__header">
+                    <span class="section__eyebrow">OTA</span>
+                    <h2 class="section__title">Actualización de firmware</h2>
+                </div>
+                <div class="section__body">
                     <input type="file" id="selected_file" accept=".bin" onchange="getFileInfo()" hidden />
                     <div class="actions">
                         <button class="btn ghost" type="button" onclick="document.getElementById('selected_file').click();">
-                            📁 Seleccionar archivo
+                            Seleccionar archivo
                         </button>
                         <button class="btn primary" type="button" onclick="updateFirmware()">
-                            ⚡ Actualizar ESP32
+                            Actualizar ESP32
                         </button>
                     </div>
                     <div class="status" id="file_info"></div>
@@ -90,12 +131,12 @@
             </section>
 
             <!-- WiFi -->
-            <section class="card" id="WiFiConnect">
-                <div class="card__header">
-                    <p class="eyebrow">Conectividad</p>
-                    <h2>Conexión Wi-Fi</h2>
+            <section class="section" id="WiFiConnect">
+                <div class="section__header">
+                    <span class="section__eyebrow">Conectividad</span>
+                    <h2 class="section__title">Conexión Wi-Fi</h2>
                 </div>
-                <div class="card__content stack">
+                <div class="section__body">
                     <label class="field">
                         <span>SSID</span>
                         <input id="connect_ssid" type="text" maxlength="32" placeholder="Nombre de la red">
@@ -110,10 +151,10 @@
                     </label>
                     <div class="actions">
                         <button class="btn primary" id="connect_wifi" type="button">
-                            📡 Conectar
+                            Conectar
                         </button>
                         <button class="btn secondary" type="button" onclick="toogle_led()">
-                            💡 Toggle LED
+                            Toggle LED
                         </button>
                     </div>
                     <div class="status error" id="wifi_connect_credentials_errors"></div>
@@ -121,79 +162,102 @@
                 </div>
             </section>
 
-            <!-- Registros leídos -->
-            <section class="card" id="Configreading">
-                <div class="card__header">
-                    <p class="eyebrow">Registros</p>
-                    <h2>Tiempos configurados</h2>
+            <!-- Registros (lectura + programación) -->
+            <section class="section section--regs" id="Regs">
+                <div class="section__header">
+                    <span class="section__eyebrow">Registros</span>
+                    <h2 class="section__title">Tiempos configurados y programación</h2>
                 </div>
-                <div class="card__content reg-list">
-                    <div class="reg-row"><span>Registro 1</span><span id="reg_1" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 2</span><span id="reg_2" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 3</span><span id="reg_3" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 4</span><span id="reg_4" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 5</span><span id="reg_5" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 6</span><span id="reg_6" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 7</span><span id="reg_7" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 8</span><span id="reg_8" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 9</span><span id="reg_9" class="reg-value">--</span></div>
-                    <div class="reg-row"><span>Registro 10</span><span id="reg_10" class="reg-value">--</span></div>
+                <div class="section__body">
+                    <!-- Columna izquierda: lectura -->
+                    <div>
+                        <h3 class="section__title" style="font-size:14px; margin-bottom:6px;">Tiempos configurados</h3>
+                        <div class="reg-list">
+                            <div class="reg-row"><span>Registro 1</span><span id="reg_1" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 2</span><span id="reg_2" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 3</span><span id="reg_3" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 4</span><span id="reg_4" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 5</span><span id="reg_5" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 6</span><span id="reg_6" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 7</span><span id="reg_7" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 8</span><span id="reg_8" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 9</span><span id="reg_9" class="reg-value">--</span></div>
+                            <div class="reg-row"><span>Registro 10</span><span id="reg_10" class="reg-value">--</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha: programación -->
+                    <div>
+                        <h3 class="section__title" style="font-size:14px; margin-bottom:6px;">Configurar registro</h3>
+                        <div class="section__body" style="gap:8px;">
+                            <label class="field">
+                                <span>Selecciona el registro</span>
+                                <select id="selectNumber" name="selectNumber">
+                                    <option value="1">Registro 1</option>
+                                    <option value="2">Registro 2</option>
+                                    <option value="3">Registro 3</option>
+                                    <option value="4">Registro 4</option>
+                                    <option value="5">Registro 5</option>
+                                    <option value="6">Registro 6</option>
+                                    <option value="7">Registro 7</option>
+                                    <option value="8">Registro 8</option>
+                                    <option value="9">Registro 9</option>
+                                    <option value="10">Registro 10</option>
+                                </select>
+                            </label>
+
+                            <div class="double">
+                                <label class="field">
+                                    <span>Hora</span>
+                                    <input type="number" id="hours" name="hours" min="0" max="23" value="12">
+                                </label>
+                                <label class="field">
+                                    <span>Minutos</span>
+                                    <input type="number" id="minutes" name="minutes" min="0" max="59" value="30">
+                                </label>
+                            </div>
+
+                            <div class="days">
+                                <span class="days__title">Días</span>
+                                <label class="checkbox"><input type="checkbox" id="day_mon" name="day_mon" value="Monday" checked><span>Lunes</span></label>
+                                <label class="checkbox"><input type="checkbox" id="day_tue" name="day_tue" value="Tuesday"><span>Martes</span></label>
+                                <label class="checkbox"><input type="checkbox" id="day_wed" name="day_wed" value="Wednesday"><span>Miércoles</span></label>
+                                <label class="checkbox"><input type="checkbox" id="day_thu" name="day_thu" value="Thursday"><span>Jueves</span></label>
+                                <label class="checkbox"><input type="checkbox" id="day_fri" name="day_fri" value="Friday"><span>Viernes</span></label>
+                                <label class="checkbox"><input type="checkbox" id="day_sat" name="day_sat" value="Saturday"><span>Sábado</span></label>
+                                <label class="checkbox"><input type="checkbox" id="day_sun" name="day_sun" value="Sunday"><span>Domingo</span></label>
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn primary" type="button" onclick="send_register()">Enviar registro</button>
+                                <button class="btn secondary" type="button" onclick="getregValues()">Leer registros</button>
+                                <button class="btn ghost" type="button" onclick="erase_register()">Borrar registro</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Programar registro -->
-            <section class="card" id="Insert_mem">
-                <div class="card__header">
-                    <p class="eyebrow">Programación</p>
-                    <h2>Configurar registro</h2>
-                </div>
-                <div class="card__content stack">
-                    <label class="field">
-                        <span>Selecciona el registro</span>
-                        <select id="selectNumber" name="selectNumber">
-                            <option value="1">Registro 1</option>
-                            <option value="2">Registro 2</option>
-                            <option value="3">Registro 3</option>
-                            <option value="4">Registro 4</option>
-                            <option value="5">Registro 5</option>
-                            <option value="6">Registro 6</option>
-                            <option value="7">Registro 7</option>
-                            <option value="8">Registro 8</option>
-                            <option value="9">Registro 9</option>
-                            <option value="10">Registro 10</option>
-                        </select>
-                    </label>
-
-                    <div class="double">
-                        <label class="field">
-                            <span>Hora</span>
-                            <input type="number" id="hours" name="hours" min="0" max="23" value="12">
-                        </label>
-                        <label class="field">
-                            <span>Minutos</span>
-                            <input type="number" id="minutes" name="minutes" min="0" max="59" value="30">
-                        </label>
-                    </div>
-
-                    <div class="days">
-                        <span class="days__title">Días</span>
-                        <label class="checkbox"><input type="checkbox" id="day_mon" name="day_mon" value="Monday" checked><span>Lunes</span></label>
-                        <label class="checkbox"><input type="checkbox" id="day_tue" name="day_tue" value="Tuesday"><span>Martes</span></label>
-                        <label class="checkbox"><input type="checkbox" id="day_wed" name="day_wed" value="Wednesday"><span>Miércoles</span></label>
-                        <label class="checkbox"><input type="checkbox" id="day_thu" name="day_thu" value="Thursday"><span>Jueves</span></label>
-                        <label class="checkbox"><input type="checkbox" id="day_fri" name="day_fri" value="Friday"><span>Viernes</span></label>
-                        <label class="checkbox"><input type="checkbox" id="day_sat" name="day_sat" value="Saturday"><span>Sábado</span></label>
-                        <label class="checkbox"><input type="checkbox" id="day_sun" name="day_sun" value="Sunday"><span>Domingo</span></label>
-                    </div>
-
-                    <div class="actions">
-                        <button class="btn primary" type="button" onclick="send_register()">✅ Enviar registro</button>
-                        <button class="btn secondary" type="button" onclick="getregValues()">🔄 Leer registros</button>
-                        <button class="btn ghost" type="button" onclick="erase_register()">🗑 Borrar registro</button>
-                    </div>
-                </div>
-            </section>
         </main>
     </div>
+
+    <!-- Nota: ajusta tu app.js para el slider y el modo, por ejemplo:
+    $(document).ready(function(){
+        const $range = $("#fan_speed");
+        const $label = $("#fan_speed_value");
+        $label.text($range.val() + "%");
+        $range.on("input change", function(){
+            $label.text($(this).val() + "%");
+        });
+    });
+
+    function apply_fan_control() {
+        const mode = $("#fan_mode").val();
+        const speed = $("#fan_speed").val();
+        // Aquí mandas mode y speed al ESP32 por AJAX si quieres
+        $("#fan_status").text("Modo: " + mode + " | Velocidad: " + speed + "%");
+    }
+    -->
+
 </body>
 </html>

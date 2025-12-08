@@ -6,6 +6,8 @@ idf_component_register(
         "pir_driver.c"
         "ntc_driver.c"
         "rgb_led.c"
+        "fan_driver.c"
+        "fan_control.c"
     INCLUDE_DIRS
         "."
     EMBED_FILES

@@ -1,8 +1,8 @@
 /**
- * Add gobals here
+ * Add globals here
  */
-var seconds 	= null;
-var otaTimerVar =  null;
+var seconds = null;
+var otaTimerVar = null;
 var wifiConnectInterval = null;
 
 /**
@@ -142,25 +142,25 @@ function otaRebootTimer()
     }
 }
 
+
 /**
  * Gets DHT22 sensor temperature and humidity values for display on the web page.
  */
 
-
-function getregValues()
-{
-	$.getJSON('/read_regs.json', function(data) {
-		$("#reg_1").text(data["reg1"]);
-		$("#reg_2").text(data["reg2"]);
-		$("#reg_3").text(data["reg3"]);
-		$("#reg_4").text(data["reg4"]);
-		$("#reg_5").text(data["reg5"]);
-		$("#reg_6").text(data["reg6"]);
-		$("#reg_7").text(data["reg7"]);
-		$("#reg_8").text(data["reg8"]);
-		$("#reg_9").text(data["reg9"]);
-		$("#reg_10").text(data["reg10"]);
-	});
+function getregValues() {
+    fetch("/api/registers")
+    .then(res => res.json())
+    .then(regs => {
+        for (let i = 1; i <= 10; i++) {
+            const el = document.getElementById(`reg_${i}`);
+            if (regs[i]) {
+                el.textContent = `${regs[i].hour}:${regs[i].minute} (${regs[i].days.join(", ")})`;
+            } else {
+                el.textContent = "--";
+            }
+        }
+    })
+    .catch(err => alert("Error leyendo registros: " + err));
 }
 
 function getDHTSensorValues()
@@ -197,9 +197,8 @@ function getDHTSensorValues()
  * Sets the interval for getting the updated DHT22 sensor values.
  */
 
-function startDHTSensorInterval()
-{
-	setInterval(getDHTSensorValues, 5000);    
+function startDHTSensorInterval() {
+	setInterval(getDHTSensorValues, 5000);
 }
 
 
@@ -270,168 +269,114 @@ function getWifiConnectStatus()
 /**
  * Starts the interval for checking the connection status.
  */
-function startWifiConnectStatusInterval()
-{
+function startWifiConnectStatusInterval() {
 	wifiConnectInterval = setInterval(getWifiConnectStatus, 2800);
 }
 
 /**
  * Connect WiFi function called using the SSID and password entered into the text fields.
  */
-function connectWifi()
-{
-	// Get the SSID and password
-	/*selectedSSID = $("#connect_ssid").val();
-	pwd = $("#connect_pass").val();
-	
-	$.ajax({
-		url: '/wifiConnect.json',
-		dataType: 'json',
-		method: 'POST',
-		cache: false,
-		headers: {'my-connect-ssid': selectedSSID, 'my-connect-pwd': pwd},
-		data: {'timestamp': Date.now()}
-	});
-	*/
-	selectedSSID = $("#connect_ssid").val();
-	pwd = $("#connect_pass").val();
-	
-	// Create an object to hold the data to be sent in the request body
-	var requestData = {
-	  'selectedSSID': selectedSSID,
-	  'pwd': pwd,
-	  'timestamp': Date.now()
-	};
-	
-	// Serialize the data object to JSON
-	var requestDataJSON = JSON.stringify(requestData);
-	
-	$.ajax({
-	  url: '/wifiConnect.json',
-	  dataType: 'json',
-	  method: 'POST',
-	  cache: false,
-	  data: requestDataJSON, // Send the JSON data in the request body
-	  contentType: 'application/json', // Set the content type to JSON
-	  success: function(response) {
-		// Handle the success response from the server
-		console.log(response);
-	  },
-	  error: function(xhr, status, error) {
-		// Handle errors
-		console.error(xhr.responseText);
-	  }
-	});
+function connectWifi() {
+		var selectedSSID = $("#connect_ssid").val();
+		var pwd = $("#connect_pass").val();
 
+		var requestData = {
+				'selectedSSID': selectedSSID,
+				'pwd': pwd,
+				'timestamp': Date.now()
+		};
 
-	//startWifiConnectStatusInterval();
+		$.ajax({
+				url: '/wifiConnect.json',
+				dataType: 'json',
+				method: 'POST',
+				cache: false,
+				data: JSON.stringify(requestData),
+				contentType: 'application/json',
+				success: function(response) {
+						console.log(response);
+				},
+				error: function(xhr) {
+						console.error(xhr.responseText);
+				}
+		});
 }
 
 /**
  * Checks credentials on connect_wifi button click.
  */
-function checkCredentials()
-{
-	errorList = "";
-	credsOk = true;
-	
-	selectedSSID = $("#connect_ssid").val();
-	pwd = $("#connect_pass").val();
-	
-	if (selectedSSID == "")
-	{
-		errorList += "<h4 class='rd'>SSID cannot be empty!</h4>";
-		credsOk = false;
-	}
-	if (pwd == "")
-	{
-		errorList += "<h4 class='rd'>Password cannot be empty!</h4>";
-		credsOk = false;
-	}
-	
-	if (credsOk == false)
-	{
-		$("#wifi_connect_credentials_errors").html(errorList);
-	}
-	else
-	{
-		$("#wifi_connect_credentials_errors").html("");
-		connectWifi();    
-	}
-}
+function checkCredentials() {
+    var selectedNumber = parseInt($("#selectNumber").val(), 10);
+    var hours = parseInt($("#hours").val(), 10);
+    var minutes = parseInt($("#minutes").val(), 10);
 
-/**
- * Shows the WiFi password if the box is checked.
- */
-function showPassword()
-{
-	var x = document.getElementById("connect_pass");
-	if (x.type === "password")
-	{
-		x.type = "text";
-	}
-	else
+    var selectedDays = [];
+    $(".days input[type='checkbox']").each(function() {
+        selectedDays.push($(this).prop('checked') ? '1' : '0');
+    });
+
+    var payload = {
+        register: selectedNumber,
+        hour: hours,
+        minute: minutes,
+        days: selectedDays
+    };
+
+    fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.text())
+    .then(txt => {
+        console.log('saved', txt);
+        getregValues();
+    })
+    .catch(err => {
+        console.error('Error saving register', err);
+        alert('Error saving registro');
+    });
 	{
 		x.type = "password";
 	}
 }
 
 
-function send_register()
-{
-    // Assuming you have selectedNumber, hours, minutes variables populated from your form
-    selectedNumber = $("#selectNumber").val();
-    hours = $("#hours").val();
-    minutes = $("#minutes").val();
-    
-    // Create an array for selected days
-    var selectedDays = [];
-    if ($("#day_mon").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_tue").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_wed").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_thu").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_fri").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_sat").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_sun").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
+function send_register() {
+	var selectedNumber = $("#selectNumber").val();
+	var hours = $("#hours").val();
+	var minutes = $("#minutes").val();
 
-    // Create an object to hold the data to be sent in the request body
-    var requestData = {
-        'selectedNumber': selectedNumber,
-        'hours': hours,
-        'minutes': minutes,
-        'selectedDays': selectedDays,
-        'timestamp': Date.now()
-    };
+	var selectedDays = [];
+	$(".days input[type='checkbox']").each(function() {
+		selectedDays.push($(this).prop('checked') ? '1' : '0');
+	});
 
-    // Serialize the data object to JSON
-    var requestDataJSON = JSON.stringify(requestData);
+	var requestData = {
+		'selectedNumber': selectedNumber.toString(),
+		'hours': hours.toString(),
+		'minutes': minutes.toString(),
+		'selectedDays': selectedDays,
+		'timestamp': Date.now()
+	};
 
 	$.ajax({
 		url: '/regchange.json',
 		dataType: 'json',
 		method: 'POST',
 		cache: false,
-		data: requestDataJSON, // Send the JSON data in the request body
-		contentType: 'application/json', // Set the content type to JSON
+		data: JSON.stringify(requestData),
+		contentType: 'application/json',
 		success: function(response) {
-		  // Handle the success response from the server
-		  console.log(response);
+			console.log('reg saved', response);
+			// Optionally refresh displayed regs
+			getregValues();
 		},
-		error: function(xhr, status, error) {
-		  // Handle errors
-		  console.error(xhr.responseText);
+		error: function(xhr) {
+			console.error(xhr.responseText);
+			alert('Error saving registro');
 		}
-	  });
-
-    // Print the resulting JSON to the console (for testing)
-    //console.log(requestDataJSON);
+	});
 }
 
 /**
@@ -456,41 +401,20 @@ function read_reg()
 }
 
 
-function erase_register()
-{
-    // Assuming you have selectedNumber, hours, minutes variables populated from your form
-    selectedNumber = $("#selectNumber").val();
-
-
-
-    // Create an object to hold the data to be sent in the request body
-    var requestData = {
-        'selectedNumber': selectedNumber,
-        'timestamp': Date.now()
-    };
-
-    // Serialize the data object to JSON
-    var requestDataJSON = JSON.stringify(requestData);
-
-	$.ajax({
-		url: '/regchange.json',
-		dataType: 'json',
-		method: 'POST',
-		cache: false,
-		data: requestDataJSON, // Send the JSON data in the request body
-		contentType: 'application/json', // Set the content type to JSON
-		success: function(response) {
-		  // Handle the success response from the server
-		  console.log(response);
-		},
-		error: function(xhr, status, error) {
-		  // Handle errors
-		  console.error(xhr.responseText);
-		}
-	  });
-
-    // Print the resulting JSON to the console (for testing)
-    //console.log(requestDataJSON);
+function erase_register() {
+    var selectedNumber = document.getElementById('selectNumber').value;
+    fetch('/api/register/' + encodeURIComponent(selectedNumber), {
+        method: 'DELETE'
+    })
+    .then(res => res.text())
+    .then(txt => {
+        console.log('deleted', txt);
+        document.getElementById('reg_' + selectedNumber).textContent = '--';
+    })
+    .catch(err => {
+        console.error('Error deleting register', err);
+        alert('Error borrando registro');
+    });
 }
 
 function toogle_led() 
@@ -515,6 +439,80 @@ function brigthness_up()
 
 }
 
+
+// Actualizar el valor del slider en texto
+$(document).ready(function() {
+    const $range = $("#fan_speed");
+    const $label = $("#fan_speed_value");
+
+    $label.text($range.val() + "%");
+
+    $range.on("input change", function() {
+        $label.text($(this).val() + "%");
+    });
+});
+
+// Enviar modo + velocidad al ESP32
+function apply_fan_control() {
+    const mode  = $("#fan_mode").val();   // "manual", "auto", "registros"
+    const speed = parseInt($("#fan_speed").val(), 10);
+
+    const payload = JSON.stringify({
+        mode: mode,
+        speed: speed
+    });
+
+    $.ajax({
+        url: "/fanControl.json",
+        dataType: "json",
+        method: "POST",
+        cache: false,
+        data: payload,
+        contentType: "application/json",
+        success: function(resp) {
+            $("#fan_status").text(resp.status || "Configuración aplicada");
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            $("#fan_status").text("Error al aplicar configuración");
+        }
+    });
+}
+// ========================
+//   ENVIAR REGISTRO
+// ========================
+function send_register() {
+    const regNumber = document.getElementById("selectNumber").value;
+    const hour = document.getElementById("hours").value;
+    const minutes = document.getElementById("minutes").value;
+
+    // Días seleccionados
+    const days = [];
+    document.querySelectorAll(".days input[type='checkbox']").forEach(item => {
+        if (item.checked) days.push(item.value);
+    });
+
+    // Estructura JSON a enviar
+    const data = {
+        register: parseInt(regNumber),
+        hour: parseInt(hour),
+        minute: parseInt(minutes),
+        days: days
+    };
+
+    fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(txt => alert("Registro guardado: " + txt))
+    .catch(err => alert("Error enviando registro: " + err));
+}
+
+
+
+// End of file: only keep single implementations for register CRUD aligned with server
 
 
 
