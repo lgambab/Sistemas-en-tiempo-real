@@ -8,6 +8,7 @@ idf_component_register(
         "rgb_led.c"
         "fan_driver.c"
         "fan_control.c"
+        "registers.c"
     INCLUDE_DIRS
         "."
     EMBED_FILES

@@ -6,19 +6,19 @@
 #include "esp_err.h"
 #include "esp_http_server.h"
 
-// Estructura de un registro
+// Estructura de un registro (renombrada a `reg_t` to avoid name collisions)
 typedef struct {
     int hour;
     int minute;
     char days[7][12];   // Lunes, Martes...
     int day_count;
-} register_t;
+} reg_t;
 
 // Inicialización
 void init_nvs();
 
 // Guardar un registro
-esp_err_t save_register_to_nvs(int id, register_t *reg);
+esp_err_t save_register_to_nvs(int id, reg_t *reg);
 
 // Cargar un registro (devuelve JSON en buffer)
 esp_err_t load_register_from_nvs(int id, char *buffer, size_t buffer_len);

@@ -1,20 +1,24 @@
 #include <stdio.h>
 #include <string.h>
+#include "sdkconfig.h"
+#include "registers.h"
+
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
 #include "nvs.h"
 #include "cJSON.h"
 
-static const char *TAG = "REGISTERS";
+// Fix for VS Code IntelliSense: some builds generate sdkconfig.h in build/ and
+// the editor may not see CONFIG_* macros. Define a safe default only for
+// IntelliSense to avoid spurious "identifier undefined" errors.
+#if defined(__INTELLISENSE__)
+#ifndef CONFIG_LOG_MAXIMUM_LEVEL
+#define CONFIG_LOG_MAXIMUM_LEVEL 5
+#endif
+#endif
 
-// Estructura de un registro
-typedef struct {
-    int hour;
-    int minute;
-    char days[7][12];
-    int day_count;
-} register_t;
+static const char *TAG = "REGISTERS";
 void init_nvs()
 {
     esp_err_t ret = nvs_flash_init();
@@ -24,7 +28,7 @@ void init_nvs()
     }
     ESP_ERROR_CHECK(ret);
 }
-esp_err_t save_register_to_nvs(int id, register_t *reg)
+esp_err_t save_register_to_nvs(int id, reg_t *reg)
 {
     nvs_handle_t nvs;
     char key[16];
@@ -137,7 +141,7 @@ esp_err_t api_post_register(httpd_req_t *req)
     int day_count = cJSON_GetArraySize(days);
     if (day_count > 7) day_count = 7;
 
-    register_t reg = {0};
+    reg_t reg = {0};
     reg.hour = hour;
     reg.minute = minute;
     reg.day_count = day_count;
