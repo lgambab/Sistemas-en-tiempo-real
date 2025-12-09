@@ -9,6 +9,9 @@ idf_component_register(
         "fan_driver.c"
         "fan_control.c"
         "registers.c"
+        "keypad/keypad.c"
+        "peripherals.c"
+        "ssd1306.c"
     INCLUDE_DIRS
         "."
     EMBED_FILES
