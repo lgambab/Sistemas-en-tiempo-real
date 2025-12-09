@@ -7,7 +7,7 @@
 #include "driver/ledc.h"
 
 // GPIO y canal para el ventilador
-#define FAN_PWM_GPIO        21        // cámbialo al pin real
+#define FAN_PWM_GPIO        18        // cambiado a pin seguro (antes 21, conflicto con RGB_BLUE)
 #define FAN_LEDC_CHANNEL    LEDC_CHANNEL_3
 #define FAN_LEDC_MODE       LEDC_LOW_SPEED_MODE
 #define FAN_LEDC_TIMER      LEDC_TIMER_1

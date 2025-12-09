@@ -225,104 +225,156 @@ static esp_err_t http_server_toogle_led_handler(httpd_req_t *req)
 
 static esp_err_t http_server_read_register_handler(httpd_req_t *req)
 {
-	ESP_LOGI(TAG, "/readreg.json requested");
+    ESP_LOGI(TAG, "/readreg.json requested");
 
-	char read_regs[255];
-	char register_information_read_1[12];
-	register_information_read_1[11] = 0x00;
-	if (read_reg_data( &register_information_read_1[0], 1 ) != ESP_OK ){
-		memset(&register_information_read_1[0], '9', 6);
-	}
+    // Crear el objeto JSON raíz
+    cJSON *root = cJSON_CreateObject();
+    if (!root) {
+        ESP_LOGE(TAG, "Failed to create JSON root");
+        return ESP_FAIL;
+    }
 
-	char register_information_read_2[12];
-	register_information_read_2[11] = 0x00;
-	if (read_reg_data( &register_information_read_2[0], 2 ) != ESP_OK ){
-		memset(&register_information_read_2[0], '9', 6);
-	}
+    char reg_buf[32];   // buffer temporal para cada registro
 
+    // Leer registros del 1 al 10 (igual que antes)
+    for (int i = 1; i <= 10; i++)
+    {
+        memset(reg_buf, 0, sizeof(reg_buf));
 
-	char register_information_read_3[12];
-	register_information_read_3[11] = 0x00;
-	if (read_reg_data( &register_information_read_3[0], 3 ) != ESP_OK ){
-		memset(&register_information_read_3[0], '9', 6);
-	}
+        esp_err_t r = read_reg_data(reg_buf, i);
 
+        char key[16];
+        snprintf(key, sizeof(key), "reg%d", i);
 
-	char register_information_read_4[12];
-	register_information_read_4[11] = 0x00;
-	if (read_reg_data( &register_information_read_4[0], 4 ) != ESP_OK ){
-		memset(&register_information_read_4[0], '9', 6);
-	}
+        if (r == ESP_OK) {
+            // agregar "regX": "valor"
+            cJSON_AddStringToObject(root, key, reg_buf);
+        } else {
+            // agregar "regX": null
+            cJSON_AddNullToObject(root, key);
+        }
+    }
 
-	char register_information_read_5[12];
-	register_information_read_5[11] = 0x00;
-	if (read_reg_data( &register_information_read_5[0], 5 ) != ESP_OK ){
-		memset(&register_information_read_5[0], '9', 6);
-	}
+    // Serializar el JSON
+    char *out = cJSON_PrintUnformatted(root);
+    if (!out) {
+        ESP_LOGE(TAG, "Failed to serialize JSON");
+        cJSON_Delete(root);
+        return ESP_FAIL;
+    }
 
+    // Enviar respuesta
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, out, strlen(out));
 
-	char register_information_read_6[12];
-	register_information_read_6[11] = 0x00;
-	if (read_reg_data( &register_information_read_6[0], 6 ) != ESP_OK ){
-		memset(&register_information_read_6[0], '9', 6);
-	}
+    // Limpiar
+    free(out);
+    cJSON_Delete(root);
 
-	char register_information_read_7[12];
-	register_information_read_7[11] = 0x00;
-	if (read_reg_data( &register_information_read_7[0], 7 ) != ESP_OK ){
-		memset(&register_information_read_7[0], '9', 6);
-	}
-
-
-	char register_information_read_8[12];
-	register_information_read_8[11] = 0x00;
-	if (read_reg_data( &register_information_read_8[0], 8 ) != ESP_OK ){
-		memset(&register_information_read_8[0], '9', 6);
-	}
-
-
-	char register_information_read_9[12];
-	register_information_read_9[11] = 0x00;
-	if (read_reg_data( &register_information_read_9[0], 9 ) != ESP_OK ){
-		memset(&register_information_read_9[0], '9', 6);
-	}
-
-	char register_information_read_10[12];
-	register_information_read_10[11] = 0x00;
-	if (read_reg_data( &register_information_read_10[0], 10 ) != ESP_OK ){
-		memset(&register_information_read_10[0], '9', 6);
-	}
-
-
-
-
-	// Build JSON response for registers
-	{
-		cJSON *root = cJSON_CreateObject();
-		char reg_buf[32];
-		for (int i = 1; i <= 10; i++) {
-			memset(reg_buf, 0, sizeof(reg_buf));
-			esp_err_t r = read_reg_data(reg_buf, i);
-			char key[16];
-			snprintf(key, sizeof(key), "reg%d", i);
-			if (r == ESP_OK) {
-				cJSON_AddStringToObject(root, key, reg_buf);
-			} else {
-				cJSON_AddNullToObject(root, key);
-			}
-		}
-
-		char *out = cJSON_PrintUnformatted(root);
-		httpd_resp_set_type(req, "application/json");
-		httpd_resp_send(req, out, strlen(out));
-
-		free(out);
-		cJSON_Delete(root);
-	}
-
-	return ESP_OK;
-
+    return ESP_OK;
 }
+
+
+// static esp_err_t http_server_read_register_handler(httpd_req_t *req)
+// {
+// 	ESP_LOGI(TAG, "/readreg.json requested");
+
+// 	char read_regs[255];
+// 	char register_information_read_1[12];
+// 	register_information_read_1[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_1[0], 1 ) != ESP_OK ){
+// 		memset(&register_information_read_1[0], '9', 6);
+// 	}
+
+// 	char register_information_read_2[12];
+// 	register_information_read_2[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_2[0], 2 ) != ESP_OK ){
+// 		memset(&register_information_read_2[0], '9', 6);
+// 	}
+
+
+// 	char register_information_read_3[12];
+// 	register_information_read_3[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_3[0], 3 ) != ESP_OK ){
+// 		memset(&register_information_read_3[0], '9', 6);
+// 	}
+
+
+// 	char register_information_read_4[12];
+// 	register_information_read_4[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_4[0], 4 ) != ESP_OK ){
+// 		memset(&register_information_read_4[0], '9', 6);
+// 	}
+
+// 	char register_information_read_5[12];
+// 	register_information_read_5[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_5[0], 5 ) != ESP_OK ){
+// 		memset(&register_information_read_5[0], '9', 6);
+// 	}
+
+
+// 	char register_information_read_6[12];
+// 	register_information_read_6[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_6[0], 6 ) != ESP_OK ){
+// 		memset(&register_information_read_6[0], '9', 6);
+// 	}
+
+// 	char register_information_read_7[12];
+// 	register_information_read_7[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_7[0], 7 ) != ESP_OK ){
+// 		memset(&register_information_read_7[0], '9', 6);
+// 	}
+
+
+// 	char register_information_read_8[12];
+// 	register_information_read_8[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_8[0], 8 ) != ESP_OK ){
+// 		memset(&register_information_read_8[0], '9', 6);
+// 	}
+
+
+// 	char register_information_read_9[12];
+// 	register_information_read_9[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_9[0], 9 ) != ESP_OK ){
+// 		memset(&register_information_read_9[0], '9', 6);
+// 	}
+
+// 	char register_information_read_10[12];
+// 	register_information_read_10[11] = 0x00;
+// 	if (read_reg_data( &register_information_read_10[0], 10 ) != ESP_OK ){
+// 		memset(&register_information_read_10[0], '9', 6);
+// 	}
+
+
+
+
+// 	// Build JSON response for registers
+// 	{
+// 		cJSON *root = cJSON_CreateObject();
+// 		char reg_buf[32];
+// 		for (int i = 1; i <= 10; i++) {
+// 			memset(reg_buf, 0, sizeof(reg_buf));
+// 			esp_err_t r = read_reg_data(reg_buf, i);
+// 			char key[16];
+// 			snprintf(key, sizeof(key), "reg%d", i);
+// 			if (r == ESP_OK) {
+// 				cJSON_AddStringToObject(root, key, reg_buf);
+// 			} else {
+// 				cJSON_AddNullToObject(root, key);
+// 			}
+// 		}
+
+// 		char *out = cJSON_PrintUnformatted(root);
+// 		httpd_resp_set_type(req, "application/json");
+// 		httpd_resp_send(req, out, strlen(out));
+
+// 		free(out);
+// 		cJSON_Delete(root);
+// 	}
+
+// 	return ESP_OK;
+
+// }
 
 
 static void log_error_if_nonzero(const char *message, int error_code)
@@ -1387,7 +1439,7 @@ static httpd_handle_t http_server_configure(void)
 
 		httpd_uri_t read_range_uri = {
 				.uri = "/readreg.json",
-				.method = HTTP_POST,
+				.method = HTTP_GET,
 				.handler = http_server_read_register_handler,
 				.user_ctx = NULL
 		};
@@ -1456,28 +1508,6 @@ void http_server_fw_update_reset_callback(void *arg)
 	ESP_LOGI(TAG, "http_server_fw_update_reset_callback: Timer timed-out, restarting the device");
 	esp_restart();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

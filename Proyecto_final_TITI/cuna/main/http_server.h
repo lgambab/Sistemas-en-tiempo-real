@@ -7,7 +7,8 @@
 
 #ifndef MAIN_HTTP_SERVER_H_
 #define MAIN_HTTP_SERVER_H_
-
+#include "freertos/FreeRTOS.h"
+#include "esp_event.h"
 
 #define OTA_UPDATE_PENDING 		0
 #define OTA_UPDATE_SUCCESSFUL	1
@@ -56,11 +57,6 @@ BaseType_t http_server_monitor_send_message(http_server_message_e msgID);
  * Starts the HTTP server.
  */
 void http_server_start(void);
-
-static void mqtt_app_start(void);
-static void log_error_if_nonzero(const char *message, int error_code);
-
-static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data);
 /**
  * Stops the HTTP server.
  */

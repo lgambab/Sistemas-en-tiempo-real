@@ -8,10 +8,11 @@
 #ifndef MAIN_RGB_LED_H_
 #define MAIN_RGB_LED_H_
 
-// RGB LED GPIOs
-#define RGB_LED_RED_GPIO		46
-#define RGB_LED_GREEN_GPIO		9
-#define RGB_LED_BLUE_GPIO		10
+// RGB LED GPIOs — use safe default pins (avoid GPIO6..11 which are flash/strapping pins)
+// Update these to match your hardware wiring if different.
+#define RGB_LED_RED_GPIO		16
+#define RGB_LED_GREEN_GPIO		17
+#define RGB_LED_BLUE_GPIO		21
 
 // RGB LED color mix channels
 #define RGB_LED_CHANNEL_NUM		3

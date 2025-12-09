@@ -3,14 +3,11 @@
  */
 
 #include "nvs_flash.h"
-//#include "http_server.h"
+#include "http_server.h"
 #include "wifi_app.h"
 #include "driver/gpio.h"
 
 #include "fan_driver.h"
-
-
-#define BLINK_GPIO				48
 
 
 static void configure_led(void)
