@@ -1,3 +1,56 @@
+/**
+ * @file fan_control.c
+ * @brief Implementación del controlador multi-modo del ventilador
+ * @author Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya
+ * @date 2025
+ * 
+ * @details
+ * Este módulo implementa la lógica de control del ventilador con 3 modos de operación:
+ * 
+ * **MODO MANUAL (FAN_MODE_MANUAL):**
+ * - Usuario controla velocidad directamente desde web UI (0-100%)
+ * - Velocidad PWM = velocidad del slider
+ * - No aplica lógica automática
+ * 
+ * **MODO AUTOMÁTICO (FAN_MODE_AUTO):**
+ * - Velocidad basada en temperatura del NTC
+ * - Algoritmo: < 25°C → 0%, [25-30°C] → lineal, > 30°C → 100%
+ * - Requiere sensor funcional (retorna 0% si error NTC)
+ * - Actualizado por fan_task cada 1 segundo
+ * 
+ * **MODO REGISTROS (FAN_MODE_REGISTERS):**
+ * - Activado por scheduler de registros programados
+ * - Si hay registro activo: velocidad = slider
+ * - Si no hay registro: ventilador apagado
+ * - Actualizado cada 10s por registers_scheduler_task
+ * 
+ * **Arquitectura de actualización:**
+ * @code
+ *   [fan_task] ---(cada 1s)---> fan_control_update() si modo AUTO
+ *        |
+ *        v
+ *   [compute_auto_speed()] ---> Lee NTC ---> Calcula PWM
+ *        |
+ *        v
+ *   fan_set_speed_percent() ---> Actualiza hardware PWM
+ * 
+ *   [registers_scheduler] ---(cada 10s)---> fan_control_on_register_tick()
+ *        |
+ *        v
+ *   Enciende/apaga según registros activos
+ * @endcode
+ * 
+ * **Variables de estado:**
+ * - s_mode: Modo actual (MANUAL/AUTO/REGISTERS)
+ * - s_manual_speed: Velocidad del slider (0-100%)
+ * - s_current_speed: Velocidad REAL del PWM (puede diferir del slider en AUTO)
+ * - s_reg_active: Flag de registro programado activo
+ * 
+ * @see fan_control.h Para la API pública
+ * @see fan_driver.h Para control de hardware PWM
+ * @see registers.c Para scheduler de programación
+ */
+
 #include "fan_control.h"
 #include "fan_driver.h"
 
@@ -6,14 +59,44 @@
 #include "ntc_driver.h"
 #include "pir_driver.h"
 
-
-
+/**
+ * @var s_ntc_adc_handle
+ * @brief Handle externo del ADC para lectura de temperatura
+ * 
+ * @details
+ * Definido en http_server.c e inicializado durante el arranque.
+ * Usado por compute_auto_speed() para leer temperatura del NTC.
+ * Si es NULL, modo AUTO retorna velocidad 0%.
+ */
 extern adc_oneshot_unit_handle_t s_ntc_adc_handle;
 
+/** @brief Modo de operación actual del ventilador */
 static fan_mode_t s_mode = FAN_MODE_MANUAL;
+
+/** @brief Velocidad configurada por usuario en slider (0-100%) */
 static uint8_t    s_manual_speed = 0;
-static uint8_t    s_current_speed = 0;  // Velocidad REAL actual del ventilador PWM
-static bool       s_reg_active   = false;   // hay algún registro activo ahora
+
+/** 
+ * @brief Velocidad REAL actual del ventilador PWM (0-100%)
+ * 
+ * @details
+ * Puede diferir de s_manual_speed en modo AUTO.
+ * - MANUAL: s_current_speed = s_manual_speed
+ * - AUTO: s_current_speed = compute_auto_speed(temperatura)
+ * - REGISTERS: s_current_speed = s_manual_speed si registro activo, 0 si no
+ * 
+ * Esta variable representa el duty cycle real del PWM.
+ */
+static uint8_t    s_current_speed = 0;
+
+/** 
+ * @brief Flag que indica si hay algún registro programado activo
+ * 
+ * @details
+ * Actualizado por fan_control_on_register_tick() desde registers_scheduler_task.
+ * Solo tiene efecto en modo FAN_MODE_REGISTERS.
+ */
+static bool       s_reg_active   = false;
 
 
 
@@ -39,6 +122,27 @@ static uint8_t compute_auto_speed(float temp_c)
     return (uint8_t)(scale * 100.0f);
 }
 
+/**
+ * @brief Inicializa el subsistema de control del ventilador
+ * @implements fan_control_init
+ * 
+ * @details
+ * Secuencia de inicialización:
+ * 1. Inicializa hardware PWM (fan_init())
+ * 2. Configura modo MANUAL por defecto
+ * 3. Velocidades a 0%
+ * 4. Apaga ventilador
+ * 
+ * **Estado inicial:**
+ * - Modo: FAN_MODE_MANUAL
+ * - Velocidad manual: 0%
+ * - Velocidad actual: 0%
+ * - Registro activo: false
+ * - PWM: apagado
+ * 
+ * @warning Llamar antes de usar cualquier otra función de fan_control
+ * @note Thread-safe: solo llamar una vez durante inicialización
+ */
 void fan_control_init(void)
 {
     fan_init();
@@ -49,6 +153,34 @@ void fan_control_init(void)
     fan_off();
 }
 
+/**
+ * @brief Cambia el modo de operación del ventilador
+ * @implements fan_control_set_mode
+ * 
+ * @details
+ * Actualiza el modo y aplica lógica correspondiente inmediatamente:
+ * 
+ * **MANUAL:**
+ * - Aplica velocidad del slider directamente
+ * - No requiere sensores
+ * 
+ * **AUTO:**
+ * - Lee temperatura NTC
+ * - Calcula velocidad con compute_auto_speed()
+ * - Si ADC NULL o error NTC: apaga ventilador
+ * - PIR deshabilitado en esta versión (comentado)
+ * 
+ * **REGISTERS:**
+ * - Si hay registro activo: aplica velocidad del slider
+ * - Si no hay registro: apaga ventilador
+ * 
+ * @param[in] mode Nuevo modo (FAN_MODE_MANUAL/AUTO/REGISTERS)
+ * 
+ * @warning No es thread-safe: llamar solo desde HTTP server task
+ * @note Cambio de modo aplica velocidad inmediatamente (no espera a fan_task)
+ * 
+ * @see fan_control_update() Para actualizaciones periódicas en modo AUTO
+ */
 void fan_control_set_mode(fan_mode_t mode)
 {
     s_mode = mode;
@@ -76,12 +208,12 @@ void fan_control_set_mode(fan_mode_t mode)
             break;
         }
 
-        // bool motion = pir_is_motion_active();
-        // if (!motion) {
-        //     s_current_speed = 0;
-        //     fan_off();
-        //     break;
-        // }
+        bool motion = pir_is_motion_active();
+        if (!motion) {
+            s_current_speed = 0;
+            fan_off();
+            break;
+        }
 
         uint8_t spd = compute_auto_speed(temp_c);
         s_current_speed = spd;
@@ -101,13 +233,36 @@ void fan_control_set_mode(fan_mode_t mode)
     }
 }
 
-
+/**
+ * @brief Obtiene el modo de operación actual
+ * @implements fan_control_get_mode
+ * 
+ * @return fan_mode_t Modo actual (MANUAL/AUTO/REGISTERS)
+ * 
+ * @note Thread-safe: lectura atómica de enum
+ */
 fan_mode_t fan_control_get_mode(void)
 {
     return s_mode;
 }
 
-
+/**
+ * @brief Establece la velocidad del slider (usado en MANUAL y REGISTERS)
+ * @implements fan_control_set_manual_speed
+ * 
+ * @details
+ * Actualiza s_manual_speed y aplica inmediatamente si está en modo MANUAL.
+ * 
+ * **Comportamiento por modo:**
+ * - MANUAL: Actualiza PWM inmediatamente
+ * - AUTO: Solo guarda valor (no afecta PWM)
+ * - REGISTERS: Solo guarda valor (se aplica cuando registro activo)
+ * 
+ * @param[in] percent Velocidad deseada (0-100%)
+ * 
+ * @note Valores > 100 se limitan automáticamente a 100
+ * @warning No es thread-safe: llamar solo desde HTTP server task
+ */
 void fan_control_set_manual_speed(uint8_t percent)
 {
     if (percent > 100) {
@@ -121,11 +276,45 @@ void fan_control_set_manual_speed(uint8_t percent)
     }
 }
 
+/**
+ * @brief Obtiene la velocidad REAL del ventilador PWM
+ * @implements fan_control_get_speed
+ * 
+ * @details
+ * Retorna s_current_speed, que es el duty cycle real del PWM.
+ * Puede diferir de s_manual_speed en modo AUTO.
+ * 
+ * @return uint8_t Velocidad actual (0-100%)
+ * 
+ * @note Thread-safe: lectura atómica de uint8_t
+ * @note Usado por OLED display y HTTP GET /api/dhtSensor
+ */
 uint8_t fan_control_get_speed(void)
 {
     return s_current_speed;  // Devolver velocidad REAL del PWM, no del slider
 }
 
+/**
+ * @brief Callback desde scheduler de registros programados
+ * @implements fan_control_on_register_tick
+ * 
+ * @details
+ * Llamado cada 10 segundos por registers_scheduler_task.
+ * Solo tiene efecto si el modo actual es FAN_MODE_REGISTERS.
+ * 
+ * **Lógica:**
+ * - Si any_match_now = true: Enciende ventilador a velocidad del slider
+ * - Si any_match_now = false: Apaga ventilador
+ * 
+ * En otros modos (MANUAL/AUTO), esta función no hace nada.
+ * 
+ * @param[in] any_match_now true si hay al menos un registro activo ahora
+ * 
+ * @note Llamado desde registers_scheduler_task (diferente tarea)
+ * @warning No es completamente thread-safe con cambios simultáneos de modo
+ * 
+ * @see registers.c Para el scheduler que llama esta función
+ */
 void fan_control_on_register_tick(bool any_match_now)
 {
     s_reg_active = any_match_now;
@@ -146,6 +335,35 @@ void fan_control_on_register_tick(bool any_match_now)
         fan_off();
     }
 }
+
+/**
+ * @brief Actualiza velocidad del ventilador en modo AUTO
+ * @implements fan_control_update
+ * 
+ * @details
+ * Llamado cada 1 segundo por fan_task.
+ * Solo tiene efecto si el modo actual es FAN_MODE_AUTO.
+ * 
+ * **Algoritmo de actualización:**
+ * 1. Verifica que el modo sea AUTO (si no, retorna)
+ * 2. Verifica que el ADC esté inicializado
+ * 3. Lee temperatura del NTC
+ * 4. Valida lectura (> -100°C)
+ * 5. Calcula velocidad con compute_auto_speed()
+ * 6. Actualiza PWM con fan_set_speed_percent()
+ * 
+ * **Manejo de errores:**
+ * - Si ADC handle es NULL: apaga ventilador
+ * - Si temperatura < -100°C: apaga ventilador (error NTC)
+ * - PIR deshabilitado: no verifica movimiento (comentado)
+ * 
+ * @note Llamado desde fan_task cada 1 segundo
+ * @note Solo procesa en modo AUTO (retorna inmediatamente en otros modos)
+ * @warning No es thread-safe con cambios de modo simultáneos
+ * 
+ * @see fan_task en http_server.c Para la tarea que llama esta función
+ * @see compute_auto_speed() Para el algoritmo de cálculo
+ */
 void fan_control_update(void)
 {
     if (s_mode != FAN_MODE_AUTO) {
@@ -165,12 +383,12 @@ void fan_control_update(void)
         return;
     }
 
-    // bool motion = pir_is_motion_active();
-    // if (!motion) {
-    //     s_current_speed = 0;
-    //     fan_off();
-    //     return;
-    // }
+    bool motion = pir_is_motion_active();
+    if (!motion) {
+        s_current_speed = 0;
+        fan_off();
+        return;
+    }
 
     uint8_t auto_speed = compute_auto_speed(temp_c);
     s_current_speed = auto_speed;

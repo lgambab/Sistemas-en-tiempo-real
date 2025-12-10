@@ -1,3 +1,59 @@
+/**
+ * @file registers.c
+ * @brief Implementación del sistema de programación de eventos (scheduler)
+ * @author Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya
+ * @date 2025
+ * 
+ * @details
+ * Este módulo implementa un scheduler de eventos programados para activación automática
+ * del ventilador basado en hora y días de la semana.
+ * 
+ * **Características:**
+ * - Hasta 10 registros programables
+ * - Configuración por hora:minuto y días (L,M,X,J,V,S,D)
+ * - Persistencia en NVS (flash) - sobrevive a reinicios
+ * - Evaluación cada 10 segundos por tarea RTOS dedicada
+ * - API REST completa (POST/GET/DELETE)
+ * 
+ * **Arquitectura:**
+ * @code
+ *   [Web UI] --POST--> /api/register --> save_register_to_nvs()
+ *       |                                        |
+ *       |                                        v
+ *       |                                   [NVS Flash]
+ *       |                                        ^
+ *       v                                        |
+ *   [registers_scheduler_task] ---cada 10s---> load_register_from_nvs()
+ *       |                                        |
+ *       v                                        v
+ *   register_is_active_now() <--- compara hora/día actual
+ *       |
+ *       v
+ *   fan_control_on_register_tick(any_match) --> Enciende/apaga ventilador
+ * @endcode
+ * 
+ * **Formato JSON en NVS:**
+ * @code
+ * {
+ *   "hour": 14,
+ *   "minute": 30,
+ *   "days": ["L", "X", "V"]  // Lunes, Miércoles, Viernes
+ * }
+ * @endcode
+ * 
+ * **Mapeo de días:**
+ * - L = Lunes (tm_wday = 1)
+ * - M = Martes (tm_wday = 2)
+ * - X = Miércoles (tm_wday = 3)
+ * - J = Jueves (tm_wday = 4)
+ * - V = Viernes (tm_wday = 5)
+ * - S = Sábado (tm_wday = 6)
+ * - D = Domingo (tm_wday = 0)
+ * 
+ * @see registers.h Para la API pública y estructura reg_t
+ * @see fan_control.c Para activación del ventilador
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -23,14 +79,24 @@
 #endif
 #endif
 
-
-
-
-
-
+/** @brief Tag para logging ESP-IDF */
 static const char *TAG = "REGISTERS";
 
-// -------------------- NVS INIT --------------------
+/**
+ * @brief Inicializa el subsistema NVS (Non-Volatile Storage)
+ * 
+ * @details
+ * Inicializa la partición NVS en flash para almacenamiento persistente.
+ * Si la partición está corrupta o es versión antigua, la borra y reinicializa.
+ * 
+ * **Manejo de errores:**
+ * - ESP_ERR_NVS_NO_FREE_PAGES: Partición llena → borra y reinicia
+ * - ESP_ERR_NVS_NEW_VERSION_FOUND: Versión incompatible → borra y reinicia
+ * - Otros errores: ESP_ERROR_CHECK causa panic
+ * 
+ * @warning Llamar antes de cualquier operación NVS
+ * @note Seguro llamar múltiples veces (NVS ignora reinicializaciones)
+ */
 void init_nvs()
 {
     esp_err_t ret = nvs_flash_init();
@@ -41,7 +107,33 @@ void init_nvs()
     ESP_ERROR_CHECK(ret);
 }
 
-// -------------------- SAVE / LOAD / DELETE --------------------
+/**
+ * @brief Guarda un registro en NVS como JSON
+ * 
+ * @details
+ * Serializa la estructura reg_t a JSON y la guarda en NVS con clave "reg_<id>".
+ * 
+ * **Proceso:**
+ * 1. Crea objeto JSON con hour, minute, days
+ * 2. Serializa a string con cJSON_Print()
+ * 3. Guarda en NVS con nvs_set_str()
+ * 4. Commit para escribir a flash
+ * 
+ * **Ejemplo de JSON guardado:**
+ * @code
+ * {"hour":14,"minute":30,"days":["L","X","V"]}
+ * @endcode
+ * 
+ * @param[in] id ID del registro (1-10)
+ * @param[in] reg Puntero a estructura reg_t a guardar
+ * 
+ * @return esp_err_t
+ * @retval ESP_OK Guardado exitoso
+ * @retval ESP_FAIL Error de NVS
+ * 
+ * @warning Sobrescribe registro existente con mismo ID
+ * @note Máximo 10 registros soportados (IDs 1-10)
+ */
 esp_err_t save_register_to_nvs(int id, reg_t *reg)
 {
     nvs_handle_t nvs;
@@ -73,6 +165,30 @@ esp_err_t save_register_to_nvs(int id, reg_t *reg)
     return err;
 }
 
+/**
+ * @brief Carga un registro desde NVS como string JSON
+ * 
+ * @details
+ * Lee el string JSON almacenado en NVS para el ID especificado.
+ * 
+ * **Proceso:**
+ * 1. Abre namespace "storage" en modo lectura
+ * 2. Verifica tamaño requerido con nvs_get_str(NULL)
+ * 3. Lee string JSON en buffer proporcionado
+ * 4. Cierra handle NVS
+ * 
+ * @param[in] id ID del registro (1-10)
+ * @param[out] buffer Buffer donde copiar el JSON
+ * @param[in] buffer_len Tamaño del buffer
+ * 
+ * @return esp_err_t
+ * @retval ESP_OK Lectura exitosa
+ * @retval ESP_ERR_NVS_NOT_FOUND No existe registro con ese ID
+ * @retval ESP_ERR_NVS_INVALID_LENGTH Buffer muy pequeño
+ * 
+ * @note No parsea el JSON - solo retorna string crudo
+ * @see load_register_struct_from_nvs() Para obtener estructura reg_t directamente
+ */
 esp_err_t load_register_from_nvs(int id, char *buffer, size_t buffer_len)
 {
     nvs_handle_t nvs;
@@ -99,6 +215,17 @@ esp_err_t load_register_from_nvs(int id, char *buffer, size_t buffer_len)
     return err;
 }
 
+/**
+ * @brief Elimina un registro de NVS
+ * 
+ * @details
+ * Borra la clave "reg_<id>" del namespace "storage".
+ * 
+ * @param[in] id ID del registro a eliminar (1-10)
+ * 
+ * @note No retorna error si el registro no existía (nvs_erase_key silencioso)
+ * @warning Requiere nvs_commit() para persistir (ya incluido)
+ */
 void delete_register_from_nvs(int id)
 {
     nvs_handle_t nvs;
@@ -111,7 +238,30 @@ void delete_register_from_nvs(int id)
     nvs_close(nvs);
 }
 
-// -------------------- HELPER: cargar reg_t desde NVS --------------------
+/**
+ * @brief Helper: Carga registro desde NVS y parsea a estructura reg_t
+ * 
+ * @details
+ * Combina load_register_from_nvs() + parsing JSON.
+ * 
+ * **Proceso:**
+ * 1. Lee string JSON de NVS
+ * 2. Parsea con cJSON_Parse()
+ * 3. Extrae campos: hour, minute, days
+ * 4. Valida tipos JSON (number, array)
+ * 5. Copia a estructura reg_t
+ * 
+ * @param[in] id ID del registro (1-10)
+ * @param[out] out Puntero a reg_t donde copiar datos
+ * 
+ * @return esp_err_t
+ * @retval ESP_OK Carga y parsing exitoso
+ * @retval ESP_ERR_NVS_NOT_FOUND No existe registro
+ * @retval ESP_FAIL JSON inválido o campos faltantes
+ * 
+ * @note Función estática (solo visible en este módulo)
+ * @note Limita días a máximo 7
+ */
 static esp_err_t load_register_struct_from_nvs(int id, reg_t *out)
 {
     char buf[512];
@@ -156,7 +306,35 @@ static esp_err_t load_register_struct_from_nvs(int id, reg_t *out)
     return ESP_OK;
 }
 
-// -------------------- HELPER: ¿registro activo ahora? --------------------
+/**
+ * @brief Determina si un registro debe activarse en este momento
+ * 
+ * @details
+ * Compara hora actual del sistema con el registro programado.
+ * 
+ * **Algoritmo:**
+ * 1. Obtiene hora del sistema (time() + localtime_r())
+ * 2. Compara hora:minuto exacto
+ * 3. Compara día de la semana (tm_wday)
+ * 4. Retorna true si hay coincidencia
+ * 
+ * **Mapeo de días:**
+ * - tm_wday: 0=Domingo, 1=Lunes, 2=Martes, 3=Miércoles, 4=Jueves, 5=Viernes, 6=Sábado
+ * - Registro: "L","M","X","J","V","S","D"
+ * 
+ * **Ventana de activación:**
+ * Solo activo durante el minuto exacto (14:30:00 a 14:30:59).
+ * Scheduler debe llamar esta función con frecuencia ≤ 60s.
+ * 
+ * @param[in] reg Puntero a registro a evaluar
+ * 
+ * @return bool
+ * @retval true Registro coincide con hora/día actual
+ * @retval false No coincide o día no incluido
+ * 
+ * @note Función estática (solo visible en este módulo)
+ * @warning Requiere que el sistema tenga hora sincronizada (SNTP)
+ */
 static bool register_is_active_now(const reg_t *reg)
 {
     time_t now;
@@ -358,7 +536,35 @@ esp_err_t api_delete_register(httpd_req_t *req)
     return ESP_OK;
 }
 
-// -------------------- TASK: scheduler de registros --------------------
+/**
+ * @brief Tarea RTOS que evalúa registros programados periódicamente
+ * 
+ * @details
+ * Scheduler que evalúa los 10 registros cada 10 segundos.
+ * 
+ * **Ciclo de ejecución:**
+ * 1. Itera sobre IDs 1-10
+ * 2. Carga cada registro desde NVS
+ * 3. Evalúa con register_is_active_now()
+ * 4. Si alguno coincide: any_match_now = true
+ * 5. Llama fan_control_on_register_tick(any_match_now)
+ * 6. Espera 10 segundos (vTaskDelay)
+ * 
+ * **Optimización:**
+ * Break al primer match (no evalúa registros restantes).
+ * 
+ * **Parámetros de tarea:**
+ * - Nombre: "registers_scheduler"
+ * - Stack: 4096 bytes
+ * - Prioridad: 5 (media-alta)
+ * - Periodo: 10000ms
+ * 
+ * @param[in] arg Parámetro de tarea (no usado)
+ * 
+ * @note Tarea infinita (nunca termina)
+ * @warning Periodo de 10s significa resolución mínima de activación de 10s
+ * @see fan_control_on_register_tick() Para activación del ventilador
+ */
 static void registers_scheduler_task(void *arg)
 {
     ESP_LOGI(TAG, "registers_scheduler_task: started");

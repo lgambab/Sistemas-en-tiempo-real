@@ -1,3 +1,57 @@
+/**
+ * @file http_server.c
+ * @brief Servidor HTTP con REST API para control del sistema
+ * @author Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya
+ * @date 2025
+ * 
+ * @details
+ * Implementa servidor HTTP completo con endpoints REST para:
+ * - Control de ventilador (manual/auto/registros)
+ * - Lectura de sensores (temperatura, PIR)
+ * - Gestión de registros programados (CRUD)
+ * - Configuración WiFi
+ * - Actualización OTA de firmware
+ * - Servicio de archivos estáticos (HTML, CSS, JS)
+ * 
+ * **Endpoints principales:**
+ * - GET  /dhtSensor.json → Sensores (temp, PIR)
+ * - POST /fanControl.json → Control ventilador
+ * - GET  /api/registers → Lista todos los registros
+ * - POST /api/register → Crear/actualizar registro
+ * - DELETE /api/register/{id} → Eliminar registro
+ * - POST /wifiConnect.json → Conectar WiFi
+ * - POST /OTAupdate → Actualización firmware
+ * 
+ * **Arquitectura:**
+ * @code
+ *   [HTTP Requests] --> [esp_http_server]
+ *         |                     |
+ *         v                     v
+ *   [Handler Functions] --> [fan_control]
+ *         |                     |
+ *         v                     v
+ *   [JSON Response] <---- [sensor_task]
+ *         |                     |
+ *         v                     v
+ *   [Client Browser]      [registers.c]
+ * @endcode
+ * 
+ * **Tareas RTOS:**
+ * - http_server_monitor: Monitorea eventos de WiFi y OTA
+ * - fan_task: Actualiza ventilador cada 1s en modo AUTO
+ * 
+ * **Archivos embebidos:**
+ * - index.html: Página principal
+ * - app.js: Lógica JavaScript
+ * - app.css: Estilos
+ * - jquery-3.3.1.min.js: Biblioteca jQuery
+ * - favicon.ico: Icono del sitio
+ * 
+ * @see http_server.h Para la API pública
+ * @see registers.c Para gestión de programación
+ * @see fan_control.c Para control del ventilador
+ */
+
 /*
  * http_server.c
  *
@@ -59,28 +113,41 @@ static esp_err_t http_server_read_register_handler(httpd_req_t *req);
 
 static esp_err_t http_server_register_erase_handler(httpd_req_t *req);
 
-// Tag used for ESP serial console messages
+/** @brief Tag para logging ESP-IDF */
 static const char TAG[] = "http_server";
 
+/**
+ * @var s_ntc_adc_handle
+ * @brief Handle del ADC para sensor NTC (compartido globalmente)
+ * 
+ * @details
+ * Inicializado en http_server_configure_peripherals().
+ * Usado por endpoint /dhtSensor.json para leer temperatura.
+ * También usado por fan_control.c (extern).
+ */
 adc_oneshot_unit_handle_t s_ntc_adc_handle = NULL;
 
-// Wifi connect status
+/** @brief Estado de conexión WiFi (NONE, CONNECTING, SUCCESS, FAIL) */
 static int g_wifi_connect_status = NONE;
 
-// Firmware update status
+/** @brief Estado de actualización OTA (PENDING, SUCCESSFUL, FAILED) */
 static int g_fw_update_status = OTA_UPDATE_PENDING;
 
-// HTTP server task handle
+/** @brief Handle del servidor HTTP */
 static httpd_handle_t http_server_handle = NULL;
 
-// HTTP server monitor task handle
+/** @brief Handle de tarea monitora de eventos HTTP/WiFi */
 static TaskHandle_t task_http_server_monitor = NULL;
 
-// Queue handle used to manipulate the main queue of events
+/** @brief Cola de mensajes para http_server_monitor */
 static QueueHandle_t http_server_monitor_queue_handle;
 
 /**
- * ESP32 timer configuration passed to esp_timer_create.
+ * @brief Configuración del timer para reinicio post-OTA
+ * 
+ * @details
+ * Timer de 8 segundos que reinicia el ESP32 después de actualizar firmware.
+ * Callback: http_server_fw_update_reset_callback()
  */
 const esp_timer_create_args_t fw_update_reset_args = {
     .callback = &http_server_fw_update_reset_callback,
@@ -88,34 +155,81 @@ const esp_timer_create_args_t fw_update_reset_args = {
     .dispatch_method = ESP_TIMER_TASK,
     .name = "fw_update_reset"
 };
+
+/** @brief Handle del timer de reinicio OTA */
 esp_timer_handle_t fw_update_reset;
 
-// Embedded files: JQuery, index.html, app.css, app.js and favicon.ico files
+/**
+ * @defgroup EmbeddedFiles Archivos embebidos en el firmware
+ * @brief Archivos estáticos compilados dentro del binario
+ * @{
+ */
+
+/** @brief Inicio de jQuery 3.3.1 en memoria */
 extern const uint8_t jquery_3_3_1_min_js_start[] asm("_binary_jquery_3_3_1_min_js_start");
+/** @brief Fin de jQuery 3.3.1 en memoria */
 extern const uint8_t jquery_3_3_1_min_js_end[]   asm("_binary_jquery_3_3_1_min_js_end");
+/** @brief Inicio de index.html en memoria */
 extern const uint8_t index_html_start[]          asm("_binary_index_html_start");
+/** @brief Fin de index.html en memoria */
 extern const uint8_t index_html_end[]            asm("_binary_index_html_end");
+/** @brief Inicio de app.css en memoria */
 extern const uint8_t app_css_start[]             asm("_binary_app_css_start");
+/** @brief Fin de app.css en memoria */
 extern const uint8_t app_css_end[]               asm("_binary_app_css_end");
+/** @brief Inicio de app.js en memoria */
 extern const uint8_t app_js_start[]              asm("_binary_app_js_start");
+/** @brief Fin de app.js en memoria */
 extern const uint8_t app_js_end[]                asm("_binary_app_js_end");
+/** @brief Inicio de favicon.ico en memoria */
 extern const uint8_t favicon_ico_start[]         asm("_binary_favicon_ico_start");
+/** @brief Fin de favicon.ico en memoria */
 extern const uint8_t favicon_ico_end[]           asm("_binary_favicon_ico_end");
 
+/** @} */ // end of EmbeddedFiles
+
+/** @brief Estado del LED de depuración */
 uint8_t s_led_state = 0;
 
-// -----------------------------------------------------
-// LED TOGGLE
-// -----------------------------------------------------
+/**
+ * @brief Alterna el estado del LED de depuración
+ * 
+ * @details
+ * Toggle simple del GPIO definido como BLINK_GPIO.
+ * Usado para debug visual del sistema.
+ */
 void toogle_led(void)
 {
     s_led_state = !s_led_state;
     gpio_set_level(BLINK_GPIO, s_led_state);
 }
 
-// -----------------------------------------------------
-// FAN CONTROL HANDLER (/fanControl.json)
-// -----------------------------------------------------
+/**
+ * @brief Handler POST /fanControl.json - Control del ventilador
+ * 
+ * @details
+ * Endpoint para controlar el ventilador desde la interfaz web.
+ * 
+ * **Request JSON:**
+ * @code
+ * {
+ *   "mode": "manual" | "auto" | "registers",
+ *   "speed": 0-100  // Solo para modo manual
+ * }
+ * @endcode
+ * 
+ * **Proceso:**
+ * 1. Parsea JSON del body
+ * 2. Extrae modo y velocidad
+ * 3. Llama fan_control_set_mode()
+ * 4. Llama fan_control_set_manual_speed() si aplica
+ * 5. Retorna "OK"
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t
+ * @retval ESP_OK Comando aplicado exitosamente
+ * @retval ESP_FAIL Error en parsing o memoria
+ */
 static esp_err_t http_server_fan_control_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "/fanControl.json requested");
@@ -186,6 +300,32 @@ static esp_err_t http_server_fan_control_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // TIME (/time.json)
 // -----------------------------------------------------
+
+/**
+ * @brief Handler GET /time.json - Obtiene hora del sistema
+ * 
+ * @details
+ * Retorna hora actual en formato JSON si SNTP está sincronizado.
+ * 
+ * **Response JSON:**
+ * @code
+ * {
+ *   "hour": 14,
+ *   "minute": 30,
+ *   "second": 45,
+ *   "day": 15,
+ *   "month": 3,
+ *   "year": 2024
+ * }
+ * @endcode
+ * 
+ * **Estado:** Solo retorna si get_state_time_was_synchronized() == true
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t
+ * @retval ESP_OK Hora enviada
+ * @retval ESP_FAIL SNTP no sincronizado
+ */
 static esp_err_t http_server_time_json_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "/time.json requested");
@@ -243,6 +383,22 @@ static void log_error_if_nonzero(const char *message, int error_code)
 // -----------------------------------------------------
 // SENSORES: NTC + PIR
 // -----------------------------------------------------
+
+/**
+ * @brief Inicializa periféricos de sensores
+ * 
+ * @details
+ * Configura:
+ * - ADC1 para NTC (oneshot mode)
+ * - NTC driver con ADC handle
+ * - PIR driver (GPIO 35)
+ * - sensor_task (tarea RTOS de lectura)
+ * 
+ * @note Llamada desde http_server_start()
+ * @see ntc_init() Inicializa driver NTC
+ * @see pir_init() Inicializa driver PIR
+ * @see sensor_task_init() Crea tarea de sensores
+ */
 static void sensors_init(void)
 {
     adc_oneshot_unit_init_cfg_t init_cfg = {
@@ -259,9 +415,35 @@ static void sensors_init(void)
         ESP_LOGE(TAG, "Failed to initialize sensor_task: %d", err);
     }
 
-    // TODO: Cambia el GPIO por el que uses para el PIR (actualmente deshabilitado por conflicto con I2C SDA GPIO4)
-    // pir_init(GPIO_NUM_XX, NULL);  // Usa un GPIO diferente disponible
+    // Inicializar sensor PIR en GPIO 35
+    pir_init(GPIO_NUM_35, NULL);
+    ESP_LOGI(TAG, "PIR sensor initialized on GPIO 35");
 }
+
+// -----------------------------------------------------
+// MONITOR TASK
+// -----------------------------------------------------
+
+/**
+ * @brief Tarea monitor de eventos WiFi
+ * 
+ * @details
+ * Recibe mensajes de wifi_app vía http_server_monitor_queue_handle.
+ * 
+ * **Mensajes:**
+ * - HTTP_MSG_WIFI_CONNECT_INIT: Intento de conexión
+ * - HTTP_MSG_WIFI_CONNECT_SUCCESS: Conexión exitosa
+ * - HTTP_MSG_WIFI_CONNECT_FAIL: Fallo en conexión
+ * 
+ * **Funcionalidad:**
+ * - Actualiza g_wifi_connect_status
+ * - Envía mensajes LED RGB para indicar estado
+ * 
+ * @param[in] parameter Parámetro de tarea (no usado)
+ * 
+ * @note Tarea infinita, stack 3072 bytes, prioridad 4
+ */
+static void http_server_monitor(void *parameter);
 
 // -----------------------------------------------------
 // FW UPDATE TIMER
@@ -330,6 +512,17 @@ static void http_server_monitor(void *parameter)
 // -----------------------------------------------------
 // STATIC FILE HANDLERS
 // -----------------------------------------------------
+
+/**
+ * @brief Handler GET /jquery-3.3.1.min.js
+ * 
+ * @details
+ * Sirve jQuery embebido desde flash.
+ * Content-Type: application/javascript
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t Siempre ESP_OK
+ */
 static esp_err_t http_server_jquery_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "jquery requested");
@@ -341,6 +534,16 @@ static esp_err_t http_server_jquery_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+/**
+ * @brief Handler GET / (index.html)
+ * 
+ * @details
+ * Sirve página principal HTML embebida desde flash.
+ * Content-Type: text/html
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t Siempre ESP_OK
+ */
 static esp_err_t http_server_index_html_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "index.html requested");
@@ -352,6 +555,16 @@ static esp_err_t http_server_index_html_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+/**
+ * @brief Handler GET /app.css
+ * 
+ * @details
+ * Sirve estilos CSS embebidos desde flash.
+ * Content-Type: text/css
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t Siempre ESP_OK
+ */
 static esp_err_t http_server_app_css_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "app.css requested");
@@ -363,6 +576,16 @@ static esp_err_t http_server_app_css_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+/**
+ * @brief Handler GET /app.js
+ * 
+ * @details
+ * Sirve JavaScript de aplicación embebido desde flash.
+ * Content-Type: application/javascript
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t Siempre ESP_OK
+ */
 static esp_err_t http_server_app_js_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "app.js requested");
@@ -374,6 +597,16 @@ static esp_err_t http_server_app_js_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+/**
+ * @brief Handler GET /favicon.ico
+ * 
+ * @details
+ * Sirve favicon embebido desde flash.
+ * Content-Type: image/x-icon
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t Siempre ESP_OK
+ */
 static esp_err_t http_server_favicon_ico_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "favicon.ico requested");
@@ -388,6 +621,37 @@ static esp_err_t http_server_favicon_ico_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // OTA HANDLERS
 // -----------------------------------------------------
+
+/**
+ * @brief Handler POST /OTAupdate - Actualización de firmware OTA
+ * 
+ * @details
+ * Recibe archivo binario (.bin) y actualiza firmware del ESP32.
+ * 
+ * **Proceso:**
+ * 1. Inicia partición OTA con esp_ota_begin()
+ * 2. Recibe datos en chunks de 1024 bytes
+ * 3. Escribe cada chunk con esp_ota_write()
+ * 4. Finaliza con esp_ota_end()
+ * 5. Marca partición como booteable
+ * 6. Programa reinicio en 8 segundos
+ * 
+ * **Request:**
+ * - Content-Type: multipart/form-data
+ * - Body: Archivo .bin del firmware
+ * 
+ * **Estados:**
+ * - g_fw_update_status = OTA_UPDATE_SUCCESSFUL: Éxito
+ * - g_fw_update_status = OTA_UPDATE_FAILED: Error
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t
+ * @retval ESP_OK Actualización exitosa
+ * @retval ESP_FAIL Error en proceso
+ * 
+ * @warning El ESP32 se reinicia 8s después de éxito
+ * @note Usa LED RGB para indicar progreso
+ */
 esp_err_t http_server_OTA_update_handler(httpd_req_t *req)
 {
     esp_ota_handle_t ota_handle;
@@ -495,6 +759,35 @@ esp_err_t http_server_OTA_status_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // WiFi CONNECT (/wifiConnect.json)
 // -----------------------------------------------------
+
+/**
+ * @brief Handler POST /wifiConnect.json - Conectar a red WiFi
+ * 
+ * @details
+ * Endpoint para configurar credenciales WiFi y conectar.
+ * 
+ * **Request JSON:**
+ * @code
+ * {
+ *   "selectedSSID": "MiRed",
+ *   "pwd": "password123"
+ * }
+ * @endcode
+ * 
+ * **Proceso:**
+ * 1. Parsea JSON del body
+ * 2. Extrae SSID y password
+ * 3. Guarda en NVS con save_wifi_credentials()
+ * 4. Envía mensaje a wifi_app para conectar
+ * 5. Retorna "OK"
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t
+ * @retval ESP_OK Credenciales guardadas, conexión iniciada
+ * @retval ESP_FAIL Error en parsing o memoria
+ * 
+ * @note El estado de conexión se consulta con GET /wifiConnectStatus
+ */
 static esp_err_t http_server_wifi_connect_json_handler(httpd_req_t *req)
 {
     size_t header_len;
@@ -583,6 +876,25 @@ static esp_err_t http_server_wifi_connect_json_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // WiFi STATUS (/wifiConnectStatus)
 // -----------------------------------------------------
+// WIFI CONNECT STATUS (/wifiConnectStatus)
+// -----------------------------------------------------
+/**
+ * @brief Handler GET /wifiConnectStatus - Estado de conexión WiFi
+ * 
+ * @details
+ * Retorna el estado actual de la conexión WiFi.
+ * 
+ * **Response JSON:**
+ * @code
+ * {"wifi_connect_status": 0}  // NONE
+ * {"wifi_connect_status": 1}  // CONNECTING
+ * {"wifi_connect_status": 2}  // SUCCESS
+ * {"wifi_connect_status": 3}  // FAIL
+ * @endcode
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t ESP_OK siempre
+ */
 static esp_err_t http_server_wifi_connect_status_json_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "/wifiConnectStatus requested");
@@ -599,6 +911,27 @@ static esp_err_t http_server_wifi_connect_status_json_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // DHT/NTC + PIR (/dhtSensor.json)
 // -----------------------------------------------------
+/**
+ * @brief Handler GET /dhtSensor.json - Lectura de sensores
+ * 
+ * @details
+ * Endpoint para leer temperatura NTC y sensor PIR.
+ * 
+ * **Response JSON:**
+ * @code
+ * {"temp": 25.5, "pir": 1}  // Temp válida, movimiento detectado
+ * {"temp": null, "pir": 0}  // Error NTC, sin movimiento
+ * @endcode
+ * 
+ * **Valores:**
+ * - temp: Temperatura en °C o null si error (< -100°C)
+ * - pir: 1 = movimiento, 0 = sin movimiento
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t ESP_OK siempre
+ * 
+ * @note Llamado cada 1-2 segundos desde app.js
+ */
 static esp_err_t http_server_get_dht_sensor_readings_json_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "/dhtSensor.json requested (NTC + PIR)");
@@ -630,6 +963,31 @@ static esp_err_t http_server_get_dht_sensor_readings_json_handler(httpd_req_t *r
 // /regerase.json  (compatibilidad botón "Borrar registro")
 // Body JSON: { "selectedNumber": "3" }
 // -----------------------------------------------------
+/**
+ * @brief Handler POST /regerase.json - Borrar registro (legacy)
+ * 
+ * @details
+ * Endpoint legacy para borrar registros. Usa JSON diferente a API REST.
+ * 
+ * **Request JSON:**
+ * @code
+ * {"selectedNumber": "3"}  // String, no número
+ * @endcode
+ * 
+ * **Proceso:**
+ * 1. Parsea JSON
+ * 2. Extrae selectedNumber (como string)
+ * 3. Convierte a entero
+ * 4. Valida rango 1-10
+ * 5. Llama delete_register_from_nvs()
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t
+ * @retval ESP_OK Registro eliminado
+ * @retval ESP_FAIL Error en parsing o ID inválido
+ * 
+ * @note Prefer usar DELETE /api/register/{id} (API moderna)
+ */
 static esp_err_t http_server_register_erase_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "/regerase.json requested");
@@ -689,6 +1047,42 @@ static esp_err_t http_server_register_erase_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // HTTP SERVER CONFIG
 // -----------------------------------------------------
+
+/**
+ * @brief Configura e inicia el servidor HTTP con todos los endpoints
+ * 
+ * @details
+ * Crea servidor HTTP y registra todos los handlers:
+ * 
+ * **Archivos estáticos:**
+ * - GET / → index.html
+ * - GET /jquery-3.3.1.min.js
+ * - GET /app.css
+ * - GET /app.js
+ * - GET /favicon.ico
+ * 
+ * **API REST:**
+ * - POST /fanControl.json
+ * - GET /dhtSensor.json
+ * - POST /wifiConnect.json
+ * - GET /wifiConnectStatus
+ * - GET /api/registers (registers.c)
+ * - POST /api/register (registers.c)
+ * - DELETE /api/register/* (registers.c)
+ * 
+ * **OTA:**
+ * - POST /OTAupdate
+ * - GET /OTAstatus
+ * 
+ * **Configuración servidor:**
+ * - Puerto: 80
+ * - Stack: 4096 bytes por conexión
+ * - Conexiones simultáneas: CONFIG_LWIP_MAX_SOCKETS
+ * 
+ * @return httpd_handle_t Handle del servidor o NULL si error
+ * 
+ * @note Registra endpoints de registers.c automáticamente
+ */
 static httpd_handle_t http_server_configure(void)
 {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
@@ -930,6 +1324,24 @@ static esp_err_t http_server_read_register_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // FAN TASK - Actualización automática del ventilador
 // -----------------------------------------------------
+
+/**
+ * @brief Tarea RTOS que actualiza el ventilador en modo AUTO
+ * 
+ * @details
+ * Llama fan_control_update() cada 1 segundo.
+ * Solo tiene efecto si el modo es FAN_MODE_AUTO.
+ * 
+ * **Parámetros tarea:**
+ * - Stack: 2048 bytes
+ * - Prioridad: configMAX_PRIORITIES - 4 (media-baja)
+ * - Periodo: 1000ms
+ * 
+ * @param[in] arg Parámetro de tarea (no usado)
+ * 
+ * @note Tarea infinita creada en http_server_start()
+ * @see fan_control_update() Función llamada cada segundo
+ */
 static void fan_task(void *arg)
 {
     while (1) {
@@ -941,6 +1353,25 @@ static void fan_task(void *arg)
 // -----------------------------------------------------
 // PUBLIC START/STOP
 // -----------------------------------------------------
+
+/**
+ * @brief Inicia el servidor HTTP y sus tareas asociadas
+ * 
+ * @details
+ * Secuencia de inicialización completa:
+ * 1. Configura periféricos (ADC, NTC, PIR, sensor_task)
+ * 2. Inicializa control del ventilador
+ * 3. Crea cola de mensajes http_server_monitor
+ * 4. Crea tarea http_server_monitor
+ * 5. Configura y arranca servidor HTTP
+ * 6. Crea fan_task para modo AUTO
+ * 
+ * @note Llamar después de que WiFi obtenga IP
+ * @warning Debe llamarse solo una vez
+ * 
+ * @see http_server_configure() Configuración del servidor
+ * @see fan_task() Tarea de actualización automática
+ */
 void http_server_start(void)
 {
     if (http_server_handle == NULL)
@@ -958,6 +1389,18 @@ void http_server_start(void)
     }
 }
 
+/**
+ * @brief Detiene el servidor HTTP y limpia recursos
+ * 
+ * @details
+ * Secuencia de parada:
+ * 1. Detiene servidor HTTP con httpd_stop()
+ * 2. Elimina tarea http_server_monitor
+ * 3. Libera cola http_server_monitor_queue_handle
+ * 
+ * @note Solo ejecuta si http_server_handle != NULL
+ * @warning No detiene fan_task ni sensor_task
+ */
 void http_server_stop(void)
 {
     if (http_server_handle)

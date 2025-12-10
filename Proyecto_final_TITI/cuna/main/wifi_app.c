@@ -1,3 +1,47 @@
+/**
+ * @file wifi_app.c
+ * @brief Aplicación WiFi con soporte AP/STA dual, reconexión automática y SNTP
+ * @author Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya
+ * @date 2025
+ * 
+ * @details
+ * Este módulo implementa la gestión completa de WiFi para el ESP32:
+ * 
+ * **Modos de operación:**
+ * 1. **Access Point (AP):** Para configuración inicial
+ *    - SSID: Configurable
+ *    - Usuario puede conectarse para configurar credenciales
+ *    
+ * 2. **Station (STA):** Conexión a red WiFi existente
+ *    - Credenciales almacenadas en NVS
+ *    - Reconexión automática tras desconexión
+ *    - Máximo de reintentos configurable
+ * 
+ * 3. **Dual AP+STA:** Permite configuración mientras mantiene conexión
+ * 
+ * **Características:**
+ * - Sincronización de tiempo mediante SNTP (pool.ntp.org)
+ * - Persistencia de credenciales en NVS flash
+ * - Event handlers para WiFi (connect, disconnect, got IP)
+ * - Cola de mensajes para comunicación entre tareas
+ * - LED RGB indicador de estado
+ * - Notificación al HTTP server de cambios de estado
+ * 
+ * **Arquitectura RTOS:**
+ * @code
+ *   [WiFi Event Handler] ---> [wifi_app_queue] ---> [wifi_app_task]
+ *         |                                               |
+ *         v                                               v
+ *   IP_EVENT_STA_GOT_IP ---------------------> http_server_monitor_send_message()
+ *         |                                               |
+ *         v                                               v
+ *   obtain_time() -> SNTP sync                    LED color update
+ * @endcode
+ * 
+ * @see wifi_app.h Para la API pública
+ * @see http_server.c Para integración con servidor web
+ */
+
 /*
  * wifi_app.c
  *
@@ -22,46 +66,86 @@
 #include "wifi_app.h"
 #include "esp_sntp.h"
 
-// Tag used for ESP serial console messages
+/** @brief Tag para logging ESP-IDF */
 static const char TAG [] = "wifi_app";
 
+/** @brief Semáforo para sincronización entre tareas */
 SemaphoreHandle_t mySemaphore;
 
-register_saved_e register_readings_from_flash [NUM_REGISTERS_AV];// registers
+/** @brief Array de registros guardados desde flash (legacy) */
+register_saved_e register_readings_from_flash [NUM_REGISTERS_AV];
 
-// Used for returning the WiFi configuration
+/**
+ * @var wifi_config
+ * @brief Configuración WiFi actual (NULL si no inicializado)
+ * 
+ * @details
+ * Almacena SSID y contraseña para modo Station.
+ * Asignado dinámicamente durante inicialización.
+ */
 wifi_config_t *wifi_config = NULL;
 
-// Used to track the number for retries when a connection attempt fails
+/** @brief Contador de reintentos de conexión WiFi */
 static int g_retry_number;
 
-// Queue handle used to manipulate the main queue of events
+/** @brief Cola para mensajes de la aplicación WiFi */
 static QueueHandle_t wifi_app_queue_handle;
 
-// netif objects for the station and access point
+/** @brief Interfaz de red para modo Station */
 esp_netif_t* esp_netif_sta = NULL;
+
+/** @brief Interfaz de red para modo Access Point */
 esp_netif_t* esp_netif_ap  = NULL;
 
+/** @brief Flag que indica si el tiempo fue sincronizado vía SNTP */
 bool time_was_synchronized;
 
+/** @brief Estado del LED RGB (externo) */
 extern uint8_t s_led_state;
 
-
-
-
-
-
-
-
+/**
+ * @brief Inicializa el estado de sincronización de tiempo
+ * 
+ * @details
+ * Marca el tiempo como NO sincronizado.
+ * Llamar antes de intentar sincronizar con SNTP.
+ */
 void init_obtain_time( void ){
 	time_was_synchronized = false;
 }
 
+/**
+ * @brief Obtiene el estado de sincronización de tiempo
+ * 
+ * @return bool
+ * @retval true Tiempo sincronizado correctamente con SNTP
+ * @retval false Aún no sincronizado o fallo
+ */
 bool get_state_time_was_synchronized( void ){
 	return time_was_synchronized;
 }
 
-
+/**
+ * @brief Sincroniza el reloj del sistema con servidor SNTP
+ * 
+ * @details
+ * Configura y ejecuta sincronización de tiempo mediante SNTP (Simple Network Time Protocol).
+ * 
+ * **Proceso:**
+ * 1. Configura zona horaria EST5EDT (Eastern Time con DST)
+ * 2. Detiene SNTP si ya está corriendo
+ * 3. Configura servidor NTP (0.co.pool.ntp.org)
+ * 4. Espera hasta 20 segundos (10 reintentos x 2s) por sincronización
+ * 5. Valida que tm_year > 2016
+ * 
+ * **Zona horaria:**
+ * - EST5EDT: Eastern Standard Time (-5h UTC)
+ * - M3.2.0/2: DST inicia 2do domingo de marzo a las 2am
+ * - M11.1.0: DST termina 1er domingo de noviembre
+ * 
+ * @note Requiere conexión WiFi activa
+ * @warning Bloquea hasta 20 segundos esperando sincronización
+ */
 static void obtain_time(void)
 {	
 	setenv("TZ", "EST5EDT,M3.2.0/2,M11.1.0", 1);
@@ -104,6 +188,23 @@ static void obtain_time(void)
     }
 }
 
+/**
+ * @brief Guarda credenciales WiFi en NVS flash
+ * 
+ * @details
+ * Almacena SSID y contraseña en memoria no volátil.
+ * Sobrevive a reinicios del ESP32.
+ * 
+ * **Claves NVS:**
+ * - "wifi_ssid": Nombre de la red WiFi
+ * - "wifi_password": Contraseña
+ * 
+ * @param[in] ssid SSID de la red WiFi (máx 32 caracteres)
+ * @param[in] password Contraseña (máx 64 caracteres)
+ * 
+ * @warning ESP_ERROR_CHECK causa panic si falla NVS
+ * @note Namespace "storage" debe existir
+ */
 void save_wifi_credentials(const char *ssid, const char *password) {
     nvs_handle_t nvs_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &nvs_handle));
@@ -113,6 +214,19 @@ void save_wifi_credentials(const char *ssid, const char *password) {
     nvs_close(nvs_handle);
 }
 
+/**
+ * @brief Guarda datos de registro en NVS (función legacy)
+ * 
+ * @details
+ * Función antigua para guardar registros (1-10).
+ * **DEPRECADA:** Usar registers.c (save_register_to_nvs) en su lugar.
+ * 
+ * @param[in] register_num Número de registro (1-10)
+ * @param[in] str Datos del registro como string
+ * 
+ * @deprecated Usar API moderna en registers.c
+ * @note Solo para compatibilidad con código antiguo
+ */
 void save_reg_data(uint8_t register_num, char *str) {
     nvs_handle_t nvs_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &nvs_handle));
@@ -374,6 +488,23 @@ void initialize_registers( void ){
 	}
 }
 
+/**
+ * @brief Carga credenciales WiFi desde NVS
+ * 
+ * @details
+ * Lee SSID y password almacenados previamente en NVS.
+ * 
+ * **Namespace NVS:** "storage"
+ * **Keys:**
+ * - "wifi_ssid": SSID de la red
+ * - "wifi_password": Contraseña
+ * 
+ * @param[out] ssid Buffer donde se copia el SSID (mínimo 33 bytes)
+ * @param[out] password Buffer donde se copia el password (mínimo 65 bytes)
+ * 
+ * @note Llama ESP_ERROR_CHECK - programa panic si no existen credenciales
+ * @warning Validar existencia con nvs_credentials_exist() antes de llamar
+ */
 void load_wifi_credentials(char *ssid, char *password) {
     nvs_handle_t nvs_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READONLY, &nvs_handle));
@@ -461,6 +592,22 @@ void connect_to_wifi(void) {
     }
 }
 
+/**
+ * @brief Tarea que monitorea conexión WiFi STA y reintenta
+ * 
+ * @details
+ * Cada 30 segundos verifica si está conectado a AP.
+ * Si pierde conexión, intenta reconectar automáticamente.
+ * 
+ * **Funcionalidad:**
+ * - Llama esp_wifi_sta_get_ap_info() cada 30s
+ * - Si falla (ESP_ERR_WIFI_NOT_CONNECT), intenta conectar
+ * - Registra RSSI si está conectado
+ * 
+ * @param[in] pvParameters Parámetro de tarea (no usado)
+ * 
+ * @note Tarea infinita creada en wifi_app_start()
+ */
 void check_sta_connection_state( void *pvParameters ) {
 	wifi_ap_record_t ap_info;
 	esp_err_t ret;
@@ -503,11 +650,28 @@ void check_sta_connection_state( void *pvParameters ) {
 
 }
 /**
- * WiFi application event handler
- * @param arg data, aside from event data, that is passed to the handler when it is called
- * @param event_base the base id of the event to register the handler for
- * @param event_id the id fo the event to register the handler for
- * @param event_data event data
+ * @brief Event handler principal para eventos WiFi y IP
+ * 
+ * @details
+ * Procesa todos los eventos WiFi del ESP32:
+ * 
+ * **Eventos WiFi:**
+ * - WIFI_EVENT_AP_STACONNECTED: Cliente conectado al AP
+ * - WIFI_EVENT_AP_STADISCONNECTED: Cliente desconectado del AP
+ * - WIFI_EVENT_STA_START: Station iniciado → intenta conectar
+ * - WIFI_EVENT_STA_CONNECTED: Conectado a AP externo
+ * - WIFI_EVENT_STA_DISCONNECTED: Desconectado → reintenta
+ * 
+ * **Eventos IP:**
+ * - IP_EVENT_STA_GOT_IP: IP asignada → notifica HTTP server, inicia SNTP
+ * 
+ * **Reconexión automática:**
+ * Máximo WIFI_RETRY_ATTEMPTS reintentos antes de fallar.
+ * 
+ * @param[in] arg Parámetro de usuario (no usado)
+ * @param[in] event_base Base del evento (WIFI_EVENT o IP_EVENT)
+ * @param[in] event_id ID específico del evento
+ * @param[in] event_data Datos del evento (IP, MAC, etc)
  */
 static void wifi_app_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
@@ -605,7 +769,25 @@ static void wifi_app_default_wifi_init(void)
 }
 
 /**
- * Configures the WiFi access point settings and assigns the static IP to the SoftAP.
+ * @brief Configura el Access Point (SoftAP)
+ * 
+ * @details
+ * Establece los parámetros del AP:
+ * 
+ * **Configuración AP:**
+ * - SSID: WIFI_AP_SSID (definido en wifi_app.h)
+ * - Password: WIFI_AP_PASSWORD
+ * - Canal: WIFI_AP_CHANNEL
+ * - SSID oculto: No
+ * - Máx conexiones: WIFI_AP_MAX_CONNECTIONS
+ * - Tipo auth: WPA/WPA2
+ * 
+ * **IP estática:**
+ * - IP: 192.168.0.1
+ * - Gateway: 192.168.0.1
+ * - Netmask: 255.255.255.0
+ * 
+ * @note Llama esp_netif_dhcps_stop() y esp_netif_dhcps_start()
  */
 static void wifi_app_soft_ap_config(void)
 {
@@ -643,7 +825,13 @@ static void wifi_app_soft_ap_config(void)
 }
 
 /**
- * Connects the ESP32 to an external AP using the updated station configuration
+ * @brief Conecta el ESP32 en modo Station a un AP externo
+ * 
+ * @details
+ * Utiliza las credenciales de wifi_app_get_wifi_config().
+ * Si la conexión falla, wifi_app_event_handler reintenta.
+ * 
+ * @note Llama esp_wifi_set_config() y esp_wifi_connect()
  */
 static void wifi_app_connect_sta(void)
 {
@@ -652,8 +840,24 @@ static void wifi_app_connect_sta(void)
 }
 
 /**
- * Main task for the WiFi application
- * @param pvParameters parameter which can be passed to the task
+ * @brief Tarea principal de la aplicación WiFi
+ * 
+ * @details
+ * Tarea RTOS que procesa mensajes de la cola wifi_app_queue_handle.
+ * 
+ * **Mensajes soportados:**
+ * - WIFI_APP_MSG_START_HTTP_SERVER: Inicia servidor HTTP
+ * - WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER: Intenta conexión STA
+ * - WIFI_APP_MSG_STA_CONNECTED_GOT_IP: IP obtenida exitosamente
+ * 
+ * **Parámetros tarea:**
+ * - Stack: WIFI_APP_TASK_STACK_SIZE
+ * - Prioridad: WIFI_APP_TASK_PRIORITY
+ * - Core: WIFI_APP_TASK_CORE_ID
+ * 
+ * @param[in] pvParameters Parámetro de tarea (no usado)
+ * 
+ * @note Tarea infinita que nunca termina
  */
 static void wifi_app_task(void *pvParameters)
 {
@@ -748,6 +952,13 @@ BaseType_t wifi_app_send_message(wifi_app_message_e msgID)
 	return xQueueSend(wifi_app_queue_handle, &msg, portMAX_DELAY);
 }
 
+/**
+ * @brief Obtiene puntero a configuración WiFi STA
+ * 
+ * @return wifi_config_t* Puntero a wifi_config global
+ * 
+ * @note Contiene SSID y password cargados de NVS
+ */
 wifi_config_t* wifi_app_get_wifi_config(void)
 {
 	return wifi_config;
@@ -826,6 +1037,24 @@ bool compare_hour_day_structs (struct tm timeinfo, register_saved_e aux_reg ){
 
 }
 
+/**
+ * @brief Tarea que ejecuta registros programados basados en hora SNTP
+ * 
+ * @details
+ * Espera a que SNTP sincronice, luego cada 60s compara hora actual
+ * con registros programados. Si coincide, ejecuta acción (ventilador).
+ * 
+ * **Proceso:**
+ * 1. Espera a get_state_time_was_synchronized() == true
+ * 2. Cada 60s obtiene hora con time() y localtime_r()
+ * 3. Itera registros y compara con compare_hour_day_structs()
+ * 4. Si coincide, ejecuta acción del registro
+ * 
+ * @param[in] pvParameters Parámetro de tarea (no usado)
+ * 
+ * @note Tarea infinita, stack 4096 bytes, prioridad 5
+ * @see compare_hour_day_structs() Comparación hora/día
+ */
 void task_compare_hour_to_execute_action( void *pvParameters ) {
 	time_t now;
     struct tm timeinfo;
@@ -864,10 +1093,25 @@ void task_compare_hour_to_execute_action( void *pvParameters ) {
 
 }
 
-
-
-
-
+/**
+ * @brief Inicializa y arranca la aplicación WiFi completa
+ * 
+ * @details
+ * Punto de entrada principal para WiFi. Secuencia:
+ * 1. Inicializa netif TCP/IP
+ * 2. Configura event handlers WiFi
+ * 3. Inicializa WiFi con config por defecto
+ * 4. Configura Access Point
+ * 5. Crea cola de mensajes
+ * 6. Crea tarea wifi_app_task
+ * 7. Crea tarea check_sta_connection_state (reconexión)
+ * 
+ * @note Llamar una sola vez durante inicialización del sistema
+ * @warning Requiere NVS inicializado previamente
+ * 
+ * @see wifi_app_task() Tarea principal creada
+ * @see check_sta_connection_state() Tarea de reconexión
+ */
 void wifi_app_start(void)
 {
 	ESP_LOGI(TAG, "STARTING WIFI APPLICATION");

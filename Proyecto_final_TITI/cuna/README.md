@@ -1,74 +1,156 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-S2 | ESP32-S3 | ESP32-P4 | ESP32-H2 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- | -------- | -------- |
+# Sistema RTOS para Control de Cuna Inteligente
 
-# Wi-Fi SoftAP & Station Example
+**Versión:** 1.0.0  
+**Autores:** Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya  
+**Universidad:** Universidad Nacional de Colombia  
+**Curso:** Sistemas Operativos en Tiempo Real (RTOS)
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## Descripción
 
-This example demonstrates how to use the ESP Wi-Fi driver to act as both an Access Point and a Station simultaneously using the SoftAP and Station features.
-With NAPT enabled on the softAP interface and the station interface set as the default interface this example can be used as Wifi nat router.
+Sistema embebido basado en ESP32 con FreeRTOS que implementa control automático de ventilador mediante interfaz web, sensores y registros programados. El sistema utiliza arquitectura RTOS con tareas dedicadas, comunicación thread-safe y persistencia en memoria no volátil.
 
-## How to use example
-### Configure the project
+## Características Principales
 
-Open the project configuration menu (`idf.py menuconfig`).
+### Control del Ventilador (PWM)
+- **Modo Manual**: Control directo mediante slider en interfaz web
+- **Modo Automático**: Ajuste basado en temperatura del sensor NTC
+  - < 25°C → Apagado
+  - 25-30°C → Velocidad proporcional
+  - > 30°C → Velocidad máxima
+- **Modo Registros**: Activación programada por horarios
 
-In the `Example Configuration` menu:
+### API REST
+- **POST /api/register**: Crear/actualizar registro programado
+- **GET /api/register**: Listar todos los registros
+- **DELETE /api/register?id=X**: Eliminar registro
+- **GET /dhtSensor.json**: Leer temperatura y sensor PIR
+- Almacenamiento persistente en NVS (Non-Volatile Storage)
 
-* Set the Wi-Fi SoftAP configuration.
-    * Set `WiFi AP SSID`.
-    * Set `WiFi AP Password`.
+### Arquitectura RTOS
+- **sensor_task**: Lectura periódica de sensores con mutex (2s)
+- **fan_task**: Actualización automática del ventilador (1s)
+- **keypad_task**: Polling del teclado matricial 4x4 (50ms)
+- **display_task**: Gestión de pantalla OLED vía cola de mensajes
+- **task_compare_hour**: Comparación de registros con hora actual
 
-* Set the Wi-Fi STA configuration.
-    * Set `WiFi Remote AP SSID`.
-    * Set `WiFi Remote AP Password`.
+### Hardware Soportado
+- Sensor NTC 10K (temperatura)
+- Sensor PIR (movimiento)
+- Ventilador DC con control PWM
+- Pantalla OLED SSD1306 128x64 I2C
+- Teclado matricial 4x4
+- WiFi AP/STA para servidor web
 
-Optional: If necessary, modify the other choices to suit your needs.
-
-### Build and Flash
-
-Build the project and flash it to the board, then run the monitor tool to view the serial output:
-
-Run `idf.py -p PORT flash monitor` to build, flash and monitor the project.
-
-(To exit the serial monitor, type ``Ctrl-]``.)
-
-## Example Output
-
-There is the console output for this example:
+## Estructura del Proyecto
 
 ```
-I (680) WiFi SoftAP: ESP_WIFI_MODE_AP
-I (690) WiFi SoftAP: wifi_init_softap finished. SSID:myssid password:mypassword channel:1
-I (690) WiFi Sta: ESP_WIFI_MODE_STA
-I (690) WiFi Sta: wifi_init_sta finished.
-I (700) phy_init: phy_version 4670,719f9f6,Feb 18 2021,17:07:07
-I (800) wifi:mode : sta (58:bf:25:e0:41:00) + softAP (58:bf:25:e0:41:01)
-I (800) wifi:enable tsf
-I (810) wifi:Total power save buffer number: 16
-I (810) wifi:Init max length of beacon: 752/752
-I (810) wifi:Init max length of beacon: 752/752
-I (820) WiFi Sta: Station started
-I (820) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<1,1>, prof:1
-I (820) wifi:state: init -> auth (b0)
-I (830) wifi:state: auth -> assoc (0)
-E (840) wifi:Association refused temporarily, comeback time 1536 mSec
-I (2380) wifi:state: assoc -> assoc (0)
-I (2390) wifi:state: assoc -> run (10)
-I (2400) wifi:connected with myssid_c3, aid = 1, channel 1, 40U, bssid = 84:f7:03:60:86:1d
-I (2400) wifi:security: WPA2-PSK, phy: bgn, rssi: -14
-I (2410) wifi:pm start, type: 1
-
-I (2410) wifi:AP's beacon interval = 102400 us, DTIM period = 2
-I (3920) WiFi Sta: Got IP:192.168.5.2
-I (3920) esp_netif_handlers: sta ip: 192.168.5.2, mask: 255.255.255.0, gw: 192.168.5.1
-I (3920) WiFi Sta: connected to ap SSID:myssid_c3 password:mypassword_c3
+main/
+├── http_server.c/h      → Servidor HTTP, endpoints REST
+├── registers.c/h        → API de registros (CRUD + NVS)
+├── fan_control.c/h      → Lógica de control del ventilador
+├── sensor_task.c/h      → Tarea dedicada para sensores
+├── wifi_app.c/h         → Gestión WiFi AP/STA
+├── ntc_driver.c/h       → Driver sensor temperatura NTC
+├── pir_driver.c/h       → Driver sensor movimiento PIR
+├── fan_driver.c/h       → Driver PWM ventilador
+├── peripherals.c/h      → Gestión teclado y OLED
+├── auth_display.c/h     → Sistema de autenticación local
+└── board_config.h       → Configuración de pines GPIO
 ```
 
-## Running the example on ESP Chips without Wi-Fi
+## Compilación
 
-This example can run on ESP Chips without Wi-Fi using ESP-Hosted. See the [Two-Chip Solution](../README.md#wi-fi-examples-with-two-chip-solution) section in the upper level `README.md` for information.
+```bash
+# Configurar ESP-IDF v5.5.1
+. $HOME/esp/esp-idf/export.sh
 
-## Troubleshooting
+# Compilar
+idf.py build
 
-For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+# Flashear
+idf.py -p COM3 flash monitor
+```
+
+## Documentación Doxygen
+
+### Archivos Documentados:
+
+**Backend (C/ESP-IDF):**
+- `sensor_task.h/c` - Tarea dedicada de sensores con mutex
+- `fan_control.h/c` - Control del ventilador (manual/auto/registros)
+- `registers.h/c` - API REST de registros programados
+- `http_server.h/c` - Servidor HTTP con endpoints REST completos
+- `wifi_app.h/c` - Gestión WiFi AP/STA dual con reconexión y SNTP
+- `ntc_driver.h/c` - Driver sensor temperatura NTC con Steinhart-Hart
+- `pir_driver.h/c` - Driver sensor movimiento PIR con ISR
+- `fan_driver.h/c` - Driver PWM del ventilador
+
+**Frontend (JavaScript):**
+- `app.js` - Aplicación web completa
+  - Control de ventilador (3 modos)
+  - Gestión de registros (CRUD)
+  - Monitoreo de sensores
+  - Configuración WiFi
+  - Actualización OTA
+
+### Generar documentación HTML:
+
+**En Windows:**
+```powershell
+# Instalar Doxygen desde: https://www.doxygen.nl/download.html
+# O con Chocolatey:
+choco install doxygen.install
+
+# Generar documentación
+cd C:\Users\lgamb\Documents\Uni\RTOS\Repositorio\RTOS_Repo_Limpio\Proyecto_final_TITI\cuna
+doxygen Doxyfile
+
+# Abrir en navegador
+start docs\html\index.html
+```
+
+**En Linux:**
+```bash
+# Instalar doxygen
+sudo apt install doxygen
+
+# Generar docs
+doxygen Doxyfile
+
+# Abrir en navegador
+xdg-open docs/html/index.html
+```
+
+La documentación incluye:
+- Descripción detallada de funciones y estructuras
+- Diagramas de llamadas y dependencias
+- Endpoints REST disponibles (C y JavaScript)
+- Parámetros, valores de retorno y excepciones
+- Ejemplos de uso y notas importantes
+- Navegación unificada entre backend y frontend
+
+## Configuración WiFi
+
+El sistema crea un Access Point por defecto:
+- **SSID**: ESP32_AP
+- **Password**: (configurar en código)
+- **IP**: 192.168.0.1
+
+También puede conectarse a redes WiFi existentes mediante la interfaz web.
+
+## Sincronización de Hora
+
+El sistema usa SNTP para sincronizar hora con servidores NTP:
+- Servidor: pool.ntp.org
+- Zona horaria: Configurable
+- Requerido para funcionamiento de registros programados
+
+## Thread Safety
+
+- **sensor_task**: Datos protegidos por mutex FreeRTOS
+- **display_task**: Comunicación mediante cola de mensajes
+- **fan_control**: Variables estáticas protegidas implícitamente por ejecución secuencial
+
+## Licencia
+
+Proyecto académico - Universidad Nacional de Colombia

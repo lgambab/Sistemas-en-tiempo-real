@@ -1,12 +1,55 @@
 /**
- * Add gobals here
+ * @file app.js
+ * @brief Aplicación web JavaScript para control del sistema de cuna inteligente
+ * @author Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya
+ * @date 2025
+ * @version 1.0.0
+ * 
+ * @details Interfaz web que proporciona:
+ * - Control de ventilador (manual/auto/registros)
+ * - Gestión de registros programados (CRUD)
+ * - Monitoreo de sensores (temperatura NTC, PIR)
+ * - Configuración WiFi
+ * - Actualización OTA de firmware
+ * - Sincronización de fecha/hora
+ * 
+ * **Endpoints REST consumidos:**
+ * - GET  /dhtSensor.json → Leer temperatura y PIR
+ * - POST /fanSettings.json → Configurar ventilador
+ * - POST /regchange.json → Modificar registro
+ * - POST /regerase.json → Eliminar registro
+ * - GET  /readreg.json → Leer todos los registros
+ * - POST /OTAupdate → Actualizar firmware
+ * - POST /wifiConnect.json → Conectar a WiFi
+ * 
+ * Universidad Nacional de Colombia - Curso RTOS
+ */
+
+/**
+ * @var seconds
+ * @brief Contador de segundos para el temporizador de reinicio OTA
  */
 var seconds 	= null;
+
+/**
+ * @var otaTimerVar
+ * @brief Handle del temporizador de reinicio tras actualización OTA
+ */
 var otaTimerVar =  null;
+
+/**
+ * @var wifiConnectInterval
+ * @brief Intervalo para verificar estado de conexión WiFi
+ */
 var wifiConnectInterval = null;
 
 /**
- * Initialize functions here.
+ * @brief Inicialización de la aplicación web
+ * @details Se ejecuta cuando el DOM está completamente cargado. Inicializa:
+ * - Intervalos de actualización de sensores (temperatura, PIR)
+ * - Intervalos de sincronización de fecha/hora
+ * - Event handlers para botones (animaciones, WiFi, ventilador, registros)
+ * - Animaciones CSS para feedback visual
  */
 $(document).ready(function(){
 	//getUpdateStatus();
@@ -38,8 +81,10 @@ $(document).ready(function(){
 });
 
 /**
- * Gets file name and size for display on the web page.
- */        
+ * @brief Obtener información del archivo seleccionado para OTA
+ * @details Lee el archivo seleccionado en el input file y muestra
+ * su nombre y tamaño en bytes en el elemento HTML #file_info
+ */
 function getFileInfo() 
 {
     var x = document.getElementById("selected_file");
@@ -49,7 +94,12 @@ function getFileInfo()
 }
 
 /**
- * Handles the firmware update.
+ * @brief Ejecutar actualización de firmware via OTA
+ * @details Envía el archivo .bin seleccionado al ESP32 mediante POST a /OTAupdate.
+ * Muestra progreso de carga y maneja la respuesta del servidor.
+ * 
+ * @note El ESP32 debe reiniciarse automáticamente tras aplicar el nuevo firmware
+ * @warning Solo acepta archivos .bin válidos de ESP-IDF
  */
 function updateFirmware() 
 {
@@ -78,7 +128,9 @@ function updateFirmware()
 }
 
 /**
- * Progress on transfers from the server to the client (downloads).
+ * @brief Actualizar barra de progreso durante carga OTA
+ * @param oEvent Evento de progreso con información de bytes transferidos
+ * @details Callback para XMLHttpRequest.upload.addEventListener("progress")
  */
 function updateProgress(oEvent) 
 {
@@ -93,7 +145,13 @@ function updateProgress(oEvent)
 }
 
 /**
- * Posts the firmware udpate status.
+ * @brief Consultar estado de actualización OTA
+ * @details Realiza POST a /OTAstatus y procesa la respuesta JSON:
+ * - ota_update_status = 1: Actualización exitosa, inicia temporizador de reinicio
+ * - ota_update_status = -1: Error en la actualización
+ * - ota_update_status = 0: Información sobre firmware actual
+ * 
+ * @note También actualiza #latest_firmware con fecha/hora de compilación
  */
 function getUpdateStatus() 
 {
@@ -125,7 +183,9 @@ function getUpdateStatus()
 }
 
 /**
- * Displays the reboot countdown.
+ * @brief Temporizador de cuenta regresiva para reinicio tras OTA
+ * @details Muestra contador de 10 segundos antes de recargar la página.
+ * Permite que el ESP32 reinicie y aplique el nuevo firmware.
  */
 function otaRebootTimer() 
 {	
@@ -147,6 +207,13 @@ function otaRebootTimer()
  */
 
 
+/**
+ * @brief Leer valores de registros programados
+ * @details Realiza GET a /readreg.json y actualiza elementos HTML #reg_1 a #reg_10
+ * con los datos de cada registro. Muestra "--" si no hay datos.
+ * 
+ * @note Usado al cargar la página para mostrar registros existentes
+ */
 function getregValues()
 {
     $.getJSON('/readreg.json', function(data) {
@@ -166,6 +233,14 @@ function getregValues()
 }
 
 
+/**
+ * @brief Leer valores de sensores (temperatura NTC y PIR)
+ * @details Realiza GET a /dhtSensor.json y actualiza:
+ * - #temperature_reading: Temperatura en °C del sensor NTC
+ * - #pir_status: Estado del sensor PIR (movimiento detectado / sin movimiento)
+ * 
+ * Maneja valores nulos y errores de lectura mostrando "--" o "Sin datos"
+ */
 function getDHTSensorValues()
 {
     $.getJSON('/dhtSensor.json', function(data) {
@@ -197,15 +272,20 @@ function getDHTSensorValues()
 
 
 /**
- * Sets the interval for getting the updated DHT22 sensor values.
+ * @brief Iniciar intervalo de actualización de sensores
+ * @details Ejecuta getDHTSensorValues() cada 5 segundos para mantener
+ * actualizada la lectura de temperatura NTC y estado del PIR
  */
-
 function startDHTSensorInterval()
 {
 	setInterval(getDHTSensorValues, 5000);    
 }
 
-
+/**
+ * @brief Obtener fecha y hora actual del ESP32
+ * @details Realiza GET a /time.json y actualiza el elemento #current_datetime.
+ * Utiliza la hora sincronizada por SNTP del sistema.
+ */
 function getCurrentDateTime()
 {
     $.getJSON('/time.json', function(data) {
@@ -220,6 +300,11 @@ function getCurrentDateTime()
     });
 }
 
+/**
+ * @brief Iniciar intervalo de actualización de fecha/hora
+ * @details Ejecuta getCurrentDateTime() inmediatamente y luego cada 1 segundo
+ * para mantener sincronizado el reloj en la interfaz web
+ */
 function startDateTimeInterval()
 {
     // Primera llamada inmediata
@@ -230,7 +315,9 @@ function startDateTimeInterval()
 
 
 /**
- * Clears the connection status interval.
+ * @brief Detener intervalo de verificación de conexión WiFi
+ * @details Limpia el intervalo wifiConnectInterval para dejar de consultar
+ * el estado de conexión una vez que se conectó o falló
  */
 function stopWifiConnectStatusInterval()
 {
@@ -242,7 +329,12 @@ function stopWifiConnectStatusInterval()
 }
 
 /**
- * Gets the WiFi connection status.
+ * @brief Consultar estado de conexión WiFi
+ * @details Realiza POST a /wifiConnectStatus y actualiza #wifi_connect_status con:
+ * - Estado 2: Falló la conexión (credenciales incorrectas o incompatibilidad)
+ * - Estado 3: Conexión exitosa
+ * 
+ * Detiene el intervalo de consulta cuando se alcanza un estado final
  */
 function getWifiConnectStatus()
 {
@@ -271,7 +363,9 @@ function getWifiConnectStatus()
 }
 
 /**
- * Starts the interval for checking the connection status.
+ * @brief Iniciar intervalo de verificación de conexión WiFi
+ * @details Ejecuta getWifiConnectStatus() cada 2.8 segundos durante
+ * el proceso de conexión para actualizar el estado en tiempo real
  */
 function startWifiConnectStatusInterval()
 {
@@ -279,7 +373,12 @@ function startWifiConnectStatusInterval()
 }
 
 /**
- * Connect WiFi function called using the SSID and password entered into the text fields.
+ * @brief Conectar ESP32 a red WiFi
+ * @details Envía SSID y contraseña al endpoint /wifiConnect.json mediante POST.
+ * El ESP32 intentará conectarse a la red especificada y guardará las credenciales
+ * en NVS para reconexión automática tras reinicios.
+ * 
+ * @note Las credenciales deben ser validadas previamente con checkCredentials()
  */
 function connectWifi()
 {
@@ -331,7 +430,10 @@ function connectWifi()
 }
 
 /**
- * Checks credentials on connect_wifi button click.
+ * @brief Validar credenciales WiFi antes de conectar
+ * @details Verifica que SSID y contraseña no estén vacíos.
+ * Si las credenciales son válidas, llama a connectWifi().
+ * Si hay errores, los muestra en #wifi_connect_credentials_errors
  */
 function checkCredentials()
 {
@@ -364,7 +466,9 @@ function checkCredentials()
 }
 
 /**
- * Shows the WiFi password if the box is checked.
+ * @brief Alternar visibilidad de la contraseña WiFi
+ * @details Cambia el tipo del input #connect_pass entre 'password' y 'text'
+ * para permitir al usuario ver la contraseña que está ingresando
  */
 function showPassword()
 {
@@ -378,8 +482,15 @@ function showPassword()
 		x.type = "password";
 	}
 }
-
-
+/**
+ * @brief Crear o actualizar registro programado
+ * @details Obtiene datos del formulario (número de registro, hora, minuto, días)
+ * y los envía al endpoint REST /api/register mediante POST.
+ * 
+ * Los días se envían en formato abreviado: L, M, X, J, V, S, D
+ * 
+ * @note El registro se guarda en NVS y persiste tras reinicios
+ */
 function send_register()
 {
     // Get form values
@@ -444,8 +555,13 @@ function read_reg()
 //	xhr.setRequestHeader("Content-Type", "application/json");
 //	xhr.send(JSON.stringify({data: "mi información"}));
 }
-
-
+/**
+ * @brief Eliminar registro programado
+ * @details Envía el número de registro seleccionado al endpoint /regerase.json
+ * mediante POST para eliminarlo permanentemente de NVS
+ * 
+ * @note El registro eliminado no se puede recuperar
+ */
 function erase_register()
 {
     // Assuming you have selectedNumber, hours, minutes variables populated from your form
@@ -518,7 +634,18 @@ $(document).ready(function() {
     });
 });
 
-// Enviar modo + velocidad al ESP32
+/**
+ * @brief Aplicar configuración del ventilador
+ * @details Envía modo de operación y velocidad al endpoint /fanControl.json.
+ * 
+ * Modos disponibles:
+ * - "manual": Control directo por slider
+ * - "auto": Control automático por temperatura NTC
+ * - "registros": Control por registros programados
+ * 
+ * @note En modo auto, la velocidad del slider se usa solo como referencia
+ * @note En modo registros, la velocidad se aplica cuando un registro coincide
+ */
 function apply_fan_control() {
     const mode  = $("#fan_mode").val();   // "manual", "auto", "registros"
     const speed = parseInt($("#fan_speed").val(), 10);
