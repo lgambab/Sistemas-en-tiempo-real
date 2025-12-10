@@ -39,7 +39,10 @@
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
 
+#if 0
+// MQTT client removed from this build (functions unused). Enable if needed.
 #include "mqtt_client.h"
+#endif
 #include "esp_sntp.h"
 
 #include "ntc_driver.h"
@@ -235,95 +238,7 @@ static void log_error_if_nonzero(const char *message, int error_code)
     }
 }
 
-// -----------------------------------------------------
-// MQTT HANDLER (si lo quieres usar luego)
-// -----------------------------------------------------
-static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
-{
-    esp_mqtt_event_handle_t event = event_data;
-    esp_mqtt_client_handle_t client = event->client;
-    int msg_id;
-    switch ((esp_mqtt_event_id_t)event_id) {
-    case MQTT_EVENT_CONNECTED:
-        ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
-        msg_id = esp_mqtt_client_subscribe(client, "test", 1);
-        ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
-        break;
-    case MQTT_EVENT_DISCONNECTED:
-        ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
-        break;
-    case MQTT_EVENT_SUBSCRIBED:
-        ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
-        break;
-    case MQTT_EVENT_UNSUBSCRIBED:
-        ESP_LOGI(TAG, "MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
-        break;
-    case MQTT_EVENT_PUBLISHED:
-        ESP_LOGI(TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
-        break;
-    case MQTT_EVENT_DATA:
-        ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-        printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
-        printf("DATA=%.*s\r\n", event->data_len, event->data);
-        if (strncmp(event->data, "toggle", event->data_len) == 0) {
-            printf("toogle LED received");
-            toogle_led();
-        }
-        break;
-    case MQTT_EVENT_ERROR:
-        ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
-        if (event->error_handle->error_type == MQTT_ERROR_TYPE_TCP_TRANSPORT) {
-            log_error_if_nonzero("reported from esp-tls",       event->error_handle->esp_tls_last_esp_err);
-            log_error_if_nonzero("reported from tls stack",     event->error_handle->esp_tls_stack_err);
-            log_error_if_nonzero("captured as transport errno", event->error_handle->esp_transport_sock_errno);
-            ESP_LOGI(TAG, "Last errno string (%s)", strerror(event->error_handle->esp_transport_sock_errno));
-        }
-        break;
-    default:
-        ESP_LOGI(TAG, "Other event id:%d", event->event_id);
-        break;
-    }
-}
-
-static void mqtt_app_start(void)
-{
-    esp_mqtt_client_config_t mqtt_cfg = {
-        .broker.address.uri        = "mqtt://victor:banano@ec2-35-93-50-123.us-west-2.compute.amazonaws.com",
-        .session.keepalive         = 15,
-        .network.reconnect_timeout_ms = 50,
-        .task.priority             = 5,
-        .task.stack_size           = 4096,
-    };
-
-#if CONFIG_BROKER_URL_FROM_STDIN
-    char line[128];
-
-    if (strcmp(mqtt_cfg.broker.address.uri, "FROM_STDIN") == 0) {
-        int count = 0;
-        printf("Please enter url of mqtt broker\n");
-        while (count < 128) {
-            int c = fgetc(stdin);
-            if (c == '\n') {
-                line[count] = '\0';
-                break;
-            } else if (c > 0 && c < 127) {
-                line[count] = c;
-                ++count;
-            }
-            vTaskDelay(10 / portTICK_PERIOD_MS);
-        }
-        mqtt_cfg.broker.address.uri = line;
-        printf("Broker url: %s\n", line);
-    } else {
-        ESP_LOGE(TAG, "Configuration mismatch: wrong broker url");
-        abort();
-    }
-#endif
-
-    esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt_cfg);
-    esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
-    esp_mqtt_client_start(client);
-}
+// MQTT support disabled in this build; re-enable if needed.
 
 // -----------------------------------------------------
 // SENSORES: NTC + PIR
@@ -1012,6 +927,16 @@ static esp_err_t http_server_read_register_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+// -----------------------------------------------------
+// FAN TASK - Actualización automática del ventilador
+// -----------------------------------------------------
+static void fan_task(void *arg)
+{
+    while (1) {
+        fan_control_update();
+        vTaskDelay(pdMS_TO_TICKS(1000));  // actualiza cada 1s
+    }
+}
 
 // -----------------------------------------------------
 // PUBLIC START/STOP
@@ -1022,6 +947,14 @@ void http_server_start(void)
     {
         sensors_init();
         http_server_handle = http_server_configure();
+        
+        // Inicializar control del ventilador
+        fan_control_init();
+        ESP_LOGI(TAG, "Fan control initialized");
+        
+        // Crear tarea para actualización automática del ventilador
+        xTaskCreate(fan_task, "fan_task", 3072, NULL, 5, NULL);
+        ESP_LOGI(TAG, "Fan task created");
     }
 }
 
@@ -1038,17 +971,6 @@ void http_server_stop(void)
         vTaskDelete(task_http_server_monitor);
         ESP_LOGI(TAG, "http_server_stop: stopping HTTP server monitor");
         task_http_server_monitor = NULL;
-    }
-}
-
-// -----------------------------------------------------
-// FAN TASK (llamado desde main)
-// -----------------------------------------------------
-void fan_task(void *arg)
-{
-    while (1) {
-        fan_control_update();
-        vTaskDelay(pdMS_TO_TICKS(1000));  // actualiza cada 1s
     }
 }
 

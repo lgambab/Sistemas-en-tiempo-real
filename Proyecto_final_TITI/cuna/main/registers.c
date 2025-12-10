@@ -24,8 +24,7 @@
 #endif
 
 
-// from registers.c
-extern esp_err_t api_get_registers(httpd_req_t *req);
+
 
 
 
@@ -325,11 +324,7 @@ esp_err_t api_get_registers(httpd_req_t *req)
 }
 
 
-static esp_err_t http_server_read_register_handler(httpd_req_t *req)
-{
-    ESP_LOGI(TAG, "/readreg.json requested -> delegando a api_get_registers");
-    return api_get_registers(req);
-}
+// Removed redundant local wrapper: http_server.c provides its own handler.
 
 // -------------------- HTTP: DELETE /api/register/{id} --------------------
 esp_err_t api_delete_register(httpd_req_t *req)

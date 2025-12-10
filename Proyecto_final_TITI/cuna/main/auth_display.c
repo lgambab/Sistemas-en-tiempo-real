@@ -6,6 +6,7 @@
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "driver/gpio.h"
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
@@ -14,6 +15,7 @@ static const char *TAG = "auth_display";
 
 #define MAX_PASSWORD_LEN 8
 #define DEFAULT_PASSWORD "1234"
+#define INFO_LED_GPIO GPIO_NUM_22  // LED indicador de información activa
 
 static char stored_password[MAX_PASSWORD_LEN + 1] = DEFAULT_PASSWORD;
 static char input_buffer[MAX_PASSWORD_LEN + 1] = {0};
@@ -40,8 +42,14 @@ static void info_refresh_task(void* arg) {
 }
 
 esp_err_t auth_display_init(void) {
+    // Configurar GPIO 22 como salida para el LED
+    gpio_reset_pin(INFO_LED_GPIO);
+    gpio_set_direction(INFO_LED_GPIO, GPIO_MODE_OUTPUT);
+    gpio_set_level(INFO_LED_GPIO, 0);  // LED apagado inicialmente
+    
     ESP_LOGI(TAG, "Authentication system initialized");
     ESP_LOGI(TAG, "Default password: %s", stored_password);
+    ESP_LOGI(TAG, "Info LED configured on GPIO %d", INFO_LED_GPIO);
     
     // Mostrar prompt inicial
     peripherals_oled_show_text("Password:");
@@ -126,8 +134,9 @@ void auth_display_process_key(char key) {
         if (key == '#') {
             authenticated = false;
             reset_input();
+            gpio_set_level(INFO_LED_GPIO, 0);  // Apagar LED al salir
             peripherals_oled_show_text("Logged out\n\nPassword:");
-            ESP_LOGI(TAG, "User logged out");
+            ESP_LOGI(TAG, "User logged out - LED OFF");
             return;
         }
         // Cualquier otra tecla: actualizar pantalla de info
@@ -141,7 +150,8 @@ void auth_display_process_key(char key) {
         if (strcmp(input_buffer, stored_password) == 0) {
             // Contraseña correcta
             authenticated = true;
-            ESP_LOGI(TAG, "Authentication successful");
+            gpio_set_level(INFO_LED_GPIO, 1);  // Encender LED al autenticar
+            ESP_LOGI(TAG, "Authentication successful - LED ON");
             peripherals_oled_show_text("Access OK!\n\nLoading...");
             vTaskDelay(pdMS_TO_TICKS(1000));
             show_info_screen();
