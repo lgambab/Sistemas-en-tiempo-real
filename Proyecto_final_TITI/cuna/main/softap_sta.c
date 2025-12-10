@@ -6,8 +6,10 @@
 #include "http_server.h"
 #include "wifi_app.h"
 #include "driver/gpio.h"
+#include "esp_log.h"
 
 #include "fan_driver.h"
+#include "peripherals.h"
 
 
 static void configure_led(void)
@@ -31,6 +33,12 @@ void app_main(void)
 	ESP_ERROR_CHECK(ret);
 	 
 	fan_init();
+    
+	// Initialize peripherals (keypad + OLED)
+	ret = peripherals_init();
+	if (ret != ESP_OK) {
+		ESP_LOGE("app_main", "peripherals_init failed: %d", ret);
+	}
     
 	// Start Wifi
 	init_obtain_time();

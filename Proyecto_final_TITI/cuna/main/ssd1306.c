@@ -1,6 +1,7 @@
 
 // SSD1306 OLED driver for ESP-IDF (I2C version)
 #include "ssd1306.h"
+#include "board_config.h"
 #include "driver/i2c.h"
 #include <string.h>
 
@@ -33,16 +34,21 @@ static uint8_t ssd1306_buffer[SSD1306_BUFFER_SIZE];
 
 // Helper: send command
 static esp_err_t ssd1306_write_cmd(uint8_t cmd) {
-    uint8_t data[2] = {0x00, cmd}; // 0x00 = command
-    return i2c_master_write_to_device(I2C_NUM_0, SSD1306_I2C_ADDR, data, 2, 100 / portTICK_PERIOD_MS);
+    uint8_t data[2] = {0x00, cmd}; // 0x00 = Co=0, D/C=0 (command)
+    return i2c_master_write_to_device(I2C_NUM_0, SSD1306_I2C_ADDR, data, 2, 200 / portTICK_PERIOD_MS);
 }
 
-// Helper: send data
+// Helper: send data buffer (prepends 0x40 control byte)
 static esp_err_t ssd1306_write_data(const uint8_t *data, size_t len) {
-    uint8_t prefix = 0x40; // 0x40 = data
-    esp_err_t ret = i2c_master_write_to_device(I2C_NUM_0, SSD1306_I2C_ADDR, &prefix, 1, 100 / portTICK_PERIOD_MS);
-    if (ret != ESP_OK) return ret;
-    return i2c_master_write_to_device(I2C_NUM_0, SSD1306_I2C_ADDR, data, len, 100 / portTICK_PERIOD_MS);
+    // Use static buffer to avoid malloc fragmentation
+    static uint8_t buffer[129]; // Max 128 bytes data + 1 control byte
+    
+    if (len > 128) return ESP_ERR_INVALID_SIZE;
+    
+    buffer[0] = 0x40; // Co=0, D/C=1 (data)
+    memcpy(buffer + 1, data, len);
+    
+    return i2c_master_write_to_device(I2C_NUM_0, SSD1306_I2C_ADDR, buffer, len + 1, 500 / portTICK_PERIOD_MS);
 }
 
 void ssd1306_init(void) {
@@ -68,18 +74,29 @@ void ssd1306_init(void) {
 }
 
 void ssd1306_update(void) {
+    // Set column address range
     ssd1306_write_cmd(SSD1306_SET_COL_ADDR);
-    ssd1306_write_cmd(0);
-    ssd1306_write_cmd(SSD1306_WIDTH - 1);
+    ssd1306_write_cmd(0);                    // Column start
+    ssd1306_write_cmd(SSD1306_WIDTH - 1);    // Column end
+    
+    // Set page address range
     ssd1306_write_cmd(SSD1306_SET_PAGE_ADDR);
-    ssd1306_write_cmd(0);
-    ssd1306_write_cmd((SSD1306_HEIGHT / 8) - 1);
-    ssd1306_write_data(ssd1306_buffer, sizeof(ssd1306_buffer));
+    ssd1306_write_cmd(0);                    // Page start
+    ssd1306_write_cmd((SSD1306_HEIGHT / 8) - 1); // Page end
+    
+    // Send entire buffer in chunks (max 128 bytes per I2C transaction is safer)
+    for (int i = 0; i < SSD1306_BUFFER_SIZE; i += 128) {
+        int chunk_size = (SSD1306_BUFFER_SIZE - i) < 128 ? (SSD1306_BUFFER_SIZE - i) : 128;
+        ssd1306_write_data(&ssd1306_buffer[i], chunk_size);
+    }
 }
 
 void ssd1306_clear(void) {
     memset(ssd1306_buffer, 0, sizeof(ssd1306_buffer));
-    ssd1306_update();
+}
+
+void ssd1306_fill(uint8_t pattern) {
+    memset(ssd1306_buffer, pattern, sizeof(ssd1306_buffer));
 }
 
 void ssd1306_draw_pixel(uint8_t x, uint8_t y, uint8_t color) {

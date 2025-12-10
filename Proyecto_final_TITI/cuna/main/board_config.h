@@ -8,7 +8,8 @@
 // Keypad matrix pins - adjust these to match your wiring
 // Rows are driven as outputs, Columns are inputs with pull-ups
 static const gpio_num_t KEYPAD_ROW_PINS[4] = { GPIO_NUM_12, GPIO_NUM_13, GPIO_NUM_14, GPIO_NUM_27 };
-static const gpio_num_t KEYPAD_COL_PINS[4] = { GPIO_NUM_32, GPIO_NUM_33, GPIO_NUM_34, GPIO_NUM_35 };
+// Changed from GPIO 34, 35 (input-only) to GPIO 25, 26 (support internal pull-ups)
+static const gpio_num_t KEYPAD_COL_PINS[4] = { GPIO_NUM_32, GPIO_NUM_33, GPIO_NUM_25, GPIO_NUM_26 };
 
 // Debounce in ms used by keypad (0 = default 100ms)
 #define KEYPAD_DEBOUNCE_MS 100

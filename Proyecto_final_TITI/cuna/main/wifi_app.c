@@ -67,10 +67,17 @@ static void obtain_time(void)
 	setenv("TZ", "EST5EDT,M3.2.0/2,M11.1.0", 1);
     tzset();
     ESP_LOGI(TAG, "Initializing SNTP");
+    
+    // Stop SNTP if already running to avoid assert
+    if (esp_sntp_enabled()) {
+        ESP_LOGI(TAG, "SNTP already running, stopping first");
+        esp_sntp_stop();
+    }
+    
     // Configurar el servidor SNTP. Aquí se utiliza "pool.ntp.org" como ejemplo. Puedes cambiarlo según tus necesidades.
-    sntp_setoperatingmode(SNTP_OPMODE_POLL);
-    sntp_setservername(0, "0.co.pool.ntp.org");
-    sntp_init();
+    esp_sntp_setoperatingmode(SNTP_OPMODE_POLL);
+    esp_sntp_setservername(0, "0.co.pool.ntp.org");
+    esp_sntp_init();
 
     // Esperar a que se sincronice el tiempo con el servidor SNTP
     time_t now = 0;
@@ -167,8 +174,6 @@ esp_err_t read_reg_data(char *str_to_save ,uint8_t register_num){
         return ESP_FAIL;
     }
 
-    // Tamaño de la cadena que se espera leer
-    size_t str_len = 0;
 	char reg_to_send[6];
 	const char *ptr_const_char = reg_to_send;
 	memset(&reg_to_send[0], 0x00, 6);
