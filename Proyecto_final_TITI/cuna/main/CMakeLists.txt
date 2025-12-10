@@ -11,9 +11,11 @@ idf_component_register(
         "registers.c"
         "keypad/keypad.c"
         "peripherals.c"
+        "auth_display.c"
         "ssd1306.c"
         "ssd1306_font.c"
         "ssd1306_font.c"
+        "sensor_task.c"
     INCLUDE_DIRS
         "."
     EMBED_FILES

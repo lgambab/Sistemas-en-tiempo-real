@@ -53,12 +53,12 @@
 
 #include "fan_control.h"
 #include "registers.h"
+#include "sensor_task.h"
 
 
 // Tag used for ESP serial console messages
 static const char TAG[] = "http_server";
 static adc_oneshot_unit_handle_t s_ntc_adc_handle = NULL;
-
 
 // Wifi connect status
 static int g_wifi_connect_status = NONE;
@@ -518,6 +518,14 @@ static void sensors_init(void)
     // ---------- PIR ----------
     // CAMBIA este GPIO por el que realmente tengas conectado el PIR
     pir_init(GPIO_NUM_4, NULL);   // Si no quieres usar cola, NULL está bien
+    
+    // ---------- Tarea de sensores (RTOS-compliant) ----------
+    esp_err_t ret = sensor_task_init(s_ntc_adc_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize sensor task");
+    } else {
+        ESP_LOGI(TAG, "Sensor task initialized successfully");
+    }
 }
 
 
@@ -1233,7 +1241,12 @@ static esp_err_t http_server_get_dht_sensor_readings_json_handler(httpd_req_t *r
 {
     ESP_LOGI(TAG, "/dhtSensor.json requested (NTC + PIR)");
 
-    float temp_c = leer_temperatura_celsius(s_ntc_adc_handle);
+    // Leer desde tarea de sensores (thread-safe)
+    sensor_data_t sensor_data;
+    esp_err_t ret = sensor_task_get_data(&sensor_data);
+    
+    float temp_c = (ret == ESP_OK && sensor_data.temperature_valid) 
+                   ? sensor_data.temperature_celsius : -999.0f;
     bool motion = pir_is_motion_active();
 
     char json[128];

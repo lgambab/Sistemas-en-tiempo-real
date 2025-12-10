@@ -15,6 +15,9 @@ void fan_control_init(void);
 void fan_control_set_mode(fan_mode_t mode);
 void fan_control_set_manual_speed(uint8_t percent);
 
+// Obtener velocidad actual del ventilador
+uint8_t fan_control_get_speed(void);
+
 // Llamada periódicamente desde un task (por ahora opcional)
 void fan_control_update(void);
 

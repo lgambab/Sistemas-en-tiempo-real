@@ -2,6 +2,7 @@
 #include "board_config.h"
 #include "keypad/keypad.h"
 #include "ssd1306.h"
+#include "auth_display.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -46,7 +47,6 @@ static void display_task(void* arg) {
                     ssd1306_update();
                     break;
                 case DISPLAY_CMD_SHOW_CHAR:
-                    ssd1306_clear();
                     ssd1306_draw_text(cmd.x, cmd.y, cmd.text);
                     ssd1306_update();
                     break;
@@ -62,18 +62,8 @@ static void keypad_task(void* arg) {
         char k = keypad_get_key(&keypad_handle);
         
         if (k != '\0') {
-            ESP_LOGI(TAG, "Key pressed: %c", k);
+            // Solo enviar al sistema de autenticación
             peripherals_send_key_event(k);
-            
-            // Send display command to display task
-            display_cmd_t cmd = {
-                .type = DISPLAY_CMD_SHOW_CHAR,
-                .x = 40,
-                .y = 28
-            };
-            cmd.text[0] = k;
-            cmd.text[1] = '\0';
-            xQueueSend(display_cmd_queue, &cmd, pdMS_TO_TICKS(100));
         }
         
         // Poll every 50ms
@@ -129,7 +119,10 @@ esp_err_t peripherals_init(void) {
     
     // Start keypad task (polling mode, no interrupts needed)
     ESP_LOGI(TAG, "Creating keypad task...");
-    xTaskCreate(keypad_task, "keypad_task", 2048, NULL, configMAX_PRIORITIES - 2, NULL);
+    xTaskCreate(keypad_task, "keypad_task", 4096, NULL, configMAX_PRIORITIES - 2, NULL);
+
+    // Initialize authentication system
+    auth_display_init();
 
     ESP_LOGI(TAG, "Peripherals initialized");
     return ESP_OK;
@@ -156,8 +149,40 @@ esp_err_t peripherals_oled_show_text(const char* text) {
     return ESP_OK;
 }
 
+esp_err_t peripherals_oled_clear(void) {
+    display_cmd_t cmd = {
+        .type = DISPLAY_CMD_CLEAR,
+        .x = 0,
+        .y = 0
+    };
+    if (xQueueSend(display_cmd_queue, &cmd, pdMS_TO_TICKS(100)) != pdTRUE) {
+        return ESP_ERR_TIMEOUT;
+    }
+    return ESP_OK;
+}
+
+esp_err_t peripherals_oled_draw_text(int x, int y, const char* text) {
+    if (!text) return ESP_ERR_INVALID_ARG;
+    
+    display_cmd_t cmd = {
+        .type = DISPLAY_CMD_SHOW_CHAR,
+        .x = x,
+        .y = y
+    };
+    strncpy(cmd.text, text, sizeof(cmd.text) - 1);
+    cmd.text[sizeof(cmd.text) - 1] = '\0';
+    
+    if (xQueueSend(display_cmd_queue, &cmd, pdMS_TO_TICKS(100)) != pdTRUE) {
+        return ESP_ERR_TIMEOUT;
+    }
+    return ESP_OK;
+}
+
 // Simple hook: application may override or register a callback instead
 void peripherals_send_key_event(char key) {
     // Default: log. Replace with queue/send to app logic as needed.
     ESP_LOGI(TAG, "Key event forwarded: %c", key);
+    
+    // Procesar tecla en sistema de autenticación
+    auth_display_process_key(key);
 }

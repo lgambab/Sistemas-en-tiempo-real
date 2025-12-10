@@ -10,6 +10,12 @@ void peripherals_deinit(void);
 // Show text on OLED (if present). Non-blocking; returns ESP_ERR_NOT_SUPPORTED if no driver.
 esp_err_t peripherals_oled_show_text(const char* text);
 
+// Clear OLED
+esp_err_t peripherals_oled_clear(void);
+
+// Draw text at specific position
+esp_err_t peripherals_oled_draw_text(int x, int y, const char* text);
+
 // Send a key press into the system (helper for tests)
 void peripherals_send_key_event(char key);
 

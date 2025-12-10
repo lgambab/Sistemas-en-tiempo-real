@@ -29,6 +29,11 @@ void fan_control_set_manual_speed(uint8_t percent)
     }
 }
 
+uint8_t fan_control_get_speed(void)
+{
+    return s_manual_speed;
+}
+
 void fan_control_update(void)
 {
     switch (s_mode) {
