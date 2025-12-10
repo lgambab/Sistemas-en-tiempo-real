@@ -4,7 +4,7 @@
 #include <math.h> // Librería matemática para cálculos como el logaritmo.
 
 // --- CONFIGURACIÓN DEL SENSOR NTC ---
-#define CANAL_ADC_NTC             ADC_CHANNEL_3 // Canal del ADC donde está conectado el NTC.
+#define CANAL_ADC_NTC             ADC_CHANNEL_6 // Canal del ADC donde está conectado el NTC (GPIO 34).
 #define RESISTENCIA_DIVISOR       10000.0f      // Resistencia fija (en Ohms) que acompaña al NTC.
 #define RESISTENCIA_NOMINAL_NTC   10000.0f      // Resistencia del NTC a temperatura nominal (ej: 10k a 25°C).
 #define TEMP_NOMINAL_NTC          25.0f         // Temperatura nominal en Celsius.

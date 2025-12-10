@@ -80,6 +80,13 @@ esp_err_t sensor_task_init(adc_oneshot_unit_handle_t handle) {
 esp_err_t sensor_task_get_data(sensor_data_t* data) {
     if (!data) return ESP_ERR_INVALID_ARG;
     
+    // Verificar que el mutex existe antes de usarlo
+    if (!sensor_mutex) {
+        ESP_LOGW(TAG, "Sensor task not initialized");
+        memset(data, 0, sizeof(*data));
+        return ESP_ERR_INVALID_STATE;
+    }
+    
     if (xSemaphoreTake(sensor_mutex, pdMS_TO_TICKS(100)) == pdTRUE) {
         *data = shared_sensor_data;
         xSemaphoreGive(sensor_mutex);

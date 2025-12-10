@@ -382,59 +382,46 @@ function showPassword()
 
 function send_register()
 {
-    // Assuming you have selectedNumber, hours, minutes variables populated from your form
-    selectedNumber = $("#selectNumber").val();
-    hours = $("#hours").val();
-    minutes = $("#minutes").val();
+    // Get form values
+    var selectedNumber = parseInt($("#selectNumber").val());
+    var hours = parseInt($("#hours").val());
+    var minutes = parseInt($("#minutes").val());
     
-    // Create an array for selected days
+    // Create array for selected days using new format (L, M, X, J, V, S, D)
     var selectedDays = [];
-    if ($("#day_mon").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_tue").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_wed").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_thu").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_fri").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_sat").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
-    if ($("#day_sun").prop("checked")) selectedDays.push("1");
-	else selectedDays.push("0");
+    if ($("#day_mon").prop("checked")) selectedDays.push("L");  // Lunes
+    if ($("#day_tue").prop("checked")) selectedDays.push("M");  // Martes
+    if ($("#day_wed").prop("checked")) selectedDays.push("X");  // Miércoles
+    if ($("#day_thu").prop("checked")) selectedDays.push("J");  // Jueves
+    if ($("#day_fri").prop("checked")) selectedDays.push("V");  // Viernes
+    if ($("#day_sat").prop("checked")) selectedDays.push("S");  // Sábado
+    if ($("#day_sun").prop("checked")) selectedDays.push("D");  // Domingo
 
-    // Create an object to hold the data to be sent in the request body
+    // Create data object for new REST API
     var requestData = {
-        'selectedNumber': selectedNumber,
-        'hours': hours,
-        'minutes': minutes,
-        'selectedDays': selectedDays,
-        'timestamp': Date.now()
+        'register': selectedNumber,
+        'hour': hours,
+        'minute': minutes,
+        'days': selectedDays
     };
 
-    // Serialize the data object to JSON
-    var requestDataJSON = JSON.stringify(requestData);
-
-	$.ajax({
-		url: '/regchange.json',
-		dataType: 'json',
-		method: 'POST',
-		cache: false,
-		data: requestDataJSON, // Send the JSON data in the request body
-		contentType: 'application/json', // Set the content type to JSON
-		success: function(response) {
-		  // Handle the success response from the server
-		  console.log(response);
-		},
-		error: function(xhr, status, error) {
-		  // Handle errors
-		  console.error(xhr.responseText);
-		}
-	  });
-
-    // Print the resulting JSON to the console (for testing)
-    //console.log(requestDataJSON);
+    // Send to new REST API endpoint
+    $.ajax({
+        url: '/api/register',
+        dataType: 'json',
+        method: 'POST',
+        cache: false,
+        data: JSON.stringify(requestData),
+        contentType: 'application/json',
+        success: function(response) {
+            console.log('Register saved successfully:', response);
+            alert('Registro guardado exitosamente');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error saving register:', xhr.responseText);
+            alert('Error al guardar registro');
+        }
+    });
 }
 
 /**

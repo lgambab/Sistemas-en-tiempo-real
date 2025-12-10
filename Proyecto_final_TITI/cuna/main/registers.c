@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
 #include "sdkconfig.h"
 #include "registers.h"
 
@@ -9,16 +11,27 @@
 #include "nvs.h"
 #include "cJSON.h"
 
-// Fix for VS Code IntelliSense: some builds generate sdkconfig.h in build/ and
-// the editor may not see CONFIG_* macros. Define a safe default only for
-// IntelliSense to avoid spurious "identifier undefined" errors.
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#include "fan_control.h"
+
+// Fix for VS Code IntelliSense
 #if defined(__INTELLISENSE__)
 #ifndef CONFIG_LOG_MAXIMUM_LEVEL
 #define CONFIG_LOG_MAXIMUM_LEVEL 5
 #endif
 #endif
 
+
+// from registers.c
+extern esp_err_t api_get_registers(httpd_req_t *req);
+
+
+
 static const char *TAG = "REGISTERS";
+
+// -------------------- NVS INIT --------------------
 void init_nvs()
 {
     esp_err_t ret = nvs_flash_init();
@@ -28,20 +41,22 @@ void init_nvs()
     }
     ESP_ERROR_CHECK(ret);
 }
+
+// -------------------- SAVE / LOAD / DELETE --------------------
 esp_err_t save_register_to_nvs(int id, reg_t *reg)
 {
     nvs_handle_t nvs;
     char key[16];
     sprintf(key, "reg_%d", id);
 
-    // Convertir a JSON
     cJSON *root = cJSON_CreateObject();
-    cJSON_AddNumberToObject(root, "hour", reg->hour);
+    cJSON_AddNumberToObject(root, "hour",   reg->hour);
     cJSON_AddNumberToObject(root, "minute", reg->minute);
 
     cJSON *days = cJSON_CreateArray();
-    for (int i = 0; i < reg->day_count; i++)
+    for (int i = 0; i < reg->day_count; i++) {
         cJSON_AddItemToArray(days, cJSON_CreateString(reg->days[i]));
+    }
     cJSON_AddItemToObject(root, "days", days);
 
     char *json_str = cJSON_Print(root);
@@ -58,6 +73,7 @@ esp_err_t save_register_to_nvs(int id, reg_t *reg)
 
     return err;
 }
+
 esp_err_t load_register_from_nvs(int id, char *buffer, size_t buffer_len)
 {
     nvs_handle_t nvs;
@@ -66,7 +82,7 @@ esp_err_t load_register_from_nvs(int id, char *buffer, size_t buffer_len)
 
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &nvs));
 
-    size_t required_size;
+    size_t required_size = 0;
     esp_err_t err = nvs_get_str(nvs, key, NULL, &required_size);
 
     if (err == ESP_ERR_NVS_NOT_FOUND) {
@@ -83,6 +99,7 @@ esp_err_t load_register_from_nvs(int id, char *buffer, size_t buffer_len)
     nvs_close(nvs);
     return err;
 }
+
 void delete_register_from_nvs(int id)
 {
     nvs_handle_t nvs;
@@ -94,6 +111,86 @@ void delete_register_from_nvs(int id)
     nvs_commit(nvs);
     nvs_close(nvs);
 }
+
+// -------------------- HELPER: cargar reg_t desde NVS --------------------
+static esp_err_t load_register_struct_from_nvs(int id, reg_t *out)
+{
+    char buf[512];
+    esp_err_t err = load_register_from_nvs(id, buf, sizeof(buf));
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    cJSON *root = cJSON_Parse(buf);
+    if (!root) {
+        return ESP_FAIL;
+    }
+
+    cJSON *hour_json = cJSON_GetObjectItem(root, "hour");
+    cJSON *min_json  = cJSON_GetObjectItem(root, "minute");
+    cJSON *days_json = cJSON_GetObjectItem(root, "days");
+
+    if (!cJSON_IsNumber(hour_json) || !cJSON_IsNumber(min_json) || !cJSON_IsArray(days_json)) {
+        cJSON_Delete(root);
+        return ESP_FAIL;
+    }
+
+    memset(out, 0, sizeof(*out));
+    out->hour      = hour_json->valueint;
+    out->minute    = min_json->valueint;
+    out->day_count = cJSON_GetArraySize(days_json);
+    if (out->day_count > 7) {
+        out->day_count = 7;
+    }
+
+    for (int i = 0; i < out->day_count; i++) {
+        cJSON *item = cJSON_GetArrayItem(days_json, i);
+        if (cJSON_IsString(item) && item->valuestring) {
+            strncpy(out->days[i], item->valuestring, sizeof(out->days[i]) - 1);
+            out->days[i][sizeof(out->days[i]) - 1] = '\0';
+        } else {
+            out->days[i][0] = '\0';
+        }
+    }
+
+    cJSON_Delete(root);
+    return ESP_OK;
+}
+
+// -------------------- HELPER: ¿registro activo ahora? --------------------
+static bool register_is_active_now(const reg_t *reg)
+{
+    time_t now;
+    struct tm timeinfo;
+    time(&now);
+    localtime_r(&now, &timeinfo);
+
+    int cur_hour = timeinfo.tm_hour;
+    int cur_min  = timeinfo.tm_min;
+    int cur_wday = timeinfo.tm_wday;  // 0=domingo, 1=lunes, ... 6=sábado
+
+    if (reg->hour != cur_hour || reg->minute != cur_min) {
+        return false;
+    }
+
+    for (int i = 0; i < reg->day_count; i++) {
+        const char *d = reg->days[i];
+
+        if ((cur_wday == 1 && strcmp(d, "L") == 0) ||   // lunes
+            (cur_wday == 2 && strcmp(d, "M") == 0) ||   // martes
+            (cur_wday == 3 && strcmp(d, "X") == 0) ||   // miércoles
+            (cur_wday == 4 && strcmp(d, "J") == 0) ||   // jueves
+            (cur_wday == 5 && strcmp(d, "V") == 0) ||   // viernes
+            (cur_wday == 6 && strcmp(d, "S") == 0) ||   // sábado
+            (cur_wday == 0 && strcmp(d, "D") == 0)) {   // domingo
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// -------------------- HTTP: POST /api/register --------------------
 esp_err_t api_post_register(httpd_req_t *req)
 {
     int len = req->content_len;
@@ -118,32 +215,34 @@ esp_err_t api_post_register(httpd_req_t *req)
 
     cJSON *root = cJSON_Parse(buf);
     free(buf);
+
     if (!root) {
         httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "invalid json");
         return ESP_FAIL;
     }
 
-    cJSON *id_json = cJSON_GetObjectItem(root, "register");
+    cJSON *id_json   = cJSON_GetObjectItem(root, "register");
     cJSON *hour_json = cJSON_GetObjectItem(root, "hour");
-    cJSON *min_json = cJSON_GetObjectItem(root, "minute");
-    cJSON *days = cJSON_GetObjectItem(root, "days");
+    cJSON *min_json  = cJSON_GetObjectItem(root, "minute");
+    cJSON *days      = cJSON_GetObjectItem(root, "days");
 
-    if (!cJSON_IsNumber(id_json) || !cJSON_IsNumber(hour_json) || !cJSON_IsNumber(min_json) || !cJSON_IsArray(days)) {
+    if (!cJSON_IsNumber(id_json) || !cJSON_IsNumber(hour_json) ||
+        !cJSON_IsNumber(min_json) || !cJSON_IsArray(days)) {
         cJSON_Delete(root);
         httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "missing fields");
         return ESP_FAIL;
     }
 
-    int id = id_json->valueint;
-    int hour = hour_json->valueint;
+    int id     = id_json->valueint;
+    int hour   = hour_json->valueint;
     int minute = min_json->valueint;
 
     int day_count = cJSON_GetArraySize(days);
     if (day_count > 7) day_count = 7;
 
     reg_t reg = {0};
-    reg.hour = hour;
-    reg.minute = minute;
+    reg.hour      = hour;
+    reg.minute    = minute;
     reg.day_count = day_count;
 
     for (int i = 0; i < day_count; i++) {
@@ -164,17 +263,22 @@ esp_err_t api_post_register(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-    ESP_LOGI(TAG, "api_post_register: saved id=%d hour=%d minute=%d days=%d", id, hour, minute, day_count);
+    ESP_LOGI(TAG, "api_post_register: saved id=%d hour=%d minute=%d days=%d",
+             id, hour, minute, day_count);
 
     httpd_resp_sendstr(req, "OK");
     return ESP_OK;
 }
+
+// -------------------- HTTP: GET /api/registers --------------------
 esp_err_t api_get_registers(httpd_req_t *req)
 {
     cJSON *root = cJSON_CreateObject();
     char smallbuf[256];
+
     for (int i = 1; i <= 10; i++) {
-        char key[8]; snprintf(key, sizeof(key), "%d", i);
+        char key[8];
+        snprintf(key, sizeof(key), "%d", i);
 
         esp_err_t r = load_register_from_nvs(i, smallbuf, sizeof(smallbuf));
         if (r == ESP_OK) {
@@ -183,12 +287,10 @@ esp_err_t api_get_registers(httpd_req_t *req)
                 cJSON_AddItemToObject(root, key, reg_json);
                 continue;
             }
-        }
-
-        if (r == ESP_ERR_NVS_INVALID_LENGTH) {
-            // read with required size
+        } else if (r == ESP_ERR_NVS_INVALID_LENGTH) {
             nvs_handle_t nvs;
-            char nkey[16]; snprintf(nkey, sizeof(nkey), "reg_%d", i);
+            char nkey[16];
+            snprintf(nkey, sizeof(nkey), "reg_%d", i);
             if (nvs_open("storage", NVS_READWRITE, &nvs) == ESP_OK) {
                 size_t required = 0;
                 if (nvs_get_str(nvs, nkey, NULL, &required) == ESP_OK && required > 0) {
@@ -196,7 +298,9 @@ esp_err_t api_get_registers(httpd_req_t *req)
                     if (dyn) {
                         if (nvs_get_str(nvs, nkey, dyn, &required) == ESP_OK) {
                             cJSON *reg_json = cJSON_Parse(dyn);
-                            if (reg_json) cJSON_AddItemToObject(root, key, reg_json);
+                            if (reg_json) {
+                                cJSON_AddItemToObject(root, key, reg_json);
+                            }
                         }
                         free(dyn);
                     }
@@ -206,7 +310,6 @@ esp_err_t api_get_registers(httpd_req_t *req)
             }
         }
 
-        // not found or error
         cJSON_AddNullToObject(root, key);
     }
 
@@ -218,12 +321,22 @@ esp_err_t api_get_registers(httpd_req_t *req)
     free(out);
     cJSON_Delete(root);
     return ESP_OK;
+
 }
+
+
+static esp_err_t http_server_read_register_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "/readreg.json requested -> delegando a api_get_registers");
+    return api_get_registers(req);
+}
+
+// -------------------- HTTP: DELETE /api/register/{id} --------------------
 esp_err_t api_delete_register(httpd_req_t *req)
 {
-    // Try to parse id from URI path: /api/register/{id}
     const char *uri = req->uri; // e.g. "/api/register/3"
     int id = 0;
+
     if (uri) {
         const char *last = strrchr(uri, '/');
         if (last && *(last + 1) != '\0') {
@@ -232,7 +345,6 @@ esp_err_t api_delete_register(httpd_req_t *req)
     }
 
     if (id <= 0) {
-        // Fallback: try query string (old behavior)
         char query[16] = {0};
         if (httpd_req_get_url_query_str(req, query, sizeof(query)) == ESP_OK) {
             id = atoi(query);
@@ -245,52 +357,78 @@ esp_err_t api_delete_register(httpd_req_t *req)
     }
 
     delete_register_from_nvs(id);
-
     ESP_LOGI(TAG, "api_delete_register: deleted id=%d", id);
 
     httpd_resp_sendstr(req, "Deleted");
     return ESP_OK;
 }
-httpd_uri_t post_register_uri = {
-    .uri = "/api/register",
-    .method = HTTP_POST,
-    .handler = api_post_register
-};
 
-httpd_uri_t get_registers_uri = {
-    .uri = "/api/registers",
-    .method = HTTP_GET,
-    .handler = api_get_registers
-};
+// -------------------- TASK: scheduler de registros --------------------
+static void registers_scheduler_task(void *arg)
+{
+    ESP_LOGI(TAG, "registers_scheduler_task: started");
 
-httpd_uri_t delete_register_uri = {
-    .uri = "/api/register/*",
-    .method = HTTP_DELETE,
-    .handler = api_delete_register
-};
+    while (1) {
+        bool any_match_now = false;
 
+        for (int i = 1; i <= 10; i++) {
+            reg_t reg;
+            if (load_register_struct_from_nvs(i, &reg) == ESP_OK) {
+                if (register_is_active_now(&reg)) {
+                    any_match_now = true;
+                    break;
+                }
+            }
+        }
+
+        fan_control_on_register_tick(any_match_now);
+
+        vTaskDelay(pdMS_TO_TICKS(10000)); // cada 10 s
+    }
+}
+
+// -------------------- REGISTRO DE ENDPOINTS --------------------
 void register_registers_endpoints(httpd_handle_t server)
 {
     ESP_LOGI(TAG, "register_registers_endpoints: registering /api/register endpoints");
+
     httpd_uri_t post_register_uri = {
-        .uri = "/api/register",
-        .method = HTTP_POST,
+        .uri     = "/api/register",
+        .method  = HTTP_POST,
         .handler = api_post_register
     };
 
     httpd_uri_t get_registers_uri = {
-        .uri = "/api/registers",
-        .method = HTTP_GET,
+        .uri     = "/api/registers",
+        .method  = HTTP_GET,
         .handler = api_get_registers
     };
 
     httpd_uri_t delete_register_uri = {
-        .uri = "/api/register/*",
-        .method = HTTP_DELETE,
+        .uri     = "/api/register/*",
+        .method  = HTTP_DELETE,
         .handler = api_delete_register
     };
 
     httpd_register_uri_handler(server, &post_register_uri);
     httpd_register_uri_handler(server, &get_registers_uri);
     httpd_register_uri_handler(server, &delete_register_uri);
+
+    static bool s_scheduler_started = false;
+    if (!s_scheduler_started) {
+        if (xTaskCreate(
+                registers_scheduler_task,
+                "registers_scheduler",
+                4096,
+                NULL,
+                5,
+                NULL
+            ) == pdPASS)
+        {
+            s_scheduler_started = true;
+            ESP_LOGI(TAG, "registers_scheduler_task created");
+        } else {
+            ESP_LOGE(TAG, "Failed to create registers_scheduler_task");
+        }
+    }
 }
