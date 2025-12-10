@@ -83,9 +83,9 @@ static void keypad_task(void* arg) {
                 continue;
             }
             
-            // Disable interrupts on all columns
-            for (int i = 0; i < KEYPAD_COLS; i++) {
-                gpio_intr_disable(KEYPAD_COL_PINS[i]);
+            // Disable interrupts on all rows
+            for (int i = 0; i < KEYPAD_ROWS; i++) {
+                gpio_intr_disable(KEYPAD_ROW_PINS[i]);
             }
             
             // Small delay to let signal stabilize
@@ -113,9 +113,9 @@ static void keypad_task(void* arg) {
                 ESP_LOGI(TAG, "No key detected after scan");
             }
             
-            // Clear the interrupt status for all column pins
-            for (int i = 0; i < KEYPAD_COLS; i++) {
-                gpio_intr_disable(KEYPAD_COL_PINS[i]);
+            // Clear the interrupt status for all row pins
+            for (int i = 0; i < KEYPAD_ROWS; i++) {
+                gpio_intr_disable(KEYPAD_ROW_PINS[i]);
             }
             
             // Drain the queue of any accumulated events
@@ -128,8 +128,8 @@ static void keypad_task(void* arg) {
             vTaskDelay(pdMS_TO_TICKS(100));
             
             // Re-enable interrupts
-            for (int i = 0; i < KEYPAD_COLS; i++) {
-                gpio_intr_enable(KEYPAD_COL_PINS[i]);
+            for (int i = 0; i < KEYPAD_ROWS; i++) {
+                gpio_intr_enable(KEYPAD_ROW_PINS[i]);
             }
             ESP_LOGI(TAG, "Ready for next keypress");
         }
@@ -186,12 +186,12 @@ esp_err_t peripherals_init(void) {
     ESP_LOGI(TAG, "Installing GPIO ISR service...");
     gpio_install_isr_service(0);
     
-    ESP_LOGI(TAG, "Configuring column interrupts...");
-    for (int i = 0; i < KEYPAD_COLS; i++) {
-        gpio_num_t col = KEYPAD_COL_PINS[i];
-        ESP_LOGI(TAG, "Setting up interrupt for col %d (GPIO %d)", i, col);
-        gpio_set_intr_type(col, GPIO_INTR_NEGEDGE);
-        err = gpio_isr_handler_add(col, gpio_isr_handler, (void*)(intptr_t)col);
+    ESP_LOGI(TAG, "Configuring ROW interrupts (INVERTED)...");
+    for (int i = 0; i < KEYPAD_ROWS; i++) {
+        gpio_num_t row = KEYPAD_ROW_PINS[i];
+        ESP_LOGI(TAG, "Setting up interrupt for row %d (GPIO %d)", i, row);
+        gpio_set_intr_type(row, GPIO_INTR_POSEDGE);  // Pull-down: detecta flanco positivo
+        err = gpio_isr_handler_add(row, gpio_isr_handler, (void*)(intptr_t)row);
         if (err != ESP_OK) {
             ESP_LOGE(TAG, "Failed to add ISR handler for GPIO %d: %d", col, err);
         }

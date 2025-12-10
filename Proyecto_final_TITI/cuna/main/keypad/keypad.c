@@ -2,6 +2,9 @@
 #include "esp_err.h"
 #include "freertos/task.h"
 #include "esp_timer.h"
+#include "esp_log.h"
+
+static const char *TAG = "keypad";
 
 static const char keypad_map[KEYPAD_ROWS][KEYPAD_COLS] = {
   {'1', '2', '3', 'A'},
@@ -20,41 +23,63 @@ esp_err_t keypad_init(keypad_handle_t* keypad) {
     if (!keypad) return ESP_ERR_INVALID_ARG;
     if (keypad->debounce_ms == 0) keypad->debounce_ms = pdMS_TO_TICKS(100);
 
-    // Configure row pins as outputs, set HIGH (inactive)
-    for (int i = 0; i < KEYPAD_ROWS; i++) {
-        gpio_reset_pin(keypad->row_pins[i]);
-        gpio_set_direction(keypad->row_pins[i], GPIO_MODE_OUTPUT);
-        gpio_set_level(keypad->row_pins[i], 1);
-    }
-
-    // Configure column pins as inputs with pull-up
+    // INVERTIDO: Configure COLUMN pins as outputs, set LOW (inactive with pull-down logic)
     for (int i = 0; i < KEYPAD_COLS; i++) {
         gpio_reset_pin(keypad->col_pins[i]);
-        gpio_set_direction(keypad->col_pins[i], GPIO_MODE_INPUT);
-        gpio_set_pull_mode(keypad->col_pins[i], GPIO_PULLUP_ONLY);
+        gpio_set_direction(keypad->col_pins[i], GPIO_MODE_OUTPUT);
+        gpio_set_drive_capability(keypad->col_pins[i], GPIO_DRIVE_CAP_3);  // Máxima corriente ~40mA
+        gpio_set_level(keypad->col_pins[i], 0);
+        ESP_LOGI(TAG, "Col %d configured: GPIO %d set to OUTPUT LOW (max drive)", i, keypad->col_pins[i]);
+    }
+
+    // INVERTIDO: Configure ROW pins as inputs with pull-down
+    for (int i = 0; i < KEYPAD_ROWS; i++) {
+        gpio_reset_pin(keypad->row_pins[i]);
+        gpio_set_direction(keypad->row_pins[i], GPIO_MODE_INPUT);
+        gpio_set_pull_mode(keypad->row_pins[i], GPIO_PULLDOWN_ONLY);
+        ESP_LOGI(TAG, "Row %d configured: GPIO %d set to INPUT PULLDOWN", i, keypad->row_pins[i]);
     }
 
     last_press_tick = xTaskGetTickCount();
     return ESP_OK;
 }
 
-// Internal helper: scan given column index only
-static char scan_column_index(keypad_handle_t* keypad, int col_index) {
+// Internal helper: scan given ROW index only (INVERTED: columns drive, rows sense)
+static char scan_row_index(keypad_handle_t* keypad, int row_index) {
     char key_pressed = '\0';
 
-    for (int row = 0; row < KEYPAD_ROWS; row++) {
-        // Drive all rows HIGH then pull current row LOW
-        for (int r = 0; r < KEYPAD_ROWS; r++) gpio_set_level(keypad->row_pins[r], 1);
-        gpio_set_level(keypad->row_pins[row], 0);
+    // First, set ALL columns to HIGH to detect which column is pressed
+    for (int c = 0; c < KEYPAD_COLS; c++) {
+        gpio_set_level(keypad->col_pins[c], 1);
+    }
+    small_delay_ms(5);
+    
+    // Check if row is still HIGH (key is still pressed)
+    if (gpio_get_level(keypad->row_pins[row_index]) == 0) {
+        // Key was released, no detection
+        for (int c = 0; c < KEYPAD_COLS; c++) gpio_set_level(keypad->col_pins[c], 0);
+        return '\0';
+    }
 
-        small_delay_ms(5);
+    // Now scan each column individually
+    for (int col = 0; col < KEYPAD_COLS; col++) {
+        // Drive all columns LOW except current column
+        for (int c = 0; c < KEYPAD_COLS; c++) {
+            gpio_set_level(keypad->col_pins[c], (c == col) ? 1 : 0);
+        }
+        
+        ESP_LOGI(TAG, "Scanning col %d (GPIO %d = HIGH)", col, keypad->col_pins[col]);
 
-        int level = gpio_get_level(keypad->col_pins[col_index]);
-        if (level == 0) { // active low
-            key_pressed = keypad_map[row][col_index];
+        small_delay_ms(2);
+
+        int level = gpio_get_level(keypad->row_pins[row_index]);
+        ESP_LOGI(TAG, "  Row %d (GPIO %d) level: %d", row_index, keypad->row_pins[row_index], level);
+        
+        if (level == 1) { // active high (pull-down logic)
+            key_pressed = keypad_map[row_index][col];
 
             // Wait for release
-            while (gpio_get_level(keypad->col_pins[col_index]) == 0) {
+            while (gpio_get_level(keypad->row_pins[row_index]) == 1) {
                 small_delay_ms(10);
             }
 
@@ -63,8 +88,8 @@ static char scan_column_index(keypad_handle_t* keypad, int col_index) {
         }
     }
 
-    // restore rows to inactive
-    for (int r = 0; r < KEYPAD_ROWS; r++) gpio_set_level(keypad->row_pins[r], 1);
+    // restore columns to inactive
+    for (int c = 0; c < KEYPAD_COLS; c++) gpio_set_level(keypad->col_pins[c], 0);
     return key_pressed;
 }
 
@@ -77,9 +102,9 @@ char keypad_get_key(keypad_handle_t* keypad) {
         return '\0';
     }
 
-    // drive rows and check all columns
-    for (int col = 0; col < KEYPAD_COLS; col++) {
-        char k = scan_column_index(keypad, col);
+    // INVERTED: drive columns and check all rows
+    for (int row = 0; row < KEYPAD_ROWS; row++) {
+        char k = scan_row_index(keypad, row);
         if (k != '\0') return k;
     }
 
@@ -89,14 +114,15 @@ char keypad_get_key(keypad_handle_t* keypad) {
 char keypad_scan_from_col(keypad_handle_t* keypad, gpio_num_t col_pin) {
     if (!keypad) return '\0';
 
-    int col_index = -1;
-    for (int i = 0; i < KEYPAD_COLS; i++) {
-        if (keypad->col_pins[i] == col_pin) {
-            col_index = i;
+    // INVERTED: col_pin is now actually a ROW pin (despite function name)
+    int row_index = -1;
+    for (int i = 0; i < KEYPAD_ROWS; i++) {
+        if (keypad->row_pins[i] == col_pin) {
+            row_index = i;
             break;
         }
     }
-    if (col_index == -1) return '\0';
+    if (row_index == -1) return '\0';
 
     // debounce check
     TickType_t now = xTaskGetTickCount();
@@ -104,5 +130,5 @@ char keypad_scan_from_col(keypad_handle_t* keypad, gpio_num_t col_pin) {
         return '\0';
     }
 
-    return scan_column_index(keypad, col_index);
+    return scan_row_index(keypad, row_index);
 }
