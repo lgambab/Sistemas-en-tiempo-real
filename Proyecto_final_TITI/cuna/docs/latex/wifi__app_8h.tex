@@ -1,0 +1,876 @@
+\doxysection{Referencia del archivo wifi\+\_\+app.\+h}
+\hypertarget{wifi__app_8h}{}\label{wifi__app_8h}\index{wifi\_app.h@{wifi\_app.h}}
+
+
+Gestión completa de Wi\+Fi AP/\+STA con reconexión automática y persistencia.  
+
+
+{\ttfamily \#include "{}esp\+\_\+netif.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+wifi\+\_\+types.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+\doxysubsubsection*{Estructuras de datos}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structwifi__app__queue__message}{wifi\+\_\+app\+\_\+queue\+\_\+message}}
+\item 
+struct \mbox{\hyperlink{structregister__saved}{register\+\_\+saved}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga8e19d13af09f7ed0afad391730f1e3e7}{WIFI\+\_\+\+AP\+\_\+\+SSID}}~"{}Mi\+\_\+esp"{}
+\begin{DoxyCompactList}\small\item\em Nombre de la red AP. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_gac80c92af8bf29cfe0442a28b6a7ec5a3}{WIFI\+\_\+\+AP\+\_\+\+PASSWORD}}~"{}12345678"{}
+\begin{DoxyCompactList}\small\item\em Contraseña del AP (mínimo 8 caracteres). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_gac0a1dba58f0e6d7f07d3050fa0291dd0}{WIFI\+\_\+\+AP\+\_\+\+CHANNEL}}~1
+\begin{DoxyCompactList}\small\item\em Canal Wi\+Fi del AP (1-\/13). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga02f4226bd6b0e2adad29fddd345a0918}{WIFI\+\_\+\+AP\+\_\+\+SSID\+\_\+\+HIDDEN}}~0
+\begin{DoxyCompactList}\small\item\em 0=visible, 1=oculto \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_gab689d29cda2d350ce6652141df530fd0}{WIFI\+\_\+\+AP\+\_\+\+MAX\+\_\+\+CONNECTIONS}}~5
+\begin{DoxyCompactList}\small\item\em Máximo de clientes simultáneos. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga532527c416f545aaa0b3adf4185ed3f4}{WIFI\+\_\+\+AP\+\_\+\+BEACON\+\_\+\+INTERVAL}}~100
+\begin{DoxyCompactList}\small\item\em Intervalo beacon en ms (recomendado 100ms). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga067a8d9ec14859ad6237320d2cec686a}{WIFI\+\_\+\+AP\+\_\+\+IP}}~"{}192.\+168.\+0.\+1"{}
+\begin{DoxyCompactList}\small\item\em IP del AP. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga2782b50f9a156696a1708c61823aa3a3}{WIFI\+\_\+\+AP\+\_\+\+GATEWAY}}~"{}192.\+168.\+0.\+1"{}
+\begin{DoxyCompactList}\small\item\em Gateway del AP (igual que IP). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_gaf48472f62a4bab9896e181b25d439f34}{WIFI\+\_\+\+AP\+\_\+\+NETMASK}}~"{}255.\+255.\+255.\+0"{}
+\begin{DoxyCompactList}\small\item\em Máscara de subred. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga7581843f542963f235dd70d339f106f5}{WIFI\+\_\+\+AP\+\_\+\+BANDWIDTH}}~WIFI\+\_\+\+BW\+\_\+\+HT20
+\begin{DoxyCompactList}\small\item\em Ancho de banda 20 MHz. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga08b834aec05f183ace828469af10b817}{WIFI\+\_\+\+STA\+\_\+\+POWER\+\_\+\+SAVE}}~WIFI\+\_\+\+PS\+\_\+\+NONE
+\begin{DoxyCompactList}\small\item\em Sin ahorro de energía. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga1a3e371dfda6b729e6c7a890cf94f6ca}{MAX\+\_\+\+SSID\+\_\+\+LENGTH}}~32
+\begin{DoxyCompactList}\small\item\em Longitud máxima SSID (estándar IEEE). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga7f264fafe78080f8ea68715854b9bc24}{MAX\+\_\+\+PASSWORD\+\_\+\+LENGTH}}~64
+\begin{DoxyCompactList}\small\item\em Longitud máxima contraseña (estándar IEEE). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___wi_fi___config_ga72a2cf74d03d2705748164a8202c8f48}{MAX\+\_\+\+CONNECTION\+\_\+\+RETRIES}}~5
+\begin{DoxyCompactList}\small\item\em Intentos de reconexión antes de fallar. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{wifi__app_8h_a5b6bbc36d5b71c9bebeb124a6216a3d4}{NUM\+\_\+\+REGISTERS\+\_\+\+AV}}~10
+\begin{DoxyCompactList}\small\item\em Número máximo de registros programados. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445}{wifi\+\_\+connected\+\_\+event\+\_\+callback\+\_\+t}}) (void)
+\item 
+typedef enum \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7}{wifi\+\_\+app\+\_\+message}} \mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\+\_\+app\+\_\+message\+\_\+e}}
+\item 
+typedef struct \mbox{\hyperlink{structwifi__app__queue__message}{wifi\+\_\+app\+\_\+queue\+\_\+message}} \mbox{\hyperlink{wifi__app_8h_a92e7931e4ccac09641270ca66333c912}{wifi\+\_\+app\+\_\+queue\+\_\+message\+\_\+t}}
+\item 
+typedef struct \mbox{\hyperlink{structregister__saved}{register\+\_\+saved}} \mbox{\hyperlink{wifi__app_8h_a8ca04b228d2e75b497bad06dd88566af}{register\+\_\+saved\+\_\+e}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumeraciones}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7}{wifi\+\_\+app\+\_\+message}} \{ \newline
+\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26}{WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+START\+\_\+\+HTTP\+\_\+\+SERVER}} = 0
+, \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd}{WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+CONNECTING\+\_\+\+FROM\+\_\+\+HTTP\+\_\+\+SERVER}}
+, \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081}{WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+STA\+\_\+\+CONNECTED\+\_\+\+GOT\+\_\+\+IP}}
+, \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19}{WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+USER\+\_\+\+REQUESTED\+\_\+\+STA\+\_\+\+DISCONNECT}}
+, \newline
+\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f}{WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+LOAD\+\_\+\+SAVED\+\_\+\+CREDENTIALS}}
+, \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8}{WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+STA\+\_\+\+DISCONNECTED}}
+, \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e}{WIFI\+\_\+\+APP\+\_\+\+CONNECT\+\_\+\+TO\+\_\+\+STA}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{wifi__app_8h_ab1c7cd65f7d2ab1a577cd0179c779ee6}{obtain\+\_\+time}} (void)
+\begin{DoxyCompactList}\small\item\em Obtener hora desde servidor SNTP. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_a8a91d7a19b16ddaf60425245284defd7}{connect\+\_\+to\+\_\+wifi}} (void)
+\begin{DoxyCompactList}\small\item\em Conectar a Wi\+Fi usando credenciales guardadas. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_a1d00e8eaad99ca85a63b4329a60b4f39}{initialize\+\_\+registers}} (void)
+\begin{DoxyCompactList}\small\item\em Inicializar sistema de registros programados. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{wifi__app_8h_ad0657d784ea25871bdc65ab1a0d10b5a}{read\+\_\+reg\+\_\+data}} (char \texorpdfstring{$\ast$}{*}str\+\_\+to\+\_\+save, uint8\+\_\+t register\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Leer datos de registro desde NVS. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_aa25117999d3c679ce2ec34f66a4da463}{init\+\_\+obtain\+\_\+time}} (void)
+\begin{DoxyCompactList}\small\item\em Inicializar sincronización de hora SNTP. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{wifi__app_8h_af889cf6e5d320085772f871cf468ffb1}{get\+\_\+state\+\_\+time\+\_\+was\+\_\+synchronized}} (void)
+\begin{DoxyCompactList}\small\item\em Verificar si la hora ya fue sincronizada. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_a56633849de02c2abb38c9f47ef6fee1f}{save\+\_\+reg\+\_\+data}} (uint8\+\_\+t register, char \texorpdfstring{$\ast$}{*}str)
+\begin{DoxyCompactList}\small\item\em Guardar registro en NVS. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_a1eb1e37bd21abc738271e8c1a8a876f8}{save\+\_\+wifi\+\_\+credentials}} (const char \texorpdfstring{$\ast$}{*}ssid, const char \texorpdfstring{$\ast$}{*}password)
+\begin{DoxyCompactList}\small\item\em Guardar credenciales Wi\+Fi en NVS. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_af9612dd1f9a3dccde879268af5c87db5}{load\+\_\+wifi\+\_\+credentials}} (char \texorpdfstring{$\ast$}{*}ssid, char \texorpdfstring{$\ast$}{*}password)
+\begin{DoxyCompactList}\small\item\em Cargar credenciales Wi\+Fi desde NVS. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{wifi__app_8h_a68f13dd71722bd75ad3dfbe7a709fa99}{wifi\+\_\+app\+\_\+connect\+\_\+sta}} (void)
+\begin{DoxyCompactList}\small\item\em Conectar ESP32 a red Wi\+Fi como Station. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_ac29bf6013014643966e099049b102dfd}{check\+\_\+sta\+\_\+connection\+\_\+state}} (void \texorpdfstring{$\ast$}{*}pv\+Parameters)
+\begin{DoxyCompactList}\small\item\em Tarea que verifica estado de conexión STA. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_acb668c2a5fc2215e71e0688d577f4085}{task\+\_\+compare\+\_\+hour\+\_\+to\+\_\+execute\+\_\+action}} (void \texorpdfstring{$\ast$}{*}pv\+Parameters)
+\begin{DoxyCompactList}\small\item\em Tarea que compara hora actual con registros programados. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_a101f4f6f2c139e1ac4d4619328f768d9}{update\+\_\+register}} (int reg\+\_\+to\+\_\+update)
+\begin{DoxyCompactList}\small\item\em Actualizar registro específico. \end{DoxyCompactList}\item 
+Base\+Type\+\_\+t \mbox{\hyperlink{wifi__app_8h_aec924a59c0eede746e90c5c04e682fc3}{wifi\+\_\+app\+\_\+send\+\_\+message}} (\mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\+\_\+app\+\_\+message\+\_\+e}} msg\+ID)
+\begin{DoxyCompactList}\small\item\em Enviar mensaje a la cola de la tarea Wi\+Fi. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_ac2af98a9df667dec7b75c10a5717f09d}{wifi\+\_\+app\+\_\+start}} (void)
+\begin{DoxyCompactList}\small\item\em Iniciar tarea RTOS de Wi\+Fi. \end{DoxyCompactList}\item 
+wifi\+\_\+config\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{wifi__app_8h_acd6606606de84f405065531c1889432a}{wifi\+\_\+app\+\_\+get\+\_\+wifi\+\_\+config}} (void)
+\begin{DoxyCompactList}\small\item\em Obtener configuración actual de Wi\+Fi. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_af79551f710f287fae05080e0b8e4de3b}{wifi\+\_\+app\+\_\+set\+\_\+callback}} (\mbox{\hyperlink{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445}{wifi\+\_\+connected\+\_\+event\+\_\+callback\+\_\+t}} cb)
+\begin{DoxyCompactList}\small\item\em Registrar callback para evento de conexión exitosa. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{wifi__app_8h_a8da3123ee9e699631055034de29f9bb5}{wifi\+\_\+app\+\_\+call\+\_\+callback}} (void)
+\begin{DoxyCompactList}\small\item\em Ejecutar callback registrado. \end{DoxyCompactList}\item 
+int8\+\_\+t \mbox{\hyperlink{wifi__app_8h_a5d07d8b446d099d9791b275a1635a33b}{wifi\+\_\+app\+\_\+get\+\_\+rssi}} (void)
+\begin{DoxyCompactList}\small\item\em Obtener intensidad de señal Wi\+Fi (RSSI). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+esp\+\_\+netif\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{wifi__app_8h_a9d201c9b3c512f5569c685bd04488cbe}{esp\+\_\+netif\+\_\+sta}}
+\begin{DoxyCompactList}\small\item\em Handle de interfaz de red Station. \end{DoxyCompactList}\item 
+esp\+\_\+netif\+\_\+t \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{wifi__app_8h_a9d04dd561f9f32dd175245abb38a868a}{esp\+\_\+netif\+\_\+ap}}
+\begin{DoxyCompactList}\small\item\em Handle de interfaz de red Access Point. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Gestión completa de Wi\+Fi AP/\+STA con reconexión automática y persistencia. 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Versión}
+1.\+0.\+0
+\end{DoxyVersion}
+Módulo que gestiona la configuración dual Wi\+Fi (Access Point + Station) del ESP32\+:
+\begin{DoxyItemize}
+\item {\bfseries{Access Point (AP)}}\+: Crea red Wi\+Fi para configuración inicial
+\item {\bfseries{Station (STA)}}\+: Se conecta a redes Wi\+Fi existentes
+\item {\bfseries{Reconexión Automática}}\+: Reintenta conexión hasta MAX\+\_\+\+CONNECTION\+\_\+\+RETRIES veces
+\item {\bfseries{Persistencia NVS}}\+: Guarda credenciales Wi\+Fi para reconexión tras reinicio
+\item {\bfseries{Sincronización SNTP}}\+: Obtiene hora de servidores NTP cuando se conecta
+\item {\bfseries{Cola de Mensajes RTOS}}\+: Comunicación thread-\/safe con el servidor HTTP
+\end{DoxyItemize}
+
+El sistema inicia en modo AP+\+STA, permitiendo configuración web mientras mantiene el AP activo. Las credenciales se guardan en NVS y se cargan automáticamente al reiniciar.
+
+Universidad Nacional de Colombia -\/ Curso RTOS 
+
+Definición en el archivo \mbox{\hyperlink{wifi__app_8h_source}{wifi\+\_\+app.\+h}}.
+
+
+
+\label{doc-define-members}
+\Hypertarget{wifi__app_8h_doc-define-members}
+\doxysubsection{Documentación de «define»}
+\Hypertarget{wifi__app_8h_a5b6bbc36d5b71c9bebeb124a6216a3d4}\index{wifi\_app.h@{wifi\_app.h}!NUM\_REGISTERS\_AV@{NUM\_REGISTERS\_AV}}
+\index{NUM\_REGISTERS\_AV@{NUM\_REGISTERS\_AV}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{NUM\_REGISTERS\_AV}{NUM\_REGISTERS\_AV}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a5b6bbc36d5b71c9bebeb124a6216a3d4} 
+\#define NUM\+\_\+\+REGISTERS\+\_\+\+AV~10}
+
+
+
+Número máximo de registros programados. 
+
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8h_source_l00051}{51}} del archivo \mbox{\hyperlink{wifi__app_8h_source}{wifi\+\_\+app.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00431}{initialize\+\_\+registers()}} y \mbox{\hyperlink{wifi__app_8c_source_l01058}{task\+\_\+compare\+\_\+hour\+\_\+to\+\_\+execute\+\_\+action()}}.
+
+
+
+\label{doc-typedef-members}
+\Hypertarget{wifi__app_8h_doc-typedef-members}
+\doxysubsection{Documentación de «typedef»}
+\Hypertarget{wifi__app_8h_a8ca04b228d2e75b497bad06dd88566af}\index{wifi\_app.h@{wifi\_app.h}!register\_saved\_e@{register\_saved\_e}}
+\index{register\_saved\_e@{register\_saved\_e}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{register\_saved\_e}{register\_saved\_e}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a8ca04b228d2e75b497bad06dd88566af} 
+typedef struct \mbox{\hyperlink{structregister__saved}{register\+\_\+saved}} register\+\_\+saved\+\_\+e}
+
+\Hypertarget{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_message\_e@{wifi\_app\_message\_e}}
+\index{wifi\_app\_message\_e@{wifi\_app\_message\_e}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_message\_e}{wifi\_app\_message\_e}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08} 
+typedef enum \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7}{wifi\+\_\+app\+\_\+message}} \mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\+\_\+app\+\_\+message\+\_\+e}}}
+
+\Hypertarget{wifi__app_8h_a92e7931e4ccac09641270ca66333c912}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_queue\_message\_t@{wifi\_app\_queue\_message\_t}}
+\index{wifi\_app\_queue\_message\_t@{wifi\_app\_queue\_message\_t}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_queue\_message\_t}{wifi\_app\_queue\_message\_t}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a92e7931e4ccac09641270ca66333c912} 
+typedef struct \mbox{\hyperlink{structwifi__app__queue__message}{wifi\+\_\+app\+\_\+queue\+\_\+message}} wifi\+\_\+app\+\_\+queue\+\_\+message\+\_\+t}
+
+\Hypertarget{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445}\index{wifi\_app.h@{wifi\_app.h}!wifi\_connected\_event\_callback\_t@{wifi\_connected\_event\_callback\_t}}
+\index{wifi\_connected\_event\_callback\_t@{wifi\_connected\_event\_callback\_t}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_connected\_event\_callback\_t}{wifi\_connected\_event\_callback\_t}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445} 
+typedef void(\texorpdfstring{$\ast$}{*} wifi\+\_\+connected\+\_\+event\+\_\+callback\+\_\+t) (void)}
+
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8h_source_l00030}{30}} del archivo \mbox{\hyperlink{wifi__app_8h_source}{wifi\+\_\+app.\+h}}.
+
+
+
+\label{doc-enum-members}
+\Hypertarget{wifi__app_8h_doc-enum-members}
+\doxysubsection{Documentación de enumeraciones}
+\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_message@{wifi\_app\_message}}
+\index{wifi\_app\_message@{wifi\_app\_message}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_message}{wifi\_app\_message}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7} 
+enum \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7}{wifi\+\_\+app\+\_\+message}}}
+
+\begin{DoxyEnumFields}[2]{Valores de enumeraciones}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WIFI\_APP\_MSG\_START\_HTTP\_SERVER@{WIFI\_APP\_MSG\_START\_HTTP\_SERVER}!wifi\_app.h@{wifi\_app.h}}\index{wifi\_app.h@{wifi\_app.h}!WIFI\_APP\_MSG\_START\_HTTP\_SERVER@{WIFI\_APP\_MSG\_START\_HTTP\_SERVER}}}\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26}\label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26} 
+WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+START\+\_\+\+HTTP\+\_\+\+SERVER&Iniciar servidor HTTP tras conexión Wi\+Fi. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WIFI\_APP\_MSG\_CONNECTING\_FROM\_HTTP\_SERVER@{WIFI\_APP\_MSG\_CONNECTING\_FROM\_HTTP\_SERVER}!wifi\_app.h@{wifi\_app.h}}\index{wifi\_app.h@{wifi\_app.h}!WIFI\_APP\_MSG\_CONNECTING\_FROM\_HTTP\_SERVER@{WIFI\_APP\_MSG\_CONNECTING\_FROM\_HTTP\_SERVER}}}\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd}\label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd} 
+WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+CONNECTING\+\_\+\+FROM\+\_\+\+HTTP\+\_\+\+SERVER&Usuario solicitó conexión desde web. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WIFI\_APP\_MSG\_STA\_CONNECTED\_GOT\_IP@{WIFI\_APP\_MSG\_STA\_CONNECTED\_GOT\_IP}!wifi\_app.h@{wifi\_app.h}}\index{wifi\_app.h@{wifi\_app.h}!WIFI\_APP\_MSG\_STA\_CONNECTED\_GOT\_IP@{WIFI\_APP\_MSG\_STA\_CONNECTED\_GOT\_IP}}}\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081}\label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081} 
+WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+STA\+\_\+\+CONNECTED\+\_\+\+GOT\+\_\+\+IP&STA conectado y obtuvo IP por DHCP. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WIFI\_APP\_MSG\_USER\_REQUESTED\_STA\_DISCONNECT@{WIFI\_APP\_MSG\_USER\_REQUESTED\_STA\_DISCONNECT}!wifi\_app.h@{wifi\_app.h}}\index{wifi\_app.h@{wifi\_app.h}!WIFI\_APP\_MSG\_USER\_REQUESTED\_STA\_DISCONNECT@{WIFI\_APP\_MSG\_USER\_REQUESTED\_STA\_DISCONNECT}}}\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19}\label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19} 
+WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+USER\+\_\+\+REQUESTED\+\_\+\+STA\+\_\+\+DISCONNECT&Usuario solicitó desconexión desde web. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WIFI\_APP\_MSG\_LOAD\_SAVED\_CREDENTIALS@{WIFI\_APP\_MSG\_LOAD\_SAVED\_CREDENTIALS}!wifi\_app.h@{wifi\_app.h}}\index{wifi\_app.h@{wifi\_app.h}!WIFI\_APP\_MSG\_LOAD\_SAVED\_CREDENTIALS@{WIFI\_APP\_MSG\_LOAD\_SAVED\_CREDENTIALS}}}\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f}\label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f} 
+WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+LOAD\+\_\+\+SAVED\+\_\+\+CREDENTIALS&Cargar credenciales guardadas en NVS. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WIFI\_APP\_MSG\_STA\_DISCONNECTED@{WIFI\_APP\_MSG\_STA\_DISCONNECTED}!wifi\_app.h@{wifi\_app.h}}\index{wifi\_app.h@{wifi\_app.h}!WIFI\_APP\_MSG\_STA\_DISCONNECTED@{WIFI\_APP\_MSG\_STA\_DISCONNECTED}}}\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8}\label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8} 
+WIFI\+\_\+\+APP\+\_\+\+MSG\+\_\+\+STA\+\_\+\+DISCONNECTED&STA desconectado (evento del sistema). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WIFI\_APP\_CONNECT\_TO\_STA@{WIFI\_APP\_CONNECT\_TO\_STA}!wifi\_app.h@{wifi\_app.h}}\index{wifi\_app.h@{wifi\_app.h}!WIFI\_APP\_CONNECT\_TO\_STA@{WIFI\_APP\_CONNECT\_TO\_STA}}}\Hypertarget{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e}\label{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e} 
+WIFI\+\_\+\+APP\+\_\+\+CONNECT\+\_\+\+TO\+\_\+\+STA&Comando para conectar a STA. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8h_source_l00065}{65}} del archivo \mbox{\hyperlink{wifi__app_8h_source}{wifi\+\_\+app.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{wifi__app_8h_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{wifi__app_8h_ac29bf6013014643966e099049b102dfd}\index{wifi\_app.h@{wifi\_app.h}!check\_sta\_connection\_state@{check\_sta\_connection\_state}}
+\index{check\_sta\_connection\_state@{check\_sta\_connection\_state}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{check\_sta\_connection\_state()}{check\_sta\_connection\_state()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_ac29bf6013014643966e099049b102dfd} 
+void check\+\_\+sta\+\_\+connection\+\_\+state (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{pv\+Parameters}{}\end{DoxyParamCaption})}
+
+
+
+Tarea que verifica estado de conexión STA. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em pv\+Parameters} & Parámetros de la tarea (sin usar)\\
+\hline
+\end{DoxyParams}
+Monitorea conexión y reintenta automáticamente si falla
+
+Tarea que verifica estado de conexión STA.
+
+Cada 30 segundos verifica si está conectado a AP. Si pierde conexión, intenta reconectar automáticamente.
+
+{\bfseries{Funcionalidad\+:}}
+\begin{DoxyItemize}
+\item Llama esp\+\_\+wifi\+\_\+sta\+\_\+get\+\_\+ap\+\_\+info() cada 30s
+\item Si falla (ESP\+\_\+\+ERR\+\_\+\+WIFI\+\_\+\+NOT\+\_\+\+CONNECT), intenta conectar
+\item Registra RSSI si está conectado
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em pv\+Parameters} & Parámetro de tarea (no usado)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Tarea infinita creada en \doxylink{wifi__app_8h_ac2af98a9df667dec7b75c10a5717f09d}{wifi\+\_\+app\+\_\+start()} 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00611}{611}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00569}{connect\+\_\+to\+\_\+wifi()}}, \mbox{\hyperlink{wifi__app_8c_source_l00124}{get\+\_\+state\+\_\+time\+\_\+was\+\_\+synchronized()}}, \mbox{\hyperlink{wifi__app_8c_source_l00548}{nvs\+\_\+credentials\+\_\+exist()}}, \mbox{\hyperlink{wifi__app_8c_source_l00149}{obtain\+\_\+time()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{wifi__app_8h_a8a91d7a19b16ddaf60425245284defd7}\index{wifi\_app.h@{wifi\_app.h}!connect\_to\_wifi@{connect\_to\_wifi}}
+\index{connect\_to\_wifi@{connect\_to\_wifi}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{connect\_to\_wifi()}{connect\_to\_wifi()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a8a91d7a19b16ddaf60425245284defd7} 
+void connect\+\_\+to\+\_\+wifi (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Conectar a Wi\+Fi usando credenciales guardadas. 
+
+Lee credenciales de NVS e intenta conexión STA 
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00569}{569}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00508}{load\+\_\+wifi\+\_\+credentials()}}, \mbox{\hyperlink{wifi__app_8c_source_l00073}{my\+Semaphore}}, \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}, \mbox{\hyperlink{wifi__app_8c_source_l00836}{wifi\+\_\+app\+\_\+connect\+\_\+sta()}}, \mbox{\hyperlink{wifi__app_8c_source_l00962}{wifi\+\_\+app\+\_\+get\+\_\+wifi\+\_\+config()}} y \mbox{\hyperlink{wifi__app_8c_source_l00086}{wifi\+\_\+config}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00611}{check\+\_\+sta\+\_\+connection\+\_\+state()}} y \mbox{\hyperlink{http__server_8c_source_l00791}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+json\+\_\+handler()}}.
+
+\Hypertarget{wifi__app_8h_af889cf6e5d320085772f871cf468ffb1}\index{wifi\_app.h@{wifi\_app.h}!get\_state\_time\_was\_synchronized@{get\_state\_time\_was\_synchronized}}
+\index{get\_state\_time\_was\_synchronized@{get\_state\_time\_was\_synchronized}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{get\_state\_time\_was\_synchronized()}{get\_state\_time\_was\_synchronized()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_af889cf6e5d320085772f871cf468ffb1} 
+bool get\+\_\+state\+\_\+time\+\_\+was\+\_\+synchronized (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Verificar si la hora ya fue sincronizada. 
+
+\begin{DoxyReturn}{Devuelve}
+true si el sistema tiene hora válida de SNTP
+\end{DoxyReturn}
+Verificar si la hora ya fue sincronizada.
+
+\begin{DoxyReturn}{Devuelve}
+bool 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em true} & Tiempo sincronizado correctamente con SNTP \\
+\hline
+{\em false} & Aún no sincronizado o fallo \\
+\hline
+\end{DoxyRetVals}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00124}{124}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00101}{time\+\_\+was\+\_\+synchronized}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00611}{check\+\_\+sta\+\_\+connection\+\_\+state()}} y \mbox{\hyperlink{wifi__app_8c_source_l01058}{task\+\_\+compare\+\_\+hour\+\_\+to\+\_\+execute\+\_\+action()}}.
+
+\Hypertarget{wifi__app_8h_aa25117999d3c679ce2ec34f66a4da463}\index{wifi\_app.h@{wifi\_app.h}!init\_obtain\_time@{init\_obtain\_time}}
+\index{init\_obtain\_time@{init\_obtain\_time}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{init\_obtain\_time()}{init\_obtain\_time()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_aa25117999d3c679ce2ec34f66a4da463} 
+void init\+\_\+obtain\+\_\+time (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Inicializar sincronización de hora SNTP. 
+
+Configura servidor NTP y zona horaria
+
+Inicializar sincronización de hora SNTP.
+
+Marca el tiempo como NO sincronizado. Llamar antes de intentar sincronizar con SNTP. 
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00113}{113}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00101}{time\+\_\+was\+\_\+synchronized}}.
+
+\Hypertarget{wifi__app_8h_a1d00e8eaad99ca85a63b4329a60b4f39}\index{wifi\_app.h@{wifi\_app.h}!initialize\_registers@{initialize\_registers}}
+\index{initialize\_registers@{initialize\_registers}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_registers()}{initialize\_registers()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a1d00e8eaad99ca85a63b4329a60b4f39} 
+void initialize\+\_\+registers (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Inicializar sistema de registros programados. 
+
+Carga registros desde NVS al arranque \texorpdfstring{$<$}{<} Número máximo de registros programados
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00431}{431}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8h_source_l00051}{NUM\+\_\+\+REGISTERS\+\_\+\+AV}}, \mbox{\hyperlink{wifi__app_8c_source_l00279}{read\+\_\+reg\+\_\+data()}} y \mbox{\hyperlink{wifi__app_8c_source_l00076}{register\+\_\+readings\+\_\+from\+\_\+flash}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{wifi__app_8h_af9612dd1f9a3dccde879268af5c87db5}\index{wifi\_app.h@{wifi\_app.h}!load\_wifi\_credentials@{load\_wifi\_credentials}}
+\index{load\_wifi\_credentials@{load\_wifi\_credentials}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{load\_wifi\_credentials()}{load\_wifi\_credentials()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_af9612dd1f9a3dccde879268af5c87db5} 
+void load\+\_\+wifi\+\_\+credentials (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{ssid}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{password}{}\end{DoxyParamCaption})}
+
+
+
+Cargar credenciales Wi\+Fi desde NVS. 
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{out}}  & {\em ssid} & Buffer para SSID (mínimo MAX\+\_\+\+SSID\+\_\+\+LENGTH) \\
+\hline
+\mbox{\texttt{out}}  & {\em password} & Buffer para contraseña (mínimo MAX\+\_\+\+PASSWORD\+\_\+\+LENGTH)\\
+\hline
+\end{DoxyParams}
+Cargar credenciales Wi\+Fi desde NVS.
+
+Lee SSID y password almacenados previamente en NVS.
+
+{\bfseries{Namespace NVS\+:}} "{}storage"{} {\bfseries{Keys\+:}}
+\begin{DoxyItemize}
+\item "{}wifi\+\_\+ssid"{}\+: SSID de la red
+\item "{}wifi\+\_\+password"{}\+: Contraseña
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{out}}  & {\em ssid} & Buffer donde se copia el SSID (mínimo 33 bytes) \\
+\hline
+\mbox{\texttt{out}}  & {\em password} & Buffer donde se copia el password (mínimo 65 bytes)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Llama ESP\+\_\+\+ERROR\+\_\+\+CHECK -\/ programa panic si no existen credenciales 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+Validar existencia con \doxylink{wifi__app_8c_a8403b06ff93f8eb3f9423025f4d2b47f}{nvs\+\_\+credentials\+\_\+exist()} antes de llamar 
+\end{DoxyWarning}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00508}{508}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00569}{connect\+\_\+to\+\_\+wifi()}}.
+
+\Hypertarget{wifi__app_8h_ab1c7cd65f7d2ab1a577cd0179c779ee6}\index{wifi\_app.h@{wifi\_app.h}!obtain\_time@{obtain\_time}}
+\index{obtain\_time@{obtain\_time}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{obtain\_time()}{obtain\_time()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_ab1c7cd65f7d2ab1a577cd0179c779ee6} 
+void obtain\+\_\+time (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Obtener hora desde servidor SNTP. 
+
+Sincroniza reloj del sistema con pool.\+ntp.\+org \begin{DoxyNote}{Nota}
+Función interna, llamada automáticamente tras conexión Wi\+Fi 
+\end{DoxyNote}
+\Hypertarget{wifi__app_8h_ad0657d784ea25871bdc65ab1a0d10b5a}\index{wifi\_app.h@{wifi\_app.h}!read\_reg\_data@{read\_reg\_data}}
+\index{read\_reg\_data@{read\_reg\_data}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{read\_reg\_data()}{read\_reg\_data()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_ad0657d784ea25871bdc65ab1a0d10b5a} 
+esp\+\_\+err\+\_\+t read\+\_\+reg\+\_\+data (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{str\+\_\+to\+\_\+save}{, }\item[{uint8\+\_\+t}]{register\+\_\+num}{}\end{DoxyParamCaption})}
+
+
+
+Leer datos de registro desde NVS. 
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{out}}  & {\em str\+\_\+to\+\_\+save} & Buffer donde se escribirá el registro (JSON) \\
+\hline
+ & {\em register\+\_\+num} & Número de registro (1-\/10) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+ESP\+\_\+\+OK si se leyó correctamente 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00279}{279}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00431}{initialize\+\_\+registers()}} y \mbox{\hyperlink{wifi__app_8c_source_l00387}{update\+\_\+register()}}.
+
+\Hypertarget{wifi__app_8h_a56633849de02c2abb38c9f47ef6fee1f}\index{wifi\_app.h@{wifi\_app.h}!save\_reg\_data@{save\_reg\_data}}
+\index{save\_reg\_data@{save\_reg\_data}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{save\_reg\_data()}{save\_reg\_data()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a56633849de02c2abb38c9f47ef6fee1f} 
+void save\+\_\+reg\+\_\+data (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{register\+\_\+num}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Guardar registro en NVS. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em register} & Número de registro (1-\/10) \\
+\hline
+{\em str} & Datos del registro en formato string\\
+\hline
+\end{DoxyParams}
+Guardar registro en NVS.
+
+Función antigua para guardar registros (1-\/10). {\bfseries{DEPRECADA\+:}} Usar \doxylink{registers_8c}{registers.\+c} (save\+\_\+register\+\_\+to\+\_\+nvs) en su lugar.
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em register\+\_\+num} & Número de registro (1-\/10) \\
+\hline
+\mbox{\texttt{in}}  & {\em str} & Datos del registro como string\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Obsoleto}
+\item[\mbox{\hyperlink{deprecated__deprecated000001}{Obsoleto}}]Usar API moderna en \doxylink{registers_8c}{registers.\+c} \end{DoxyRefDesc}
+\begin{DoxyNote}{Nota}
+Solo para compatibilidad con código antiguo 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00230}{230}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+\Hypertarget{wifi__app_8h_a1eb1e37bd21abc738271e8c1a8a876f8}\index{wifi\_app.h@{wifi\_app.h}!save\_wifi\_credentials@{save\_wifi\_credentials}}
+\index{save\_wifi\_credentials@{save\_wifi\_credentials}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{save\_wifi\_credentials()}{save\_wifi\_credentials()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a1eb1e37bd21abc738271e8c1a8a876f8} 
+void save\+\_\+wifi\+\_\+credentials (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{ssid}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{password}{}\end{DoxyParamCaption})}
+
+
+
+Guardar credenciales Wi\+Fi en NVS. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em ssid} & Nombre de red Wi\+Fi \\
+\hline
+{\em password} & Contraseña de red Wi\+Fi \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Las credenciales persisten tras reinicios
+\end{DoxyNote}
+Guardar credenciales Wi\+Fi en NVS.
+
+Almacena SSID y contraseña en memoria no volátil. Sobrevive a reinicios del ESP32.
+
+{\bfseries{Claves NVS\+:}}
+\begin{DoxyItemize}
+\item "{}wifi\+\_\+ssid"{}\+: Nombre de la red Wi\+Fi
+\item "{}wifi\+\_\+password"{}\+: Contraseña
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em ssid} & SSID de la red Wi\+Fi (máx 32 caracteres) \\
+\hline
+\mbox{\texttt{in}}  & {\em password} & Contraseña (máx 64 caracteres)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Atención}
+ESP\+\_\+\+ERROR\+\_\+\+CHECK causa panic si falla NVS 
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Namespace "{}storage"{} debe existir 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00208}{208}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00791}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+json\+\_\+handler()}}.
+
+\Hypertarget{wifi__app_8h_acb668c2a5fc2215e71e0688d577f4085}\index{wifi\_app.h@{wifi\_app.h}!task\_compare\_hour\_to\_execute\_action@{task\_compare\_hour\_to\_execute\_action}}
+\index{task\_compare\_hour\_to\_execute\_action@{task\_compare\_hour\_to\_execute\_action}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{task\_compare\_hour\_to\_execute\_action()}{task\_compare\_hour\_to\_execute\_action()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_acb668c2a5fc2215e71e0688d577f4085} 
+void task\+\_\+compare\+\_\+hour\+\_\+to\+\_\+execute\+\_\+action (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{pv\+Parameters}{}\end{DoxyParamCaption})}
+
+
+
+Tarea que compara hora actual con registros programados. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em pv\+Parameters} & Parámetros de la tarea (sin usar)\\
+\hline
+\end{DoxyParams}
+Ejecuta cada minuto, activa ventilador si hay coincidencia horaria
+
+Tarea que compara hora actual con registros programados.
+
+Espera a que SNTP sincronice, luego cada 60s compara hora actual con registros programados. Si coincide, ejecuta acción (ventilador).
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Espera a \doxylink{wifi__app_8h_af889cf6e5d320085772f871cf468ffb1}{get\+\_\+state\+\_\+time\+\_\+was\+\_\+synchronized()} == true
+\item Cada 60s obtiene hora con time() y localtime\+\_\+r()
+\item Itera registros y compara con \doxylink{wifi__app_8c_a395a811c01493c2233310bb2e7810ae4}{compare\+\_\+hour\+\_\+day\+\_\+structs()}
+\item Si coincide, ejecuta acción del registro
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em pv\+Parameters} & Parámetro de tarea (no usado)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Tarea infinita, stack 4096 bytes, prioridad 5 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{wifi__app_8c_a395a811c01493c2233310bb2e7810ae4}{compare\+\_\+hour\+\_\+day\+\_\+structs()} Comparación hora/día 
+\end{DoxySeeAlso}
+\texorpdfstring{$<$}{<} Número máximo de registros programados
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l01058}{1058}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00967}{compare\+\_\+hour\+\_\+day\+\_\+structs()}}, \mbox{\hyperlink{wifi__app_8c_source_l00124}{get\+\_\+state\+\_\+time\+\_\+was\+\_\+synchronized()}}, \mbox{\hyperlink{wifi__app_8h_source_l00051}{NUM\+\_\+\+REGISTERS\+\_\+\+AV}}, \mbox{\hyperlink{wifi__app_8c_source_l00076}{register\+\_\+readings\+\_\+from\+\_\+flash}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l01115}{wifi\+\_\+app\+\_\+start()}}.
+
+\Hypertarget{wifi__app_8h_a101f4f6f2c139e1ac4d4619328f768d9}\index{wifi\_app.h@{wifi\_app.h}!update\_register@{update\_register}}
+\index{update\_register@{update\_register}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{update\_register()}{update\_register()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a101f4f6f2c139e1ac4d4619328f768d9} 
+void update\+\_\+register (\begin{DoxyParamCaption}\item[{int}]{reg\+\_\+to\+\_\+update}{}\end{DoxyParamCaption})}
+
+
+
+Actualizar registro específico. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em reg\+\_\+to\+\_\+update} & Número de registro a actualizar (1-\/10) \\
+\hline
+\end{DoxyParams}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00387}{387}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00279}{read\+\_\+reg\+\_\+data()}}, \mbox{\hyperlink{wifi__app_8c_source_l00076}{register\+\_\+readings\+\_\+from\+\_\+flash}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+\Hypertarget{wifi__app_8h_a8da3123ee9e699631055034de29f9bb5}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_call\_callback@{wifi\_app\_call\_callback}}
+\index{wifi\_app\_call\_callback@{wifi\_app\_call\_callback}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_call\_callback()}{wifi\_app\_call\_callback()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a8da3123ee9e699631055034de29f9bb5} 
+void wifi\+\_\+app\+\_\+call\+\_\+callback (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Ejecutar callback registrado. 
+
+Llamado internamente cuando STA obtiene IP \Hypertarget{wifi__app_8h_a68f13dd71722bd75ad3dfbe7a709fa99}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_connect\_sta@{wifi\_app\_connect\_sta}}
+\index{wifi\_app\_connect\_sta@{wifi\_app\_connect\_sta}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_connect\_sta()}{wifi\_app\_connect\_sta()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a68f13dd71722bd75ad3dfbe7a709fa99} 
+void wifi\+\_\+app\+\_\+connect\+\_\+sta (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Conectar ESP32 a red Wi\+Fi como Station. 
+
+\begin{DoxyNote}{Nota}
+Función interna, usa credenciales cargadas previamente 
+\end{DoxyNote}
+\Hypertarget{wifi__app_8h_a5d07d8b446d099d9791b275a1635a33b}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_get\_rssi@{wifi\_app\_get\_rssi}}
+\index{wifi\_app\_get\_rssi@{wifi\_app\_get\_rssi}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_get\_rssi()}{wifi\_app\_get\_rssi()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a5d07d8b446d099d9791b275a1635a33b} 
+int8\+\_\+t wifi\+\_\+app\+\_\+get\+\_\+rssi (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Obtener intensidad de señal Wi\+Fi (RSSI). 
+
+\begin{DoxyReturn}{Devuelve}
+Nivel RSSI actual en d\+Bm (valores negativos, ej\+: -\/50 d\+Bm) 
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Solo válido cuando STA está conectado 
+\end{DoxyNote}
+\Hypertarget{wifi__app_8h_acd6606606de84f405065531c1889432a}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_get\_wifi\_config@{wifi\_app\_get\_wifi\_config}}
+\index{wifi\_app\_get\_wifi\_config@{wifi\_app\_get\_wifi\_config}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_get\_wifi\_config()}{wifi\_app\_get\_wifi\_config()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_acd6606606de84f405065531c1889432a} 
+wifi\+\_\+config\+\_\+t \texorpdfstring{$\ast$}{*} wifi\+\_\+app\+\_\+get\+\_\+wifi\+\_\+config (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Obtener configuración actual de Wi\+Fi. 
+
+\begin{DoxyReturn}{Devuelve}
+Puntero a estructura wifi\+\_\+config\+\_\+t con configuración STA actual
+\end{DoxyReturn}
+Obtener configuración actual de Wi\+Fi.
+
+\begin{DoxyReturn}{Devuelve}
+wifi\+\_\+config\+\_\+t\texorpdfstring{$\ast$}{*} Puntero a wifi\+\_\+config global
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Contiene SSID y password cargados de NVS 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00962}{962}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00086}{wifi\+\_\+config}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00569}{connect\+\_\+to\+\_\+wifi()}}, \mbox{\hyperlink{http__server_8c_source_l00791}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+json\+\_\+handler()}} y \mbox{\hyperlink{wifi__app_8c_source_l00836}{wifi\+\_\+app\+\_\+connect\+\_\+sta()}}.
+
+\Hypertarget{wifi__app_8h_aec924a59c0eede746e90c5c04e682fc3}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_send\_message@{wifi\_app\_send\_message}}
+\index{wifi\_app\_send\_message@{wifi\_app\_send\_message}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_send\_message()}{wifi\_app\_send\_message()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_aec924a59c0eede746e90c5c04e682fc3} 
+Base\+Type\+\_\+t wifi\+\_\+app\+\_\+send\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\+\_\+app\+\_\+message\+\_\+e}}}]{msg\+ID}{}\end{DoxyParamCaption})}
+
+
+
+Enviar mensaje a la cola de la tarea Wi\+Fi. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em msg\+ID} & ID del mensaje desde \doxylink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\+\_\+app\+\_\+message\+\_\+e} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+pd\+TRUE si se envió correctamente, pd\+FALSE si la cola está llena 
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Thread-\/safe, puede llamarse desde cualquier tarea 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00948}{948}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00092}{wifi\+\_\+app\+\_\+queue\+\_\+handle}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00676}{wifi\+\_\+app\+\_\+event\+\_\+handler()}} y \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{wifi__app_8h_af79551f710f287fae05080e0b8e4de3b}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_set\_callback@{wifi\_app\_set\_callback}}
+\index{wifi\_app\_set\_callback@{wifi\_app\_set\_callback}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_set\_callback()}{wifi\_app\_set\_callback()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_af79551f710f287fae05080e0b8e4de3b} 
+void wifi\+\_\+app\+\_\+set\+\_\+callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445}{wifi\+\_\+connected\+\_\+event\+\_\+callback\+\_\+t}}}]{cb}{}\end{DoxyParamCaption})}
+
+
+
+Registrar callback para evento de conexión exitosa. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em cb} & Función callback a ejecutar cuando STA se conecta \\
+\hline
+\end{DoxyParams}
+\Hypertarget{wifi__app_8h_ac2af98a9df667dec7b75c10a5717f09d}\index{wifi\_app.h@{wifi\_app.h}!wifi\_app\_start@{wifi\_app\_start}}
+\index{wifi\_app\_start@{wifi\_app\_start}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{wifi\_app\_start()}{wifi\_app\_start()}}
+{\footnotesize\ttfamily \label{wifi__app_8h_ac2af98a9df667dec7b75c10a5717f09d} 
+void wifi\+\_\+app\+\_\+start (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Iniciar tarea RTOS de Wi\+Fi. 
+
+Crea la tarea principal que gestiona eventos Wi\+Fi y mensajes \begin{DoxyNote}{Nota}
+Debe llamarse una vez durante la inicialización del sistema
+\end{DoxyNote}
+Iniciar tarea RTOS de Wi\+Fi.
+
+Punto de entrada principal para Wi\+Fi. Secuencia\+:
+\begin{DoxyEnumerate}
+\item Inicializa netif TCP/\+IP
+\item Configura event handlers Wi\+Fi
+\item Inicializa Wi\+Fi con config por defecto
+\item Configura Access Point
+\item Crea cola de mensajes
+\item Crea tarea wifi\+\_\+app\+\_\+task
+\item Crea tarea check\+\_\+sta\+\_\+connection\+\_\+state (reconexión)
+\end{DoxyEnumerate}
+
+\begin{DoxyNote}{Nota}
+Llamar una sola vez durante inicialización del sistema 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+Requiere NVS inicializado previamente
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{wifi__app_8c_a767d80a57af268276da3f7c9daa9f52d}{wifi\+\_\+app\+\_\+task()} Tarea principal creada 
+
+\doxylink{wifi__app_8h_ac29bf6013014643966e099049b102dfd}{check\+\_\+sta\+\_\+connection\+\_\+state()} Tarea de reconexión 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l01115}{1115}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00073}{my\+Semaphore}}, \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}, \mbox{\hyperlink{wifi__app_8c_source_l01058}{task\+\_\+compare\+\_\+hour\+\_\+to\+\_\+execute\+\_\+action()}}, \mbox{\hyperlink{wifi__app_8c_source_l00092}{wifi\+\_\+app\+\_\+queue\+\_\+handle}}, \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}} y \mbox{\hyperlink{wifi__app_8c_source_l00086}{wifi\+\_\+config}}.
+
+
+
+\label{doc-var-members}
+\Hypertarget{wifi__app_8h_doc-var-members}
+\doxysubsection{Documentación de variables}
+\Hypertarget{wifi__app_8h_a9d04dd561f9f32dd175245abb38a868a}\index{wifi\_app.h@{wifi\_app.h}!esp\_netif\_ap@{esp\_netif\_ap}}
+\index{esp\_netif\_ap@{esp\_netif\_ap}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{esp\_netif\_ap}{esp\_netif\_ap}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a9d04dd561f9f32dd175245abb38a868a} 
+esp\+\_\+netif\+\_\+t\texorpdfstring{$\ast$}{*} esp\+\_\+netif\+\_\+ap\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Handle de interfaz de red Access Point. 
+
+Handle de interfaz de red Access Point. 
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00098}{98}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00758}{wifi\+\_\+app\+\_\+default\+\_\+wifi\+\_\+init()}} y \mbox{\hyperlink{wifi__app_8c_source_l00792}{wifi\+\_\+app\+\_\+soft\+\_\+ap\+\_\+config()}}.
+
+\Hypertarget{wifi__app_8h_a9d201c9b3c512f5569c685bd04488cbe}\index{wifi\_app.h@{wifi\_app.h}!esp\_netif\_sta@{esp\_netif\_sta}}
+\index{esp\_netif\_sta@{esp\_netif\_sta}!wifi\_app.h@{wifi\_app.h}}
+\doxysubsubsection{\texorpdfstring{esp\_netif\_sta}{esp\_netif\_sta}}
+{\footnotesize\ttfamily \label{wifi__app_8h_a9d201c9b3c512f5569c685bd04488cbe} 
+esp\+\_\+netif\+\_\+t\texorpdfstring{$\ast$}{*} esp\+\_\+netif\+\_\+sta\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Handle de interfaz de red Station. 
+
+Handle de interfaz de red Station. 
+
+Definición en la línea \mbox{\hyperlink{wifi__app_8c_source_l00095}{95}} del archivo \mbox{\hyperlink{wifi__app_8c_source}{wifi\+\_\+app.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00758}{wifi\+\_\+app\+\_\+default\+\_\+wifi\+\_\+init()}}.
+

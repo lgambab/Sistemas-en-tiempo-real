@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Archivo de código fuente http_server.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('http__server_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">http_server.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="http__server_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#ifndef MAIN_HTTP_SERVER_H_</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#define MAIN_HTTP_SERVER_H_</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;freertos/FreeRTOS.h&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;esp_event.h&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;esp_adc/adc_oneshot.h&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="group___o_t_a___status.html#ga1f24de40c4d1df080062b6bca4cc751e">   38</a></span><span class="preprocessor">#define OTA_UPDATE_PENDING      0   </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="group___o_t_a___status.html#ga2fcbd52f78a2a3e1e7418d74fb6de497">   39</a></span><span class="preprocessor">#define OTA_UPDATE_SUCCESSFUL   1   </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="group___o_t_a___status.html#ga784a011b84e58faf7e84d7e4950a5231">   40</a></span><span class="preprocessor">#define OTA_UPDATE_FAILED       -1  </span><span class="preprocessor"></span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="http__server_8h.html#ab795a48e4796e4b0fca47a1341469d12">   43</a></span><span class="preprocessor">#define BLINK_GPIO              2   </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
+<div class="foldopen" id="foldopen00049" data-start="{" data-end="};">
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bc">   49</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code hl_enumeration" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bc">http_server_wifi_connect_status</a></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>{</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2">   51</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a> = 0,                               </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d">   52</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d">HTTP_WIFI_STATUS_CONNECTING</a>,            </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f">   53</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f">HTTP_WIFI_STATUS_CONNECT_FAILED</a>,        </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305">   54</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305">HTTP_WIFI_STATUS_CONNECT_SUCCESS</a>,       </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="http__server_8h.html#a94c46a0f2f039fae2e174938731cf5dc">   55</a></span>} <a class="code hl_typedef" href="http__server_8h.html#a94c46a0f2f039fae2e174938731cf5dc">http_server_wifi_connect_status_e</a>;</div>
+</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="};">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0">   65</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code hl_enumeration" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0">http_server_message</a></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>{</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d">   67</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d">HTTP_MSG_WIFI_CONNECT_INIT</a> = 0,     </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789">   68</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789">HTTP_MSG_WIFI_CONNECT_SUCCESS</a>,      </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5">   69</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5">HTTP_MSG_WIFI_CONNECT_FAIL</a>,         </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526">   70</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526">HTTP_MSG_OTA_UPDATE_SUCCESSFUL</a>,     </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4">   71</a></span>    <a class="code hl_enumvalue" href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4">HTTP_MSG_OTA_UPDATE_FAILED</a>,         </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="http__server_8h.html#af3e42acc0daaaa0e7992f1be99d28e08">   72</a></span>} <a class="code hl_typedef" href="http__server_8h.html#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a>;</div>
+</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span></div>
+<div class="foldopen" id="foldopen00078" data-start="{" data-end="};">
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="structhttp__server__queue__message.html">   78</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structhttp__server__queue__message.html">http_server_queue_message</a></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>{</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="structhttp__server__queue__message.html#afd920009d7adb152d34fe021dba1dd4a">   80</a></span>    <a class="code hl_typedef" href="http__server_8h.html#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a> <a class="code hl_variable" href="structhttp__server__queue__message.html#afd920009d7adb152d34fe021dba1dd4a">msgID</a>;    </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="http__server_8h.html#a28311d98817ae6c596066d8bb49a56f7">   81</a></span>} <a class="code hl_struct" href="structhttp__server__queue__message__t.html">http_server_queue_message_t</a>;</div>
+</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>BaseType_t <a class="code hl_function" href="http__server_8h.html#aa40c7544f908043547e60dcba8a41963">http_server_monitor_send_message</a>(<a class="code hl_typedef" href="http__server_8h.html#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a> msgID);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keywordtype">void</span> <a class="code hl_function" href="http__server_8h.html#ae5fb127f629ed9aecaba445bd1512221">http_server_start</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keywordtype">void</span> <a class="code hl_function" href="http__server_8h.html#afffb5f05a179c9702078a824048dab36">http_server_stop</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="keywordtype">void</span> <a class="code hl_function" href="http__server_8h.html#aa252e797e5e0e5945501a429bba37f1c">http_server_fw_update_reset_callback</a>(<span class="keywordtype">void</span> *arg);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="keywordtype">void</span> <a class="code hl_function" href="http__server_8h.html#a0d7dc83276db640fb3589828dae229e9">toogle_led</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">#endif </span><span class="comment">/* MAIN_HTTP_SERVER_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="ahttp__server_8h_html_a0d7dc83276db640fb3589828dae229e9"><div class="ttname"><a href="http__server_8h.html#a0d7dc83276db640fb3589828dae229e9">toogle_led</a></div><div class="ttdeci">void toogle_led(void)</div><div class="ttdoc">Alternar LED de estado.</div><div class="ttdef"><b>Definition</b> <a href="http__server_8c_source.html#l00201">http_server.c:201</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_a94c46a0f2f039fae2e174938731cf5dc"><div class="ttname"><a href="http__server_8h.html#a94c46a0f2f039fae2e174938731cf5dc">http_server_wifi_connect_status_e</a></div><div class="ttdeci">enum http_server_wifi_connect_status http_server_wifi_connect_status_e</div></div>
+<div class="ttc" id="ahttp__server_8h_html_a954842a930e3ec08480037f7fb7d79bc"><div class="ttname"><a href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bc">http_server_wifi_connect_status</a></div><div class="ttdeci">http_server_wifi_connect_status</div><div class="ttdef"><b>Definition</b> <a href="#l00049">http_server.h:50</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d"><div class="ttname"><a href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d">HTTP_WIFI_STATUS_CONNECTING</a></div><div class="ttdeci">@ HTTP_WIFI_STATUS_CONNECTING</div><div class="ttdoc">Intentando conectar a WiFi.</div><div class="ttdef"><b>Definition</b> <a href="#l00052">http_server.h:52</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f"><div class="ttname"><a href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f">HTTP_WIFI_STATUS_CONNECT_FAILED</a></div><div class="ttdeci">@ HTTP_WIFI_STATUS_CONNECT_FAILED</div><div class="ttdoc">Conexión WiFi falló</div><div class="ttdef"><b>Definition</b> <a href="#l00053">http_server.h:53</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2"><div class="ttname"><a href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a></div><div class="ttdeci">@ NONE</div><div class="ttdoc">Estado inicial, sin conexión.</div><div class="ttdef"><b>Definition</b> <a href="#l00051">http_server.h:51</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305"><div class="ttname"><a href="http__server_8h.html#a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305">HTTP_WIFI_STATUS_CONNECT_SUCCESS</a></div><div class="ttdeci">@ HTTP_WIFI_STATUS_CONNECT_SUCCESS</div><div class="ttdoc">Conexión WiFi exitosa.</div><div class="ttdef"><b>Definition</b> <a href="#l00054">http_server.h:54</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_aa252e797e5e0e5945501a429bba37f1c"><div class="ttname"><a href="http__server_8h.html#aa252e797e5e0e5945501a429bba37f1c">http_server_fw_update_reset_callback</a></div><div class="ttdeci">void http_server_fw_update_reset_callback(void *arg)</div><div class="ttdoc">Callback de timer para reinicio tras OTA exitoso.</div><div class="ttdef"><b>Definition</b> <a href="http__server_8c_source.html#l01430">http_server.c:1430</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_aa40c7544f908043547e60dcba8a41963"><div class="ttname"><a href="http__server_8h.html#aa40c7544f908043547e60dcba8a41963">http_server_monitor_send_message</a></div><div class="ttdeci">BaseType_t http_server_monitor_send_message(http_server_message_e msgID)</div><div class="ttdoc">Enviar mensaje a la cola del monitor HTTP.</div><div class="ttdef"><b>Definition</b> <a href="http__server_8c_source.html#l01423">http_server.c:1423</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_ab3e4b4d49519c9ebb9989dd6d6a680b0"><div class="ttname"><a href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0">http_server_message</a></div><div class="ttdeci">http_server_message</div><div class="ttdef"><b>Definition</b> <a href="#l00065">http_server.h:66</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5"><div class="ttname"><a href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5">HTTP_MSG_WIFI_CONNECT_FAIL</a></div><div class="ttdeci">@ HTTP_MSG_WIFI_CONNECT_FAIL</div><div class="ttdoc">Error al conectar WiFi.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">http_server.h:69</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526"><div class="ttname"><a href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526">HTTP_MSG_OTA_UPDATE_SUCCESSFUL</a></div><div class="ttdeci">@ HTTP_MSG_OTA_UPDATE_SUCCESSFUL</div><div class="ttdoc">Actualización OTA completada.</div><div class="ttdef"><b>Definition</b> <a href="#l00070">http_server.h:70</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d"><div class="ttname"><a href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d">HTTP_MSG_WIFI_CONNECT_INIT</a></div><div class="ttdeci">@ HTTP_MSG_WIFI_CONNECT_INIT</div><div class="ttdoc">Iniciar conexión WiFi.</div><div class="ttdef"><b>Definition</b> <a href="#l00067">http_server.h:67</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4"><div class="ttname"><a href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4">HTTP_MSG_OTA_UPDATE_FAILED</a></div><div class="ttdeci">@ HTTP_MSG_OTA_UPDATE_FAILED</div><div class="ttdoc">Actualización OTA falló</div><div class="ttdef"><b>Definition</b> <a href="#l00071">http_server.h:71</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789"><div class="ttname"><a href="http__server_8h.html#ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789">HTTP_MSG_WIFI_CONNECT_SUCCESS</a></div><div class="ttdeci">@ HTTP_MSG_WIFI_CONNECT_SUCCESS</div><div class="ttdoc">WiFi conectado exitosamente.</div><div class="ttdef"><b>Definition</b> <a href="#l00068">http_server.h:68</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_ae5fb127f629ed9aecaba445bd1512221"><div class="ttname"><a href="http__server_8h.html#ae5fb127f629ed9aecaba445bd1512221">http_server_start</a></div><div class="ttdeci">void http_server_start(void)</div><div class="ttdoc">Iniciar servidor HTTP y tareas relacionadas.</div><div class="ttdef"><b>Definition</b> <a href="http__server_8c_source.html#l01375">http_server.c:1375</a></div></div>
+<div class="ttc" id="ahttp__server_8h_html_af3e42acc0daaaa0e7992f1be99d28e08"><div class="ttname"><a href="http__server_8h.html#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a></div><div class="ttdeci">enum http_server_message http_server_message_e</div></div>
+<div class="ttc" id="ahttp__server_8h_html_afffb5f05a179c9702078a824048dab36"><div class="ttname"><a href="http__server_8h.html#afffb5f05a179c9702078a824048dab36">http_server_stop</a></div><div class="ttdeci">void http_server_stop(void)</div><div class="ttdoc">Detener servidor HTTP y liberar recursos.</div><div class="ttdef"><b>Definition</b> <a href="http__server_8c_source.html#l01404">http_server.c:1404</a></div></div>
+<div class="ttc" id="astructhttp__server__queue__message__t_html"><div class="ttname"><a href="structhttp__server__queue__message__t.html">http_server_queue_message_t</a></div><div class="ttdoc">Estructura de mensajes para la cola del monitor HTTP.</div></div>
+<div class="ttc" id="astructhttp__server__queue__message_html"><div class="ttname"><a href="structhttp__server__queue__message.html">http_server_queue_message</a></div><div class="ttdef"><b>Definition</b> <a href="#l00078">http_server.h:79</a></div></div>
+<div class="ttc" id="astructhttp__server__queue__message_html_afd920009d7adb152d34fe021dba1dd4a"><div class="ttname"><a href="structhttp__server__queue__message.html#afd920009d7adb152d34fe021dba1dd4a">http_server_queue_message::msgID</a></div><div class="ttdeci">http_server_message_e msgID</div><div class="ttdoc">ID del mensaje a procesar.</div><div class="ttdef"><b>Definition</b> <a href="#l00080">http_server.h:80</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="http__server_8h.html">http_server.h</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

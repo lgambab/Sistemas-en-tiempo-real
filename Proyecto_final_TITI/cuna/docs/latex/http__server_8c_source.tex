@@ -1,0 +1,1002 @@
+\doxysection{http\+\_\+server.\+c}
+\hypertarget{http__server_8c_source}{}\label{http__server_8c_source}\mbox{\hyperlink{http__server_8c}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00055}00055\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00056}00056\ \textcolor{comment}{\ *\ http\_server.c}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00057}00057\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00058}00058\ \textcolor{comment}{\ *\ \ Created\ on:\ Oct\ 20,\ 2021}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00059}00059\ \textcolor{comment}{\ *\ \ \ \ \ \ Author:\ kjagu}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00060}00060\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00062}00062\ \textcolor{preprocessor}{\#include\ "{}esp\_http\_server.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00063}00063\ \textcolor{preprocessor}{\#include\ "{}esp\_log.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00064}00064\ \textcolor{preprocessor}{\#include\ "{}esp\_ota\_ops.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00065}00065\ \textcolor{preprocessor}{\#include\ "{}esp\_timer.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00066}00066\ \textcolor{preprocessor}{\#include\ "{}sys/param.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00067}00067\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00069}00069\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{http__server_8h}{http\_server.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00070}00070\ \textcolor{preprocessor}{\#include\ "{}tasks\_common.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00071}00071\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{wifi__app_8h}{wifi\_app.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00072}00072\ \textcolor{preprocessor}{\#include\ "{}cJSON.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00073}00073\ \textcolor{preprocessor}{\#include\ "{}driver/gpio.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00075}00075\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00076}00076\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00077}00077\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00078}00078\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00079}00079\ \textcolor{preprocessor}{\#include\ <time.h>}\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00081}00081\ \textcolor{preprocessor}{\#include\ "{}esp\_wifi.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00082}00082\ \textcolor{preprocessor}{\#include\ "{}esp\_system.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00083}00083\ \textcolor{preprocessor}{\#include\ "{}nvs\_flash.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00084}00084\ \textcolor{preprocessor}{\#include\ "{}esp\_event.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00085}00085\ \textcolor{preprocessor}{\#include\ "{}esp\_netif.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00087}00087\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00088}00088\ \textcolor{preprocessor}{\#include\ "{}freertos/task.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00089}00089\ \textcolor{preprocessor}{\#include\ "{}freertos/semphr.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00090}00090\ \textcolor{preprocessor}{\#include\ "{}freertos/queue.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00092}00092\ \textcolor{preprocessor}{\#include\ "{}lwip/sockets.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00093}00093\ \textcolor{preprocessor}{\#include\ "{}lwip/dns.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00094}00094\ \textcolor{preprocessor}{\#include\ "{}lwip/netdb.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00096}00096\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00097}00097\ \textcolor{comment}{//\ MQTT\ client\ removed\ from\ this\ build\ (functions\ unused).\ Enable\ if\ needed.}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00098}00098\ \textcolor{preprocessor}{\#include\ "{}mqtt\_client.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00099}00099\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00100}00100\ \textcolor{preprocessor}{\#include\ "{}esp\_sntp.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00102}00102\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ntc__driver_8h}{ntc\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00103}00103\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{pir__driver_8h}{pir\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00104}00104\ \textcolor{preprocessor}{\#include\ "{}esp\_adc/adc\_oneshot.h"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00106}00106\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{fan__control_8h}{fan\_control.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00107}00107\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{registers_8h}{registers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00108}00108\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sensor__task_8h}{sensor\_task.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00112}00112\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_acf44ffde7b268213f9fbcbaed7e9b066}{http\_server\_read\_register\_handler}}(httpd\_req\_t\ *req);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00114}00114\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_ae521c42d06e5b900fcb1bac76ab9c0d8}{http\_server\_register\_erase\_handler}}(httpd\_req\_t\ *req);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00117}\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{00117}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}}[]\ =\ \textcolor{stringliteral}{"{}http\_server"{}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00128}\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{00128}}\ adc\_oneshot\_unit\_handle\_t\ \mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00131}\mbox{\hyperlink{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}{00131}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}{g\_wifi\_connect\_status}}\ =\ \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2}{NONE}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00134}\mbox{\hyperlink{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}{00134}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}{g\_fw\_update\_status}}\ =\ \mbox{\hyperlink{group___o_t_a___status_ga1f24de40c4d1df080062b6bca4cc751e}{OTA\_UPDATE\_PENDING}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00137}\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{00137}}\ \textcolor{keyword}{static}\ httpd\_handle\_t\ \mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00140}\mbox{\hyperlink{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}{00140}}\ \textcolor{keyword}{static}\ TaskHandle\_t\ \mbox{\hyperlink{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}{task\_http\_server\_monitor}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00143}\mbox{\hyperlink{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd}{00143}}\ \textcolor{keyword}{static}\ QueueHandle\_t\ \mbox{\hyperlink{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd}{http\_server\_monitor\_queue\_handle}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00152}\mbox{\hyperlink{http__server_8c_ae2877887269a0c9a741915ca971c1909}{00152}}\ \textcolor{keyword}{const}\ esp\_timer\_create\_args\_t\ \mbox{\hyperlink{http__server_8c_ae2877887269a0c9a741915ca971c1909}{fw\_update\_reset\_args}}\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00153}00153\ \ \ \ \ .callback\ =\ \&\mbox{\hyperlink{http__server_8h_aa252e797e5e0e5945501a429bba37f1c}{http\_server\_fw\_update\_reset\_callback}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00154}00154\ \ \ \ \ .arg\ =\ NULL,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00155}00155\ \ \ \ \ .dispatch\_method\ =\ ESP\_TIMER\_TASK,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00156}00156\ \ \ \ \ .name\ =\ \textcolor{stringliteral}{"{}fw\_update\_reset"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00157}00157\ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00160}\mbox{\hyperlink{http__server_8c_adca1b9e825cb767104d798e1a3b33bc2}{00160}}\ esp\_timer\_handle\_t\ \mbox{\hyperlink{http__server_8c_adca1b9e825cb767104d798e1a3b33bc2}{fw\_update\_reset}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00169}\mbox{\hyperlink{group___embedded_files_ga8ef26845cf712b3784a202859acc2e85}{00169}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ jquery\_3\_3\_1\_min\_js\_start[]\ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_jquery\_3\_3\_1\_min\_js\_start"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00171}\mbox{\hyperlink{group___embedded_files_ga6638c0c14a9ef7f914c9198af2dada1b}{00171}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ jquery\_3\_3\_1\_min\_js\_end[]\ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_jquery\_3\_3\_1\_min\_js\_end"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00173}\mbox{\hyperlink{group___embedded_files_gaede8f0bb2c45776a5718d8e7b8acbb6a}{00173}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ index\_html\_start[]\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_index\_html\_start"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00175}\mbox{\hyperlink{group___embedded_files_ga7b39f1fcc418da402de3d6966546ef7d}{00175}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ index\_html\_end[]\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_index\_html\_end"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00177}\mbox{\hyperlink{group___embedded_files_ga9244ba5260d10d4123426c271185e1be}{00177}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ app\_css\_start[]\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_app\_css\_start"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00179}\mbox{\hyperlink{group___embedded_files_gaa24663d0779ecc33c5ad8e23fc43eb38}{00179}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ app\_css\_end[]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_app\_css\_end"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00181}\mbox{\hyperlink{group___embedded_files_gac26de1a80dac4a73d1b67c5008afc2e8}{00181}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ app\_js\_start[]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_app\_js\_start"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00183}\mbox{\hyperlink{group___embedded_files_gafb40daa6bc7c43c57851110ab190fc4b}{00183}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ app\_js\_end[]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_app\_js\_end"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00185}\mbox{\hyperlink{group___embedded_files_ga6b0380c4515b49f9f71d01a188fda1c4}{00185}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ favicon\_ico\_start[]\ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_favicon\_ico\_start"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00187}\mbox{\hyperlink{group___embedded_files_gad4e8db8ceb133b2f52a893c00c559b5e}{00187}}\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ uint8\_t\ favicon\_ico\_end[]\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}(\textcolor{stringliteral}{"{}\_binary\_favicon\_ico\_end"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00188}00188\ \ \textcolor{comment}{//\ end\ of\ EmbeddedFiles}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00192}\mbox{\hyperlink{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c}{00192}}\ uint8\_t\ \mbox{\hyperlink{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c}{s\_led\_state}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00201}\mbox{\hyperlink{http__server_8h_a0d7dc83276db640fb3589828dae229e9}{00201}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_a0d7dc83276db640fb3589828dae229e9}{toogle\_led}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00202}00202\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00203}00203\ \ \ \ \ \mbox{\hyperlink{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c}{s\_led\_state}}\ =\ !\mbox{\hyperlink{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c}{s\_led\_state}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00204}00204\ \ \ \ \ gpio\_set\_level(\mbox{\hyperlink{http__server_8h_ab795a48e4796e4b0fca47a1341469d12}{BLINK\_GPIO}},\ \mbox{\hyperlink{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c}{s\_led\_state}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00205}00205\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00233}\mbox{\hyperlink{http__server_8c_ad4d559f65a1223680c853f9df5be5ffb}{00233}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_ad4d559f65a1223680c853f9df5be5ffb}{http\_server\_fan\_control\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00234}00234\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00235}00235\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/fanControl.json\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00237}00237\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ req-\/>content\_len;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00239}00239\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}fanControl:\ content\_len\ <=\ 0"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00241}00241\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00243}00243\ \ \ \ \ \textcolor{keywordtype}{char}\ *buf\ =\ malloc(len\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{if}\ (!buf)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00245}00245\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}fanControl:\ malloc\ failed"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00247}00247\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00249}00249\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ httpd\_req\_recv(req,\ buf,\ len);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00251}00251\ \ \ \ \ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00252}00252\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}fanControl:\ recv\ failed"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00253}00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00254}00254\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00255}00255\ \ \ \ \ buf[len]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00257}00257\ \ \ \ \ cJSON\ *root\ =\ cJSON\_Parse(buf);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00258}00258\ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00260}00260\ \ \ \ \ \textcolor{keywordflow}{if}\ (!root)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00261}00261\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}fanControl:\ invalid\ JSON"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00263}00263\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00265}00265\ \ \ \ \ cJSON\ *mode\_json\ \ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}mode"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00266}00266\ \ \ \ \ cJSON\ *speed\_json\ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}speed"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cJSON\_IsString(mode\_json)\ ||\ !cJSON\_IsNumber(speed\_json))\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00269}00269\ \ \ \ \ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}fanControl:\ missing\ fields"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00272}00272\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00274}00274\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode\_str\ =\ mode\_json-\/>valuestring;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00275}00275\ \ \ \ \ \textcolor{keywordtype}{int}\ speed\ \ \ \ \ \ \ \ \ \ \ \ =\ speed\_json-\/>valueint;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00277}00277\ \ \ \ \ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\_mode\_t}}\ mode\ =\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{FAN\_MODE\_MANUAL}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00278}00278\ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(mode\_str,\ \textcolor{stringliteral}{"{}auto"{}})\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00279}00279\ \ \ \ \ \ \ \ \ mode\ =\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c}{FAN\_MODE\_AUTO}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00280}00280\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (strcmp(mode\_str,\ \textcolor{stringliteral}{"{}registros"{}})\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00281}00281\ \ \ \ \ \ \ \ \ mode\ =\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418}{FAN\_MODE\_REGISTERS}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00282}00282\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00284}00284\ \ \ \ \ \mbox{\hyperlink{fan__control_8h_ad70079e6a01813020cce4bb17aa7db48}{fan\_control\_set\_mode}}(mode);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00285}00285\ \ \ \ \ \mbox{\hyperlink{fan__control_8h_a86862beca4b5da7bd5bdb3a9973f88f6}{fan\_control\_set\_manual\_speed}}((uint8\_t)speed);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00287}00287\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00289}00289\ \ \ \ \ \textcolor{keywordtype}{char}\ resp[128];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00290}00290\ \ \ \ \ snprintf(resp,\ \textcolor{keyword}{sizeof}(resp),}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\(\backslash\)"{}status\(\backslash\)"{}:\(\backslash\)"{}ok\(\backslash\)"{},\(\backslash\)"{}mode\(\backslash\)"{}:\(\backslash\)"{}\%s\(\backslash\)"{},\(\backslash\)"{}speed\(\backslash\)"{}:\%d\}"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ mode\_str,\ speed);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00294}00294\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00295}00295\ \ \ \ \ httpd\_resp\_send(req,\ resp,\ strlen(resp));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00298}00298\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00300}00300\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00301}00301\ \textcolor{comment}{//\ TIME\ (/time.json)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00302}00302\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00329}\mbox{\hyperlink{http__server_8c_ab185e6554c1eb3c4a386375eb87d2901}{00329}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_ab185e6554c1eb3c4a386375eb87d2901}{http\_server\_time\_json\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00330}00330\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00331}00331\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/time.json\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00333}00333\ \ \ \ \ time\_t\ now;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00334}00334\ \ \ \ \ \textcolor{keyword}{struct\ }tm\ timeinfo;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00336}00336\ \ \ \ \ time(\&now);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00337}00337\ \ \ \ \ localtime\_r(\&now,\ \&timeinfo);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00339}00339\ \ \ \ \ \textcolor{keywordtype}{char}\ date\_str[16];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00340}00340\ \ \ \ \ \textcolor{keywordtype}{char}\ time\_str[16];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00341}00341\ \ \ \ \ \textcolor{keywordtype}{char}\ timeJSON[128];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00343}00343\ \ \ \ \ strftime(date\_str,\ \textcolor{keyword}{sizeof}(date\_str),\ \textcolor{stringliteral}{"{}\%Y-\/\%m-\/\%d"{}},\ \&timeinfo);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00344}00344\ \ \ \ \ strftime(time\_str,\ \textcolor{keyword}{sizeof}(time\_str),\ \textcolor{stringliteral}{"{}\%H:\%M:\%S"{}},\ \&timeinfo);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00346}00346\ \ \ \ \ snprintf(timeJSON,\ \textcolor{keyword}{sizeof}(timeJSON),}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\(\backslash\)"{}date\(\backslash\)"{}:\(\backslash\)"{}\%s\(\backslash\)"{},\(\backslash\)"{}time\(\backslash\)"{}:\(\backslash\)"{}\%s\(\backslash\)"{}\}"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ date\_str,\ time\_str);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00350}00350\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00351}00351\ \ \ \ \ httpd\_resp\_send(req,\ timeJSON,\ strlen(timeJSON));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00352}00352\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00353}00353\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00354}00354\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00356}00356\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00357}00357\ \textcolor{comment}{//\ TOGGLE\ LED\ (/toogle\_led.json)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00358}00358\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00359}\mbox{\hyperlink{http__server_8c_a4172bd779fa518b7262f0f1410635b74}{00359}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a4172bd779fa518b7262f0f1410635b74}{http\_server\_toogle\_led\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00360}00360\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00361}00361\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/toogle\_led.json\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00363}00363\ \ \ \ \ \mbox{\hyperlink{http__server_8c_a0d7dc83276db640fb3589828dae229e9}{toogle\_led}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00365}00365\ \ \ \ \ httpd\_resp\_set\_hdr(req,\ \textcolor{stringliteral}{"{}Connection"{}},\ \textcolor{stringliteral}{"{}close"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00366}00366\ \ \ \ \ httpd\_resp\_send(req,\ NULL,\ 0);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00367}00367\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00368}00368\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00369}00369\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00371}00371\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00372}00372\ \textcolor{comment}{//\ LOG\ ERROR}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00373}00373\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00374}\mbox{\hyperlink{http__server_8c_a7f8a15d29ffe1832250f92032705ddd6}{00374}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_a7f8a15d29ffe1832250f92032705ddd6}{log\_error\_if\_nonzero}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *message,\ \textcolor{keywordtype}{int}\ error\_code)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00375}00375\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00376}00376\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\_code\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00377}00377\ \ \ \ \ \ \ \ \ ESP\_LOGE(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Last\ error\ \%s:\ 0x\%x"{}},\ message,\ error\_code);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00378}00378\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00379}00379\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00380}00380\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00381}00381\ \textcolor{comment}{//\ MQTT\ support\ disabled\ in\ this\ build;\ re-\/enable\ if\ needed.}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00383}00383\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00384}00384\ \textcolor{comment}{//\ SENSORES:\ NTC\ +\ PIR}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00385}00385\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00402}\mbox{\hyperlink{http__server_8c_a78199b321bd67d798d91cb9b920b7894}{00402}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_a78199b321bd67d798d91cb9b920b7894}{sensors\_init}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00403}00403\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00404}00404\ \ \ \ \ adc\_oneshot\_unit\_init\_cfg\_t\ init\_cfg\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00405}00405\ \ \ \ \ \ \ \ \ .unit\_id\ \ =\ ADC\_UNIT\_1,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00406}00406\ \ \ \ \ \ \ \ \ .ulp\_mode\ =\ ADC\_ULP\_MODE\_DISABLE,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00407}00407\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00409}00409\ \ \ \ \ ESP\_ERROR\_CHECK(adc\_oneshot\_new\_unit(\&init\_cfg,\ \&\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}}));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00410}00410\ \ \ \ \ \mbox{\hyperlink{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419}{inicializar\_ntc}}(\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00411}00411\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00412}00412\ \ \ \ \ \textcolor{comment}{//\ Inicializar\ sensor\_task\ para\ lectura\ de\ sensores}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00413}00413\ \ \ \ \ esp\_err\_t\ err\ =\ \mbox{\hyperlink{sensor__task_8h_aeff89d705d5b4afb8039e4deec09ab27}{sensor\_task\_init}}(\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00414}00414\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00415}00415\ \ \ \ \ \ \ \ \ ESP\_LOGE(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Failed\ to\ initialize\ sensor\_task:\ \%d"{}},\ err);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00416}00416\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00418}00418\ \ \ \ \ \textcolor{comment}{//\ Inicializar\ sensor\ PIR\ en\ GPIO\ 35}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00419}00419\ \ \ \ \ \mbox{\hyperlink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\_init}}(GPIO\_NUM\_35,\ NULL);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00420}00420\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}PIR\ sensor\ initialized\ on\ GPIO\ 35"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00421}00421\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00423}00423\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00424}00424\ \textcolor{comment}{//\ MONITOR\ TASK}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00425}00425\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00446}00446\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_a485e257e30e27229a9609348467183ac}{http\_server\_monitor}}(\textcolor{keywordtype}{void}\ *parameter);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00448}00448\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00449}00449\ \textcolor{comment}{//\ FW\ UPDATE\ TIMER}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00450}00450\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00451}\mbox{\hyperlink{http__server_8c_a97b7b3b19b17425082078eec697f2dd3}{00451}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_a97b7b3b19b17425082078eec697f2dd3}{http\_server\_fw\_update\_reset\_timer}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00452}00452\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00453}00453\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}{g\_fw\_update\_status}}\ ==\ \mbox{\hyperlink{group___o_t_a___status_ga2fcbd52f78a2a3e1e7418d74fb6de497}{OTA\_UPDATE\_SUCCESSFUL}})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00454}00454\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00455}00455\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_fw\_update\_reset\_timer:\ FW\ updated\ successful,\ starting\ reset\ timer"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00456}00456\ \ \ \ \ \ \ \ \ ESP\_ERROR\_CHECK(esp\_timer\_create(\&\mbox{\hyperlink{http__server_8c_ae2877887269a0c9a741915ca971c1909}{fw\_update\_reset\_args}},\ \&\mbox{\hyperlink{http__server_8c_adca1b9e825cb767104d798e1a3b33bc2}{fw\_update\_reset}}));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00457}00457\ \ \ \ \ \ \ \ \ ESP\_ERROR\_CHECK(esp\_timer\_start\_once(\mbox{\hyperlink{http__server_8c_adca1b9e825cb767104d798e1a3b33bc2}{fw\_update\_reset}},\ 8000000));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00458}00458\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00460}00460\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00461}00461\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_fw\_update\_reset\_timer:\ FW\ update\ unsuccessful"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00462}00462\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00463}00463\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00465}00465\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00466}00466\ \textcolor{comment}{//\ MONITOR\ TASK}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00467}00467\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00468}\mbox{\hyperlink{http__server_8c_a485e257e30e27229a9609348467183ac}{00468}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_a485e257e30e27229a9609348467183ac}{http\_server\_monitor}}(\textcolor{keywordtype}{void}\ *parameter)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00469}00469\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00470}00470\ \ \ \ \ \mbox{\hyperlink{structhttp__server__queue__message__t}{http\_server\_queue\_message\_t}}\ msg;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00472}00472\ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00473}00473\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00474}00474\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xQueueReceive(\mbox{\hyperlink{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd}{http\_server\_monitor\_queue\_handle}},\ \&msg,\ portMAX\_DELAY))}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00475}00475\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (msg.msgID)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d}{HTTP\_MSG\_WIFI\_CONNECT\_INIT}}:}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}HTTP\_MSG\_WIFI\_CONNECT\_INIT"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}{g\_wifi\_connect\_status}}\ =\ \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d}{HTTP\_WIFI\_STATUS\_CONNECTING}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789}{HTTP\_MSG\_WIFI\_CONNECT\_SUCCESS}}:}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}HTTP\_MSG\_WIFI\_CONNECT\_SUCCESS"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}{g\_wifi\_connect\_status}}\ =\ \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305}{HTTP\_WIFI\_STATUS\_CONNECT\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ mqtt\_app\_start();}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5}{HTTP\_MSG\_WIFI\_CONNECT\_FAIL}}:}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}HTTP\_MSG\_WIFI\_CONNECT\_FAIL"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}{g\_wifi\_connect\_status}}\ =\ \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f}{HTTP\_WIFI\_STATUS\_CONNECT\_FAILED}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00493}00493\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526}{HTTP\_MSG\_OTA\_UPDATE\_SUCCESSFUL}}:}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}HTTP\_MSG\_OTA\_UPDATE\_SUCCESSFUL"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}{g\_fw\_update\_status}}\ =\ \mbox{\hyperlink{group___o_t_a___status_ga2fcbd52f78a2a3e1e7418d74fb6de497}{OTA\_UPDATE\_SUCCESSFUL}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a97b7b3b19b17425082078eec697f2dd3}{http\_server\_fw\_update\_reset\_timer}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00499}00499\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4}{HTTP\_MSG\_OTA\_UPDATE\_FAILED}}:}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}HTTP\_MSG\_OTA\_UPDATE\_FAILED"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}{g\_fw\_update\_status}}\ =\ \mbox{\hyperlink{group___o_t_a___status_ga784a011b84e58faf7e84d7e4950a5231}{OTA\_UPDATE\_FAILED}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00504}00504\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00505}00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00508}00508\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00509}00509\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00510}00510\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00511}00511\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00512}00512\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00513}00513\ \textcolor{comment}{//\ STATIC\ FILE\ HANDLERS}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00514}00514\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00515}00515\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00526}\mbox{\hyperlink{http__server_8c_a76ae00db7345fc99769d7a184c0b1846}{00526}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a76ae00db7345fc99769d7a184c0b1846}{http\_server\_jquery\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00527}00527\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00528}00528\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}jquery\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00530}00530\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/javascript"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00531}00531\ \ \ \ \ httpd\_resp\_send(req,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)jquery\_3\_3\_1\_min\_js\_start,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jquery\_3\_3\_1\_min\_js\_end\ -\/\ jquery\_3\_3\_1\_min\_js\_start);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00534}00534\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00535}00535\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00536}00536\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00547}\mbox{\hyperlink{http__server_8c_a6b9b5a22e77f419c680e93e21009216b}{00547}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a6b9b5a22e77f419c680e93e21009216b}{http\_server\_index\_html\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00548}00548\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00549}00549\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}index.html\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00550}00550\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00551}00551\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}text/html"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00552}00552\ \ \ \ \ httpd\_resp\_send(req,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)index\_html\_start,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index\_html\_end\ -\/\ index\_html\_start);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00555}00555\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00556}00556\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00557}00557\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00568}\mbox{\hyperlink{http__server_8c_afa3468a9e2906a45df6a21aaf0d350e7}{00568}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_afa3468a9e2906a45df6a21aaf0d350e7}{http\_server\_app\_css\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00569}00569\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00570}00570\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}app.css\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00572}00572\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}text/css"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00573}00573\ \ \ \ \ httpd\_resp\_send(req,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00574}00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)app\_css\_start,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00575}00575\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ app\_css\_end\ -\/\ app\_css\_start);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00576}00576\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00577}00577\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00578}00578\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00589}\mbox{\hyperlink{http__server_8c_a627af28895f5e77abe6d4b3be767fe7b}{00589}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a627af28895f5e77abe6d4b3be767fe7b}{http\_server\_app\_js\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00590}00590\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00591}00591\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}app.js\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00593}00593\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/javascript"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00594}00594\ \ \ \ \ httpd\_resp\_send(req,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)app\_js\_start,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ app\_js\_end\ -\/\ app\_js\_start);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00597}00597\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00598}00598\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00599}00599\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00610}\mbox{\hyperlink{http__server_8c_ac5df3865572c3abea7ca9bc43b4a2a23}{00610}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_ac5df3865572c3abea7ca9bc43b4a2a23}{http\_server\_favicon\_ico\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00611}00611\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00612}00612\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}favicon.ico\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00613}00613\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00614}00614\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}image/x-\/icon"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00615}00615\ \ \ \ \ httpd\_resp\_send(req,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00616}00616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)favicon\_ico\_start,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00617}00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ favicon\_ico\_end\ -\/\ favicon\_ico\_start);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00618}00618\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00619}00619\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00620}00620\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00621}00621\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00622}00622\ \textcolor{comment}{//\ OTA\ HANDLERS}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00623}00623\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00624}00624\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00655}\mbox{\hyperlink{http__server_8c_afa6d4df0ab1362bd53d11b52fe486d94}{00655}}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_afa6d4df0ab1362bd53d11b52fe486d94}{http\_server\_OTA\_update\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00656}00656\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00657}00657\ \ \ \ \ esp\_ota\_handle\_t\ ota\_handle;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00658}00658\ \ \ \ \ \textcolor{keywordtype}{char}\ ota\_buff[1024];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00659}00659\ \ \ \ \ \textcolor{keywordtype}{int}\ content\_length\ \ \ =\ req-\/>content\_len;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00660}00660\ \ \ \ \ \textcolor{keywordtype}{int}\ content\_received\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00661}00661\ \ \ \ \ \textcolor{keywordtype}{int}\ recv\_len;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00662}00662\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_req\_body\_started\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00663}00663\ \ \ \ \ \textcolor{keywordtype}{bool}\ flash\_successful\ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00664}00664\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00665}00665\ \ \ \ \ \textcolor{keyword}{const}\ esp\_partition\_t\ *update\_partition\ =\ esp\_ota\_get\_next\_update\_partition(NULL);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00667}00667\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00668}00668\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00669}00669\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((recv\_len\ =\ httpd\_req\_recv(req,\ ota\_buff,\ MIN(content\_length,\ \textcolor{keyword}{sizeof}(ota\_buff))))\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00670}00670\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00671}00671\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (recv\_len\ ==\ HTTPD\_SOCK\_ERR\_TIMEOUT)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00672}00672\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00673}00673\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ Socket\ Timeout"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00674}00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00675}00675\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ OTA\ other\ Error\ \%d"{}},\ recv\_len);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00678}00678\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00679}00679\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ OTA\ RX:\ \%d\ of\ \%d\(\backslash\)r"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ content\_received,\ content\_length);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00681}00681\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00682}00682\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!is\_req\_body\_started)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00683}00683\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ is\_req\_body\_started\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *body\_start\_p\ =\ strstr(ota\_buff,\ \textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n\(\backslash\)r\(\backslash\)n"{}})\ +\ 4;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ body\_part\_len\ \ =\ recv\_len\ -\/\ (body\_start\_p\ -\/\ ota\_buff);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00688}00688\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ OTA\ file\ size:\ \%d\(\backslash\)r\(\backslash\)n"{}},\ content\_length);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00690}00690\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ esp\_err\_t\ err\ =\ esp\_ota\_begin(update\_partition,\ OTA\_SIZE\_UNKNOWN,\ \&ota\_handle);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ ESP\_OK)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ Error\ with\ OTA\ begin,\ cancelling\(\backslash\)r\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00698}00698\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00699}00699\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ Writing\ to\ partition\ subtype\ \%d\ at\ 0x\%lx\(\backslash\)r\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00700}00700\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ update\_partition-\/>subtype,\ update\_partition-\/>address);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00701}00701\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00702}00702\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00703}00703\ \ \ \ \ \ \ \ \ \ \ \ \ esp\_ota\_write(ota\_handle,\ body\_start\_p,\ body\_part\_len);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00704}00704\ \ \ \ \ \ \ \ \ \ \ \ \ content\_received\ +=\ body\_part\_len;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00705}00705\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00706}00706\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00707}00707\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ esp\_ota\_write(ota\_handle,\ ota\_buff,\ recv\_len);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00709}00709\ \ \ \ \ \ \ \ \ \ \ \ \ content\_received\ +=\ recv\_len;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00710}00710\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00712}00712\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (recv\_len\ >\ 0\ \&\&\ content\_received\ <\ content\_length);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00713}00713\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00714}00714\ \ \ \ \ \textcolor{keywordflow}{if}\ (esp\_ota\_end(ota\_handle)\ ==\ ESP\_OK)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00715}00715\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00716}00716\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (esp\_ota\_set\_boot\_partition(update\_partition)\ ==\ ESP\_OK)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00717}00717\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00718}00718\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ esp\_partition\_t\ *boot\_partition\ =\ esp\_ota\_get\_boot\_partition();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00719}00719\ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00720}00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ Next\ boot\ partition\ subtype\ \%d\ at\ 0x\%lx"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00721}00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ boot\_partition-\/>subtype,\ boot\_partition-\/>address);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ flash\_successful\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00723}00723\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00724}00724\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00725}00725\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00726}00726\ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ FLASHED\ ERROR!!!"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00727}00727\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00728}00728\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00729}00729\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00730}00730\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00731}00731\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_OTA\_update\_handler:\ esp\_ota\_end\ ERROR!!!"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00732}00732\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00733}00733\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00734}00734\ \ \ \ \ \textcolor{keywordflow}{if}\ (flash\_successful)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00735}00735\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_aa40c7544f908043547e60dcba8a41963}{http\_server\_monitor\_send\_message}}(\mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526}{HTTP\_MSG\_OTA\_UPDATE\_SUCCESSFUL}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00736}00736\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00737}00737\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_aa40c7544f908043547e60dcba8a41963}{http\_server\_monitor\_send\_message}}(\mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4}{HTTP\_MSG\_OTA\_UPDATE\_FAILED}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00738}00738\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00739}00739\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00740}00740\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00741}00741\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00742}00742\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00743}\mbox{\hyperlink{http__server_8c_a17943ba8d92714b90c1d48233f642d15}{00743}}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a17943ba8d92714b90c1d48233f642d15}{http\_server\_OTA\_status\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00744}00744\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00745}00745\ \ \ \ \ \textcolor{keywordtype}{char}\ otaJSON[100];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00746}00746\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00747}00747\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}OTAstatus\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00748}00748\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00749}00749\ \ \ \ \ sprintf(otaJSON,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00750}00750\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\(\backslash\)"{}ota\_update\_status\(\backslash\)"{}:\%d,\(\backslash\)"{}compile\_time\(\backslash\)"{}:\(\backslash\)"{}\%s\(\backslash\)"{},\(\backslash\)"{}compile\_date\(\backslash\)"{}:\(\backslash\)"{}\%s\(\backslash\)"{}\}"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00751}00751\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}{g\_fw\_update\_status}},\ \_\_TIME\_\_,\ \_\_DATE\_\_);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00752}00752\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00753}00753\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00754}00754\ \ \ \ \ httpd\_resp\_send(req,\ otaJSON,\ strlen(otaJSON));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00755}00755\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00756}00756\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00757}00757\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00758}00758\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00759}00759\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00760}00760\ \textcolor{comment}{//\ WiFi\ CONNECT\ (/wifiConnect.json)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00761}00761\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00762}00762\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00791}\mbox{\hyperlink{http__server_8c_a3b8145dd054fd41a8498320e7a85a4cb}{00791}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a3b8145dd054fd41a8498320e7a85a4cb}{http\_server\_wifi\_connect\_json\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00792}00792\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00793}00793\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ header\_len;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00794}00794\ \ \ \ \ \textcolor{keywordtype}{char}\ *header\_value;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00795}00795\ \ \ \ \ \textcolor{keywordtype}{char}\ *ssid\_str\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00796}00796\ \ \ \ \ \textcolor{keywordtype}{char}\ *pass\_str\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00797}00797\ \ \ \ \ \textcolor{keywordtype}{int}\ content\_length;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00798}00798\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00799}00799\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/wifiConnect.json\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00800}00800\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00801}00801\ \ \ \ \ header\_len\ =\ httpd\_req\_get\_hdr\_value\_len(req,\ \textcolor{stringliteral}{"{}Content-\/Length"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00802}00802\ \ \ \ \ \textcolor{keywordflow}{if}\ (header\_len\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00803}00803\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Content-\/Length\ header\ is\ missing\ or\ invalid"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00804}00804\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00805}00805\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00806}00806\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00807}00807\ \ \ \ \ header\_value\ =\ (\textcolor{keywordtype}{char}\ *)malloc(header\_len\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00808}00808\ \ \ \ \ \textcolor{keywordflow}{if}\ (httpd\_req\_get\_hdr\_value\_str(req,\ \textcolor{stringliteral}{"{}Content-\/Length"{}},\ header\_value,\ header\_len\ +\ 1)\ !=\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00809}00809\ \ \ \ \ \ \ \ \ free(header\_value);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00810}00810\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Failed\ to\ get\ Content-\/Length\ header\ value"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00811}00811\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00812}00812\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00813}00813\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00814}00814\ \ \ \ \ content\_length\ =\ atoi(header\_value);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00815}00815\ \ \ \ \ free(header\_value);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00816}00816\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00817}00817\ \ \ \ \ \textcolor{keywordflow}{if}\ (content\_length\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00818}00818\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Invalid\ Content-\/Length\ value"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00819}00819\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00820}00820\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00821}00821\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00822}00822\ \ \ \ \ \textcolor{keywordtype}{char}\ *data\_buffer\ =\ (\textcolor{keywordtype}{char}\ *)malloc(content\_length\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00823}00823\ \ \ \ \ \textcolor{keywordflow}{if}\ (!data\_buffer)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00824}00824\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}malloc\ failed"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00825}00825\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00826}00826\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00827}00827\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00828}00828\ \ \ \ \ \textcolor{keywordflow}{if}\ (httpd\_req\_recv(req,\ data\_buffer,\ content\_length)\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00829}00829\ \ \ \ \ \ \ \ \ free(data\_buffer);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00830}00830\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Failed\ to\ receive\ request\ body"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00831}00831\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00832}00832\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00833}00833\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00834}00834\ \ \ \ \ data\_buffer[content\_length]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00835}00835\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00836}00836\ \ \ \ \ cJSON\ *root\ =\ cJSON\_Parse(data\_buffer);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00837}00837\ \ \ \ \ free(data\_buffer);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00838}00838\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00839}00839\ \ \ \ \ \textcolor{keywordflow}{if}\ (!root)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00840}00840\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Invalid\ JSON\ data"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00841}00841\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00842}00842\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00843}00843\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00844}00844\ \ \ \ \ cJSON\ *ssid\_json\ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}selectedSSID"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00845}00845\ \ \ \ \ cJSON\ *pwd\_json\ \ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}pwd"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00846}00846\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00847}00847\ \ \ \ \ \textcolor{keywordflow}{if}\ (!ssid\_json\ ||\ !pwd\_json\ ||\ !cJSON\_IsString(ssid\_json)\ ||\ !cJSON\_IsString(pwd\_json))\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00848}00848\ \ \ \ \ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00849}00849\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Missing\ or\ invalid\ JSON\ data\ fields"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00850}00850\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00851}00851\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00852}00852\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00853}00853\ \ \ \ \ ssid\_str\ =\ strdup(ssid\_json-\/>valuestring);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00854}00854\ \ \ \ \ pass\_str\ =\ strdup(pwd\_json-\/>valuestring);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00855}00855\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00856}00856\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00857}00857\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00858}00858\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Received\ SSID:\ \%s"{}},\ ssid\_str);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00859}00859\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Received\ Password:\ \%s"{}},\ pass\_str);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00861}00861\ \ \ \ \ wifi\_config\_t\ *\mbox{\hyperlink{wifi__app_8c_a7b70c7849c256ece4a9ff6f21eeac798}{wifi\_config}}\ =\ \mbox{\hyperlink{wifi__app_8h_acd6606606de84f405065531c1889432a}{wifi\_app\_get\_wifi\_config}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00862}00862\ \ \ \ \ memset(\mbox{\hyperlink{wifi__app_8c_a7b70c7849c256ece4a9ff6f21eeac798}{wifi\_config}},\ 0x00,\ \textcolor{keyword}{sizeof}(wifi\_config\_t));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00863}00863\ \ \ \ \ memcpy(\mbox{\hyperlink{wifi__app_8c_a7b70c7849c256ece4a9ff6f21eeac798}{wifi\_config}}-\/>sta.ssid,\ \ \ \ \ ssid\_str,\ strlen(ssid\_str));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00864}00864\ \ \ \ \ memcpy(\mbox{\hyperlink{wifi__app_8c_a7b70c7849c256ece4a9ff6f21eeac798}{wifi\_config}}-\/>sta.password,\ pass\_str,\ strlen(pass\_str));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00865}00865\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00866}00866\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a1eb1e37bd21abc738271e8c1a8a876f8}{save\_wifi\_credentials}}(ssid\_str,\ pass\_str);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00867}00867\ \ \ \ \ esp\_wifi\_disconnect();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00868}00868\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a8a91d7a19b16ddaf60425245284defd7}{connect\_to\_wifi}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00869}00869\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00870}00870\ \ \ \ \ free(ssid\_str);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00871}00871\ \ \ \ \ free(pass\_str);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00872}00872\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00873}00873\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00874}00874\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00875}00875\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00876}00876\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00877}00877\ \textcolor{comment}{//\ WiFi\ STATUS\ (/wifiConnectStatus)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00878}00878\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00879}00879\ \textcolor{comment}{//\ WIFI\ CONNECT\ STATUS\ (/wifiConnectStatus)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00880}00880\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00898}\mbox{\hyperlink{http__server_8c_a34de4e2dc4bbb91cccdef9f90c9097f5}{00898}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a34de4e2dc4bbb91cccdef9f90c9097f5}{http\_server\_wifi\_connect\_status\_json\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00899}00899\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00900}00900\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/wifiConnectStatus\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00901}00901\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00902}00902\ \ \ \ \ \textcolor{keywordtype}{char}\ statusJSON[100];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00903}00903\ \ \ \ \ sprintf(statusJSON,\ \textcolor{stringliteral}{"{}\{\(\backslash\)"{}wifi\_connect\_status\(\backslash\)"{}:\%d\}"{}},\ \mbox{\hyperlink{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}{g\_wifi\_connect\_status}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00904}00904\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00905}00905\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00906}00906\ \ \ \ \ httpd\_resp\_send(req,\ statusJSON,\ strlen(statusJSON));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00907}00907\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00908}00908\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00909}00909\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00910}00910\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00911}00911\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00912}00912\ \textcolor{comment}{//\ DHT/NTC\ +\ PIR\ (/dhtSensor.json)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00913}00913\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00935}\mbox{\hyperlink{http__server_8c_a283402319442f9dbd9f3b15a4256c314}{00935}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_a283402319442f9dbd9f3b15a4256c314}{http\_server\_get\_dht\_sensor\_readings\_json\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00936}00936\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00937}00937\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/dhtSensor.json\ requested\ (NTC\ +\ PIR)"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00938}00938\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00939}00939\ \ \ \ \ \textcolor{keywordtype}{float}\ temp\_c\ =\ \mbox{\hyperlink{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}{leer\_temperatura\_celsius}}(\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00940}00940\ \ \ \ \ \textcolor{keywordtype}{bool}\ motion\ \ =\ \mbox{\hyperlink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\_is\_motion\_active}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00941}00941\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00942}00942\ \ \ \ \ \textcolor{keywordtype}{char}\ json[128];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00943}00943\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00944}00944\ \ \ \ \ \textcolor{keywordflow}{if}\ (temp\_c\ <\ -\/100.0f)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00945}00945\ \ \ \ \ \ \ \ \ snprintf(json,\ \textcolor{keyword}{sizeof}(json),}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00946}00946\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\(\backslash\)"{}temp\(\backslash\)"{}:null,\(\backslash\)"{}pir\(\backslash\)"{}:\%d\}"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00947}00947\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ motion\ ?\ 1\ :\ 0);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00948}00948\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00949}00949\ \ \ \ \ \ \ \ \ snprintf(json,\ \textcolor{keyword}{sizeof}(json),}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00950}00950\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\{\(\backslash\)"{}temp\(\backslash\)"{}:\%.2f,\(\backslash\)"{}pir\(\backslash\)"{}:\%d\}"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00951}00951\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_c,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00952}00952\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ motion\ ?\ 1\ :\ 0);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00953}00953\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00954}00954\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00955}00955\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00956}00956\ \ \ \ \ httpd\_resp\_send(req,\ json,\ strlen(json));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00957}00957\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00958}00958\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00959}00959\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00960}00960\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00961}00961\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00962}00962\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00963}00963\ \textcolor{comment}{//\ /regerase.json\ \ (compatibilidad\ botón\ "{}Borrar\ registro"{})}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00964}00964\ \textcolor{comment}{//\ Body\ JSON:\ \{\ "{}selectedNumber"{}:\ "{}3"{}\ \}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00965}00965\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00991}\mbox{\hyperlink{http__server_8c_ae521c42d06e5b900fcb1bac76ab9c0d8}{00991}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_ae521c42d06e5b900fcb1bac76ab9c0d8}{http\_server\_register\_erase\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00992}00992\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00993}00993\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/regerase.json\ requested"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00994}00994\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00995}00995\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ req-\/>content\_len;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00996}00996\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ <=\ 0\ ||\ len\ >\ 128)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00997}00997\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}invalid\ length"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00998}00998\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l00999}00999\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01000}01000\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01001}01001\ \ \ \ \ \textcolor{keywordtype}{char}\ *buf\ =\ malloc(len\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01002}01002\ \ \ \ \ \textcolor{keywordflow}{if}\ (!buf)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01003}01003\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_500\_INTERNAL\_SERVER\_ERROR,\ \textcolor{stringliteral}{"{}no\ mem"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01004}01004\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01005}01005\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01006}01006\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01007}01007\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ httpd\_req\_recv(req,\ buf,\ len);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01008}01008\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01009}01009\ \ \ \ \ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01010}01010\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_500\_INTERNAL\_SERVER\_ERROR,\ \textcolor{stringliteral}{"{}recv\ failed"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01011}01011\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01012}01012\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01013}01013\ \ \ \ \ buf[ret]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01014}01014\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01015}01015\ \ \ \ \ cJSON\ *root\ =\ cJSON\_Parse(buf);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01016}01016\ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01017}01017\ \ \ \ \ \textcolor{keywordflow}{if}\ (!root)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01018}01018\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}invalid\ json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01019}01019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01020}01020\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01021}01021\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01022}01022\ \ \ \ \ cJSON\ *reg\_number\_json\ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}selectedNumber"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01023}01023\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cJSON\_IsString(reg\_number\_json))\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01024}01024\ \ \ \ \ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01025}01025\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}missing\ selectedNumber"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01026}01026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01027}01027\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01028}01028\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01029}01029\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ atoi(reg\_number\_json-\/>valuestring);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01030}01030\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01031}01031\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01032}01032\ \ \ \ \ \textcolor{keywordflow}{if}\ (id\ <=\ 0\ ||\ id\ >\ 10)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01033}01033\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}invalid\ id"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01034}01034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01035}01035\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01036}01036\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01037}01037\ \ \ \ \ \mbox{\hyperlink{registers_8h_a96fc67199ae4e05f5cb25a0b8020573f}{delete\_register\_from\_nvs}}(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01038}01038\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}register\ \%d\ deleted\ from\ NVS"{}},\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01039}01039\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01040}01040\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01041}01041\ \ \ \ \ httpd\_resp\_send(req,\ \textcolor{stringliteral}{"{}\{\(\backslash\)"{}status\(\backslash\)"{}:\(\backslash\)"{}ok\(\backslash\)"{}\}"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01042}01042\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01043}01043\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01044}01044\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01045}01045\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01046}01046\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01047}01047\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01048}01048\ \textcolor{comment}{//\ HTTP\ SERVER\ CONFIG}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01049}01049\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01050}01050\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01086}\mbox{\hyperlink{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc}{01086}}\ \textcolor{keyword}{static}\ httpd\_handle\_t\ \mbox{\hyperlink{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc}{http\_server\_configure}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01087}01087\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01088}01088\ \ \ \ \ httpd\_config\_t\ config\ =\ HTTPD\_DEFAULT\_CONFIG();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01089}01089\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01090}01090\ \ \ \ \ \mbox{\hyperlink{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd}{http\_server\_monitor\_queue\_handle}}\ =}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01091}01091\ \ \ \ \ \ \ \ \ xQueueCreate(3,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structhttp__server__queue__message__t}{http\_server\_queue\_message\_t}}));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01092}01092\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01093}01093\ \ \ \ \ xTaskCreatePinnedToCore(\&\mbox{\hyperlink{http__server_8c_a485e257e30e27229a9609348467183ac}{http\_server\_monitor}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01094}01094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}http\_server\_monitor"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01095}01095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HTTP\_SERVER\_MONITOR\_STACK\_SIZE,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01096}01096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NULL,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01097}01097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HTTP\_SERVER\_MONITOR\_PRIORITY,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01098}01098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&\mbox{\hyperlink{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}{task\_http\_server\_monitor}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01099}01099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HTTP\_SERVER\_MONITOR\_CORE\_ID);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01100}01100\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01101}01101\ \ \ \ \ config.core\_id\ \ \ \ \ \ \ \ \ \ \ =\ HTTP\_SERVER\_TASK\_CORE\_ID;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01102}01102\ \ \ \ \ config.task\_priority\ \ \ \ \ =\ HTTP\_SERVER\_TASK\_PRIORITY;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01103}01103\ \ \ \ \ config.stack\_size\ \ \ \ \ \ \ \ =\ HTTP\_SERVER\_TASK\_STACK\_SIZE;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01104}01104\ \ \ \ \ config.max\_uri\_handlers\ \ =\ 20;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01105}01105\ \ \ \ \ config.recv\_wait\_timeout\ =\ 10;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01106}01106\ \ \ \ \ config.send\_wait\_timeout\ =\ 10;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01107}01107\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01108}01108\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01109}01109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}http\_server\_configure:\ Starting\ server\ on\ port:\ '\%d'\ with\ priority:\ '\%d'"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01110}01110\ \ \ \ \ \ \ \ \ \ \ \ \ \ config.server\_port,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01111}01111\ \ \ \ \ \ \ \ \ \ \ \ \ \ config.task\_priority);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01112}01112\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01113}01113\ \ \ \ \ \textcolor{keywordflow}{if}\ (httpd\_start(\&\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&config)\ ==\ ESP\_OK)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01114}01114\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01115}01115\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_configure:\ Registering\ URI\ handlers"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01116}01116\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01117}01117\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ fan\_control\_uri\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01118}01118\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/fanControl.json"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01119}01119\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01120}01120\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_ad4d559f65a1223680c853f9df5be5ffb}{http\_server\_fan\_control\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01121}01121\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01122}01122\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01123}01123\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&fan\_control\_uri);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01124}01124\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01125}01125\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ jquery\_js\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01126}01126\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/jquery-\/3.3.1.min.js"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01127}01127\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01128}01128\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a76ae00db7345fc99769d7a184c0b1846}{http\_server\_jquery\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01129}01129\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01130}01130\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01131}01131\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&jquery\_js);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01132}01132\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01133}01133\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ index\_html\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01134}01134\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01135}01135\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01136}01136\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a6b9b5a22e77f419c680e93e21009216b}{http\_server\_index\_html\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01137}01137\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01138}01138\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01139}01139\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&index\_html);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01140}01140\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01141}01141\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ app\_css\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01142}01142\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/app.css"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01143}01143\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01144}01144\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_afa3468a9e2906a45df6a21aaf0d350e7}{http\_server\_app\_css\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01145}01145\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01146}01146\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01147}01147\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&app\_css);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01148}01148\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01149}01149\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ app\_js\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01150}01150\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/app.js"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01151}01151\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01152}01152\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a627af28895f5e77abe6d4b3be767fe7b}{http\_server\_app\_js\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01153}01153\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01154}01154\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01155}01155\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&app\_js);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01156}01156\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01157}01157\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ favicon\_ico\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01158}01158\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/favicon.ico"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01159}01159\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01160}01160\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_ac5df3865572c3abea7ca9bc43b4a2a23}{http\_server\_favicon\_ico\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01161}01161\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01162}01162\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01163}01163\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&favicon\_ico);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01164}01164\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01165}01165\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ toogle\_led\_uri\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01166}01166\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/toogle\_led.json"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01167}01167\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01168}01168\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a4172bd779fa518b7262f0f1410635b74}{http\_server\_toogle\_led\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01169}01169\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01170}01170\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01171}01171\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&toogle\_led\_uri);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01172}01172\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01173}01173\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ wifi\_connect\_json\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01174}01174\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/wifiConnect.json"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01175}01175\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01176}01176\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a3b8145dd054fd41a8498320e7a85a4cb}{http\_server\_wifi\_connect\_json\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01177}01177\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01178}01178\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01179}01179\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&wifi\_connect\_json);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01180}01180\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01181}01181\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ readreg\_uri\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01182}01182\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/readreg.json"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01183}01183\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01184}01184\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_acf44ffde7b268213f9fbcbaed7e9b066}{http\_server\_read\_register\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01185}01185\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01186}01186\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01187}01187\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&readreg\_uri);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01188}01188\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Registered\ /readreg.json\ handler"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01189}01189\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01190}01190\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01191}01191\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Borrar\ registro\ (compatibilidad)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01192}01192\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ register\_erase\_uri\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01193}01193\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/regerase.json"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01194}01194\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01195}01195\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_ae521c42d06e5b900fcb1bac76ab9c0d8}{http\_server\_register\_erase\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01196}01196\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01197}01197\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01198}01198\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&register\_erase\_uri);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01199}01199\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01200}01200\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ OTA\_update\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01201}01201\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/OTAupdate"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01202}01202\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01203}01203\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_afa6d4df0ab1362bd53d11b52fe486d94}{http\_server\_OTA\_update\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01204}01204\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01205}01205\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01206}01206\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&OTA\_update);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01207}01207\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01208}01208\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ OTA\_status\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01209}01209\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/OTAstatus"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01210}01210\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01211}01211\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a17943ba8d92714b90c1d48233f642d15}{http\_server\_OTA\_status\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01212}01212\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01213}01213\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01214}01214\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&OTA\_status);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01215}01215\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01216}01216\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ dht\_sensor\_json\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01217}01217\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/dhtSensor.json"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01218}01218\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01219}01219\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a283402319442f9dbd9f3b15a4256c314}{http\_server\_get\_dht\_sensor\_readings\_json\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01220}01220\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01221}01221\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01222}01222\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&dht\_sensor\_json);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01223}01223\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01224}01224\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ wifi\_connect\_status\_json\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01225}01225\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/wifiConnectStatus"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01226}01226\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01227}01227\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_a34de4e2dc4bbb91cccdef9f90c9097f5}{http\_server\_wifi\_connect\_status\_json\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01228}01228\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01229}01229\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01230}01230\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&wifi\_connect\_status\_json);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01231}01231\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01232}01232\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Endpoints\ nuevos\ de\ registros\ (en\ registers.c):}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01233}01233\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{registers_8h_a02b94c84eabd1b5cc88c675a6c75b12f}{register\_registers\_endpoints}}(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01234}01234\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01235}01235\ \ \ \ \ \ \ \ \ httpd\_uri\_t\ time\_json\ =\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01236}01236\ \ \ \ \ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}/time.json"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01237}01237\ \ \ \ \ \ \ \ \ \ \ \ \ .method\ \ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01238}01238\ \ \ \ \ \ \ \ \ \ \ \ \ .handler\ \ =\ \mbox{\hyperlink{http__server_8c_ab185e6554c1eb3c4a386375eb87d2901}{http\_server\_time\_json\_handler}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01239}01239\ \ \ \ \ \ \ \ \ \ \ \ \ .user\_ctx\ =\ NULL}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01240}01240\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01241}01241\ \ \ \ \ \ \ \ \ httpd\_register\_uri\_handler(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}},\ \&time\_json);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01242}01242\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01243}01243\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01244}01244\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01245}01245\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01246}01246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01247}01247\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01248}01248\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01249}01249\ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01250}01250\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01251}01251\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01252}01252\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01253}01253\ \textcolor{comment}{//\ /readreg.json\ \ (compatibilidad\ con\ front-\/end\ viejo)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01254}01254\ \textcolor{comment}{//\ Devuelve\ reg1..reg10\ como\ strings\ "{}HHMM"{}\ +\ días\ ("{}L"{},"{}M"{},"{}X"{}...)}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01255}01255\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01256}\mbox{\hyperlink{http__server_8c_acf44ffde7b268213f9fbcbaed7e9b066}{01256}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{http__server_8c_acf44ffde7b268213f9fbcbaed7e9b066}{http\_server\_read\_register\_handler}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01257}01257\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01258}01258\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}/readreg.json\ requested\ -\/>\ leyendo\ desde\ NVS"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01259}01259\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01260}01260\ \ \ \ \ cJSON\ *root\ =\ cJSON\_CreateObject();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01261}01261\ \ \ \ \ \textcolor{keywordflow}{if}\ (!root)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01262}01262\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_500\_INTERNAL\_SERVER\_ERROR,\ \textcolor{stringliteral}{"{}no\ mem"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01263}01263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01264}01264\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01265}01265\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01266}01266\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <=\ 10;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01267}01267\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ key[16];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01268}01268\ \ \ \ \ \ \ \ \ snprintf(key,\ \textcolor{keyword}{sizeof}(key),\ \textcolor{stringliteral}{"{}reg\%d"{}},\ i);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01269}01269\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01270}01270\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ buf[256];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01271}01271\ \ \ \ \ \ \ \ \ esp\_err\_t\ err\ =\ \mbox{\hyperlink{registers_8h_aebc3357edd2c8b27aba176cfbf2a7260}{load\_register\_from\_nvs}}(i,\ buf,\ \textcolor{keyword}{sizeof}(buf));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01272}01272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01273}01273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ hay\ registro:\ manda\ null}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01274}01274\ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\_AddNullToObject(root,\ key);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01275}01275\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01276}01276\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01277}01277\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01278}01278\ \ \ \ \ \ \ \ \ cJSON\ *reg\_json\ =\ cJSON\_Parse(buf);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01279}01279\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!reg\_json)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01280}01280\ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\_AddNullToObject(root,\ key);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01281}01281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01282}01282\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01283}01283\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01284}01284\ \ \ \ \ \ \ \ \ cJSON\ *hour\_json\ \ \ =\ cJSON\_GetObjectItem(reg\_json,\ \textcolor{stringliteral}{"{}hour"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01285}01285\ \ \ \ \ \ \ \ \ cJSON\ *minute\_json\ =\ cJSON\_GetObjectItem(reg\_json,\ \textcolor{stringliteral}{"{}minute"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01286}01286\ \ \ \ \ \ \ \ \ cJSON\ *days\_json\ \ \ =\ cJSON\_GetObjectItem(reg\_json,\ \textcolor{stringliteral}{"{}days"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01287}01287\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01288}01288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cJSON\_IsNumber(hour\_json)\ ||}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01289}01289\ \ \ \ \ \ \ \ \ \ \ \ \ !cJSON\_IsNumber(minute\_json)\ ||}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01290}01290\ \ \ \ \ \ \ \ \ \ \ \ \ !cJSON\_IsArray(days\_json))\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01291}01291\ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\_Delete(reg\_json);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01292}01292\ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\_AddNullToObject(root,\ key);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01293}01293\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01294}01294\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01295}01295\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01296}01296\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ reg\_str[32];}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01297}01297\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ "{}HHMM"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01298}01298\ \ \ \ \ \ \ \ \ snprintf(reg\_str,\ \textcolor{keyword}{sizeof}(reg\_str),\ \textcolor{stringliteral}{"{}\%02d\%02d"{}},}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01299}01299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hour\_json-\/>valueint,\ minute\_json-\/>valueint);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01300}01300\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01301}01301\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Añade\ letras\ de\ días\ tal\ como\ las\ guardamos\ en\ NVS:\ "{}L"{},"{}M"{},"{}X"{},"{}J"{},"{}V"{},"{}S"{},"{}D"{}}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01302}01302\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ndays\ =\ cJSON\_GetArraySize(days\_json);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01303}01303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ ndays\ \&\&\ strlen(reg\_str)\ <\ \textcolor{keyword}{sizeof}(reg\_str)\ -\/\ 1;\ j++)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01304}01304\ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\ *d\ =\ cJSON\_GetArrayItem(days\_json,\ j);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01305}01305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cJSON\_IsString(d)\ \&\&\ d-\/>valuestring\ \&\&\ d-\/>valuestring[0]\ !=\ \textcolor{charliteral}{'\(\backslash\)0'})\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01306}01306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ strncat(reg\_str,\ d-\/>valuestring,\ 1);\ \ \ \textcolor{comment}{//\ solo\ la\ primera\ letra}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01307}01307\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01308}01308\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01309}01309\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01310}01310\ \ \ \ \ \ \ \ \ cJSON\_AddStringToObject(root,\ key,\ reg\_str);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01311}01311\ \ \ \ \ \ \ \ \ cJSON\_Delete(reg\_json);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01312}01312\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01313}01313\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01314}01314\ \ \ \ \ \textcolor{keywordtype}{char}\ *out\ =\ cJSON\_PrintUnformatted(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01315}01315\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01316}01316\ \ \ \ \ httpd\_resp\_send(req,\ out,\ strlen(out));}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01317}01317\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01318}01318\ \ \ \ \ free(out);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01319}01319\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01320}01320\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01321}01321\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01322}01322\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01323}01323\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01324}01324\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01325}01325\ \textcolor{comment}{//\ FAN\ TASK\ -\/\ Actualización\ automática\ del\ ventilador}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01326}01326\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01327}01327\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01345}\mbox{\hyperlink{http__server_8c_a81d987e42a660d479981eefd99e51d6f}{01345}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_a81d987e42a660d479981eefd99e51d6f}{fan\_task}}(\textcolor{keywordtype}{void}\ *arg)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01346}01346\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01347}01347\ \ \ \ \ \textcolor{keywordflow}{while}\ (1)\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01348}01348\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}{fan\_control\_update}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01349}01349\ \ \ \ \ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(1000));\ \ \textcolor{comment}{//\ actualiza\ cada\ 1s}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01350}01350\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01351}01351\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01352}01352\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01353}01353\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01354}01354\ \textcolor{comment}{//\ PUBLIC\ START/STOP}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01355}01355\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01356}01356\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01375}\mbox{\hyperlink{http__server_8h_ae5fb127f629ed9aecaba445bd1512221}{01375}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_ae5fb127f629ed9aecaba445bd1512221}{http\_server\_start}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01376}01376\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01377}01377\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}}\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01378}01378\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01379}01379\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a78199b321bd67d798d91cb9b920b7894}{sensors\_init}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01380}01380\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}}\ =\ \mbox{\hyperlink{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc}{http\_server\_configure}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01381}01381\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01382}01382\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Inicializar\ control\ del\ ventilador}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01383}01383\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8h_a50dd23e7bf63c1ba17d8d81770e03186}{fan\_control\_init}}();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01384}01384\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Fan\ control\ initialized"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01385}01385\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01386}01386\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Crear\ tarea\ para\ actualización\ automática\ del\ ventilador}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01387}01387\ \ \ \ \ \ \ \ \ xTaskCreate(\mbox{\hyperlink{http__server_8c_a81d987e42a660d479981eefd99e51d6f}{fan\_task}},\ \textcolor{stringliteral}{"{}fan\_task"{}},\ 3072,\ NULL,\ 5,\ NULL);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01388}01388\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Fan\ task\ created"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01389}01389\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01390}01390\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01391}01391\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01404}\mbox{\hyperlink{http__server_8h_afffb5f05a179c9702078a824048dab36}{01404}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_afffb5f05a179c9702078a824048dab36}{http\_server\_stop}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01405}01405\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01406}01406\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01407}01407\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01408}01408\ \ \ \ \ \ \ \ \ httpd\_stop(\mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01409}01409\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_stop:\ stopping\ HTTP\ server"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01410}01410\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\_server\_handle}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01411}01411\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01412}01412\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}{task\_http\_server\_monitor}})}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01413}01413\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01414}01414\ \ \ \ \ \ \ \ \ vTaskDelete(\mbox{\hyperlink{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}{task\_http\_server\_monitor}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01415}01415\ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_stop:\ stopping\ HTTP\ server\ monitor"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01416}01416\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}{task\_http\_server\_monitor}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01417}01417\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01418}01418\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01419}01419\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01420}01420\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01421}01421\ \textcolor{comment}{//\ QUEUE\ MESSAGE}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01422}01422\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01423}\mbox{\hyperlink{http__server_8h_aa40c7544f908043547e60dcba8a41963}{01423}}\ BaseType\_t\ \mbox{\hyperlink{http__server_8c_aa40c7544f908043547e60dcba8a41963}{http\_server\_monitor\_send\_message}}(\mbox{\hyperlink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\_server\_message\_e}}\ msgID)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01424}01424\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01425}01425\ \ \ \ \ \mbox{\hyperlink{structhttp__server__queue__message__t}{http\_server\_queue\_message\_t}}\ msg;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01426}01426\ \ \ \ \ msg.msgID\ =\ msgID;}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01427}01427\ \ \ \ \ \textcolor{keywordflow}{return}\ xQueueSend(\mbox{\hyperlink{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd}{http\_server\_monitor\_queue\_handle}},\ \&msg,\ portMAX\_DELAY);}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01428}01428\ \}}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01429}01429\ }
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01430}\mbox{\hyperlink{http__server_8h_aa252e797e5e0e5945501a429bba37f1c}{01430}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{http__server_8c_aa252e797e5e0e5945501a429bba37f1c}{http\_server\_fw\_update\_reset\_callback}}(\textcolor{keywordtype}{void}\ *arg)}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01431}01431\ \{}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01432}01432\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}http\_server\_fw\_update\_reset\_callback:\ Timer\ timed-\/out,\ restarting\ device"{}});}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01433}01433\ \ \ \ \ esp\_restart();}
+\DoxyCodeLine{\Hypertarget{http__server_8c_source_l01434}01434\ \}}
+
+\end{DoxyCode}

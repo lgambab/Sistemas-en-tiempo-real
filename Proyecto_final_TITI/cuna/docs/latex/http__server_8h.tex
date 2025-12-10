@@ -1,0 +1,406 @@
+\doxysection{Referencia del archivo http\+\_\+server.\+h}
+\hypertarget{http__server_8h}{}\label{http__server_8h}\index{http\_server.h@{http\_server.h}}
+
+
+Servidor HTTP con endpoints REST para control del sistema.  
+
+
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+event.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+adc/adc\+\_\+oneshot.\+h"{}}\newline
+\doxysubsubsection*{Estructuras de datos}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structhttp__server__queue__message}{http\+\_\+server\+\_\+queue\+\_\+message}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___o_t_a___status_ga1f24de40c4d1df080062b6bca4cc751e}{OTA\+\_\+\+UPDATE\+\_\+\+PENDING}}~0
+\begin{DoxyCompactList}\small\item\em Actualización OTA pendiente. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___o_t_a___status_ga2fcbd52f78a2a3e1e7418d74fb6de497}{OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL}}~1
+\begin{DoxyCompactList}\small\item\em Actualización OTA exitosa. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___o_t_a___status_ga784a011b84e58faf7e84d7e4950a5231}{OTA\+\_\+\+UPDATE\+\_\+\+FAILED}}~-\/1
+\begin{DoxyCompactList}\small\item\em Actualización OTA fallida. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{http__server_8h_ab795a48e4796e4b0fca47a1341469d12}{BLINK\+\_\+\+GPIO}}~2
+\begin{DoxyCompactList}\small\item\em GPIO del LED de estado. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bc}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status}} \mbox{\hyperlink{http__server_8h_a94c46a0f2f039fae2e174938731cf5dc}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status\+\_\+e}}
+\item 
+typedef enum \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0}{http\+\_\+server\+\_\+message}} \mbox{\hyperlink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e}}
+\item 
+typedef struct \mbox{\hyperlink{structhttp__server__queue__message}{http\+\_\+server\+\_\+queue\+\_\+message}} \mbox{\hyperlink{http__server_8h_a28311d98817ae6c596066d8bb49a56f7}{http\+\_\+server\+\_\+queue\+\_\+message\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumeraciones}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bc}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status}} \{ \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2}{NONE}} = 0
+, \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d}{HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECTING}}
+, \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f}{HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECT\+\_\+\+FAILED}}
+, \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305}{HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECT\+\_\+\+SUCCESS}}
+ \}
+\item 
+enum \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0}{http\+\_\+server\+\_\+message}} \{ \newline
+\mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d}{HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+INIT}} = 0
+, \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789}{HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+SUCCESS}}
+, \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5}{HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+FAIL}}
+, \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526}{HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL}}
+, \newline
+\mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4}{HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+FAILED}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+Base\+Type\+\_\+t \mbox{\hyperlink{http__server_8h_aa40c7544f908043547e60dcba8a41963}{http\+\_\+server\+\_\+monitor\+\_\+send\+\_\+message}} (\mbox{\hyperlink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e}} msg\+ID)
+\begin{DoxyCompactList}\small\item\em Enviar mensaje a la cola del monitor HTTP. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8h_ae5fb127f629ed9aecaba445bd1512221}{http\+\_\+server\+\_\+start}} (void)
+\begin{DoxyCompactList}\small\item\em Iniciar servidor HTTP y tareas relacionadas. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8h_afffb5f05a179c9702078a824048dab36}{http\+\_\+server\+\_\+stop}} (void)
+\begin{DoxyCompactList}\small\item\em Detener servidor HTTP y liberar recursos. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8h_aa252e797e5e0e5945501a429bba37f1c}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+callback}} (void \texorpdfstring{$\ast$}{*}arg)
+\begin{DoxyCompactList}\small\item\em Callback de timer para reinicio tras OTA exitoso. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8h_a0d7dc83276db640fb3589828dae229e9}{toogle\+\_\+led}} (void)
+\begin{DoxyCompactList}\small\item\em Alternar LED de estado. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Servidor HTTP con endpoints REST para control del sistema. 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Versión}
+1.\+0.\+0
+\end{DoxyVersion}
+Servidor HTTP embebido que proporciona\+:
+\begin{DoxyItemize}
+\item {\bfseries{Interfaz Web Completa}}\+: HTML/\+CSS/\+JS para control del sistema
+\item {\bfseries{Endpoints REST}}\+: Control de ventilador, registros, sensores
+\item {\bfseries{OTA Updates}}\+: Actualización de firmware vía HTTP
+\item {\bfseries{Monitoreo de Estado}}\+: Cola de mensajes para eventos Wi\+Fi y sistema
+\item {\bfseries{Archivos Embebidos}}\+: \doxylink{index_8html}{index.\+html}, \doxylink{app_8js}{app.\+js}, app.\+css, j\+Query, favicon
+\end{DoxyItemize}
+
+{\bfseries{Principales Endpoints\+:}}
+\begin{DoxyItemize}
+\item GET / → Página web principal
+\item GET /dht\+Sensor.json → Leer temperatura y PIR
+\item POST /fan\+Settings.json → Configurar ventilador
+\item POST /regchange.json → Modificar registro programado
+\item GET /api/register → API de registros (ver \doxylink{registers_8h}{registers.\+h})
+\item POST /\+OTAupdate → Actualización OTA de firmware
+\end{DoxyItemize}
+
+El servidor se inicializa automáticamente cuando Wi\+Fi se conecta y mantiene una tarea monitor que procesa mensajes de estado del sistema.
+
+Universidad Nacional de Colombia -\/ Curso RTOS 
+
+Definición en el archivo \mbox{\hyperlink{http__server_8h_source}{http\+\_\+server.\+h}}.
+
+
+
+\label{doc-define-members}
+\Hypertarget{http__server_8h_doc-define-members}
+\doxysubsection{Documentación de «define»}
+\Hypertarget{http__server_8h_ab795a48e4796e4b0fca47a1341469d12}\index{http\_server.h@{http\_server.h}!BLINK\_GPIO@{BLINK\_GPIO}}
+\index{BLINK\_GPIO@{BLINK\_GPIO}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{BLINK\_GPIO}{BLINK\_GPIO}}
+{\footnotesize\ttfamily \label{http__server_8h_ab795a48e4796e4b0fca47a1341469d12} 
+\#define BLINK\+\_\+\+GPIO~2}
+
+
+
+GPIO del LED de estado. 
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8h_source_l00043}{43}} del archivo \mbox{\hyperlink{http__server_8h_source}{http\+\_\+server.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00201}{toogle\+\_\+led()}}.
+
+
+
+\label{doc-typedef-members}
+\Hypertarget{http__server_8h_doc-typedef-members}
+\doxysubsection{Documentación de «typedef»}
+\Hypertarget{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}\index{http\_server.h@{http\_server.h}!http\_server\_message\_e@{http\_server\_message\_e}}
+\index{http\_server\_message\_e@{http\_server\_message\_e}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_message\_e}{http\_server\_message\_e}}
+{\footnotesize\ttfamily \label{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08} 
+typedef enum \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0}{http\+\_\+server\+\_\+message}} \mbox{\hyperlink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e}}}
+
+\Hypertarget{http__server_8h_a28311d98817ae6c596066d8bb49a56f7}\index{http\_server.h@{http\_server.h}!http\_server\_queue\_message\_t@{http\_server\_queue\_message\_t}}
+\index{http\_server\_queue\_message\_t@{http\_server\_queue\_message\_t}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_queue\_message\_t}{http\_server\_queue\_message\_t}}
+{\footnotesize\ttfamily \label{http__server_8h_a28311d98817ae6c596066d8bb49a56f7} 
+typedef struct \mbox{\hyperlink{structhttp__server__queue__message}{http\+\_\+server\+\_\+queue\+\_\+message}} http\+\_\+server\+\_\+queue\+\_\+message\+\_\+t}
+
+\Hypertarget{http__server_8h_a94c46a0f2f039fae2e174938731cf5dc}\index{http\_server.h@{http\_server.h}!http\_server\_wifi\_connect\_status\_e@{http\_server\_wifi\_connect\_status\_e}}
+\index{http\_server\_wifi\_connect\_status\_e@{http\_server\_wifi\_connect\_status\_e}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_wifi\_connect\_status\_e}{http\_server\_wifi\_connect\_status\_e}}
+{\footnotesize\ttfamily \label{http__server_8h_a94c46a0f2f039fae2e174938731cf5dc} 
+typedef enum \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bc}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status}} \mbox{\hyperlink{http__server_8h_a94c46a0f2f039fae2e174938731cf5dc}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status\+\_\+e}}}
+
+
+
+\label{doc-enum-members}
+\Hypertarget{http__server_8h_doc-enum-members}
+\doxysubsection{Documentación de enumeraciones}
+\Hypertarget{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0}\index{http\_server.h@{http\_server.h}!http\_server\_message@{http\_server\_message}}
+\index{http\_server\_message@{http\_server\_message}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_message}{http\_server\_message}}
+{\footnotesize\ttfamily \label{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0} 
+enum \mbox{\hyperlink{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0}{http\+\_\+server\+\_\+message}}}
+
+\begin{DoxyEnumFields}[2]{Valores de enumeraciones}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_MSG\_WIFI\_CONNECT\_INIT@{HTTP\_MSG\_WIFI\_CONNECT\_INIT}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_MSG\_WIFI\_CONNECT\_INIT@{HTTP\_MSG\_WIFI\_CONNECT\_INIT}}}\Hypertarget{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d}\label{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d} 
+HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+INIT&Iniciar conexión Wi\+Fi. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_MSG\_WIFI\_CONNECT\_SUCCESS@{HTTP\_MSG\_WIFI\_CONNECT\_SUCCESS}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_MSG\_WIFI\_CONNECT\_SUCCESS@{HTTP\_MSG\_WIFI\_CONNECT\_SUCCESS}}}\Hypertarget{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789}\label{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789} 
+HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+SUCCESS&Wi\+Fi conectado exitosamente. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_MSG\_WIFI\_CONNECT\_FAIL@{HTTP\_MSG\_WIFI\_CONNECT\_FAIL}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_MSG\_WIFI\_CONNECT\_FAIL@{HTTP\_MSG\_WIFI\_CONNECT\_FAIL}}}\Hypertarget{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5}\label{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5} 
+HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+FAIL&Error al conectar Wi\+Fi. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_MSG\_OTA\_UPDATE\_SUCCESSFUL@{HTTP\_MSG\_OTA\_UPDATE\_SUCCESSFUL}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_MSG\_OTA\_UPDATE\_SUCCESSFUL@{HTTP\_MSG\_OTA\_UPDATE\_SUCCESSFUL}}}\Hypertarget{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526}\label{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526} 
+HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL&Actualización OTA completada. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_MSG\_OTA\_UPDATE\_FAILED@{HTTP\_MSG\_OTA\_UPDATE\_FAILED}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_MSG\_OTA\_UPDATE\_FAILED@{HTTP\_MSG\_OTA\_UPDATE\_FAILED}}}\Hypertarget{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4}\label{http__server_8h_ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4} 
+HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+FAILED&Actualización OTA falló \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8h_source_l00065}{65}} del archivo \mbox{\hyperlink{http__server_8h_source}{http\+\_\+server.\+h}}.
+
+\Hypertarget{http__server_8h_a954842a930e3ec08480037f7fb7d79bc}\index{http\_server.h@{http\_server.h}!http\_server\_wifi\_connect\_status@{http\_server\_wifi\_connect\_status}}
+\index{http\_server\_wifi\_connect\_status@{http\_server\_wifi\_connect\_status}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_wifi\_connect\_status}{http\_server\_wifi\_connect\_status}}
+{\footnotesize\ttfamily \label{http__server_8h_a954842a930e3ec08480037f7fb7d79bc} 
+enum \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bc}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status}}}
+
+\begin{DoxyEnumFields}[2]{Valores de enumeraciones}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NONE@{NONE}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!NONE@{NONE}}}\Hypertarget{http__server_8h_a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2}\label{http__server_8h_a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2} 
+NONE&Estado inicial, sin conexión. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_WIFI\_STATUS\_CONNECTING@{HTTP\_WIFI\_STATUS\_CONNECTING}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_WIFI\_STATUS\_CONNECTING@{HTTP\_WIFI\_STATUS\_CONNECTING}}}\Hypertarget{http__server_8h_a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d}\label{http__server_8h_a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d} 
+HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECTING&Intentando conectar a Wi\+Fi. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_WIFI\_STATUS\_CONNECT\_FAILED@{HTTP\_WIFI\_STATUS\_CONNECT\_FAILED}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_WIFI\_STATUS\_CONNECT\_FAILED@{HTTP\_WIFI\_STATUS\_CONNECT\_FAILED}}}\Hypertarget{http__server_8h_a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f}\label{http__server_8h_a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f} 
+HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECT\+\_\+\+FAILED&Conexión Wi\+Fi falló \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{HTTP\_WIFI\_STATUS\_CONNECT\_SUCCESS@{HTTP\_WIFI\_STATUS\_CONNECT\_SUCCESS}!http\_server.h@{http\_server.h}}\index{http\_server.h@{http\_server.h}!HTTP\_WIFI\_STATUS\_CONNECT\_SUCCESS@{HTTP\_WIFI\_STATUS\_CONNECT\_SUCCESS}}}\Hypertarget{http__server_8h_a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305}\label{http__server_8h_a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305} 
+HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECT\+\_\+\+SUCCESS&Conexión Wi\+Fi exitosa. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8h_source_l00049}{49}} del archivo \mbox{\hyperlink{http__server_8h_source}{http\+\_\+server.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{http__server_8h_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{http__server_8h_aa252e797e5e0e5945501a429bba37f1c}\index{http\_server.h@{http\_server.h}!http\_server\_fw\_update\_reset\_callback@{http\_server\_fw\_update\_reset\_callback}}
+\index{http\_server\_fw\_update\_reset\_callback@{http\_server\_fw\_update\_reset\_callback}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_fw\_update\_reset\_callback()}{http\_server\_fw\_update\_reset\_callback()}}
+{\footnotesize\ttfamily \label{http__server_8h_aa252e797e5e0e5945501a429bba37f1c} 
+void http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+callback (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{arg}{}\end{DoxyParamCaption})}
+
+
+
+Callback de timer para reinicio tras OTA exitoso. 
+
+Se ejecuta 8 segundos después de una actualización OTA exitosa, dando tiempo a que el navegador reciba la respuesta HTTP antes de reiniciar.
+
+
+\begin{DoxyParams}{Parámetros}
+{\em arg} & Argumento del timer (sin usar)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Llama a esp\+\_\+restart() para aplicar nuevo firmware 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01430}{1430}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+\Hypertarget{http__server_8h_aa40c7544f908043547e60dcba8a41963}\index{http\_server.h@{http\_server.h}!http\_server\_monitor\_send\_message@{http\_server\_monitor\_send\_message}}
+\index{http\_server\_monitor\_send\_message@{http\_server\_monitor\_send\_message}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_monitor\_send\_message()}{http\_server\_monitor\_send\_message()}}
+{\footnotesize\ttfamily \label{http__server_8h_aa40c7544f908043547e60dcba8a41963} 
+Base\+Type\+\_\+t http\+\_\+server\+\_\+monitor\+\_\+send\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e}}}]{msg\+ID}{}\end{DoxyParamCaption})}
+
+
+
+Enviar mensaje a la cola del monitor HTTP. 
+
+Permite comunicación thread-\/safe entre módulos del sistema y el servidor HTTP. Los mensajes se procesan en orden FIFO por la tarea http\+\_\+server\+\_\+monitor.
+
+
+\begin{DoxyParams}{Parámetros}
+{\em msg\+ID} & ID del mensaje desde \doxylink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+pd\+TRUE si el mensaje se envió correctamente 
+
+pd\+FALSE si la cola está llena (espera indefinida activada)
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Esta función usa port\+MAX\+\_\+\+DELAY, bloqueará hasta que haya espacio en la cola 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01423}{1423}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00143}{http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00655}{http\+\_\+server\+\_\+\+OTA\+\_\+update\+\_\+handler()}} y \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{http__server_8h_ae5fb127f629ed9aecaba445bd1512221}\index{http\_server.h@{http\_server.h}!http\_server\_start@{http\_server\_start}}
+\index{http\_server\_start@{http\_server\_start}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_start()}{http\_server\_start()}}
+{\footnotesize\ttfamily \label{http__server_8h_ae5fb127f629ed9aecaba445bd1512221} 
+void http\+\_\+server\+\_\+start (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Iniciar servidor HTTP y tareas relacionadas. 
+
+Crea el servidor HTTP en el puerto 80, registra todos los handlers de endpoints REST, inicializa sensores (NTC, PIR) y crea las tareas\+:
+\begin{DoxyItemize}
+\item http\+\_\+server\+\_\+monitor\+: Procesa mensajes de estado
+\item fan\+\_\+task\+: Actualiza control del ventilador cada 1s
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Nota}
+Solo se ejecuta si el servidor no está ya iniciado 
+
+Debe llamarse después de que Wi\+Fi esté configurado
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{http__server_8h_afffb5f05a179c9702078a824048dab36}{http\+\_\+server\+\_\+stop()} para detener el servidor
+\end{DoxySeeAlso}
+Iniciar servidor HTTP y tareas relacionadas.
+
+Secuencia de inicialización completa\+:
+\begin{DoxyEnumerate}
+\item Configura periféricos (ADC, NTC, PIR, sensor\+\_\+task)
+\item Inicializa control del ventilador
+\item Crea cola de mensajes http\+\_\+server\+\_\+monitor
+\item Crea tarea http\+\_\+server\+\_\+monitor
+\item Configura y arranca servidor HTTP
+\item Crea fan\+\_\+task para modo AUTO
+\end{DoxyEnumerate}
+
+\begin{DoxyNote}{Nota}
+Llamar después de que Wi\+Fi obtenga IP 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+Debe llamarse solo una vez
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc}{http\+\_\+server\+\_\+configure()} Configuración del servidor 
+
+\doxylink{http__server_8c_a81d987e42a660d479981eefd99e51d6f}{fan\+\_\+task()} Tarea de actualización automática 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01375}{1375}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00146}{fan\+\_\+control\+\_\+init()}}, \mbox{\hyperlink{http__server_8c_source_l01345}{fan\+\_\+task()}}, \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}, \mbox{\hyperlink{http__server_8c_source_l00137}{http\+\_\+server\+\_\+handle}}, \mbox{\hyperlink{http__server_8c_source_l00402}{sensors\+\_\+init()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{http__server_8h_afffb5f05a179c9702078a824048dab36}\index{http\_server.h@{http\_server.h}!http\_server\_stop@{http\_server\_stop}}
+\index{http\_server\_stop@{http\_server\_stop}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{http\_server\_stop()}{http\_server\_stop()}}
+{\footnotesize\ttfamily \label{http__server_8h_afffb5f05a179c9702078a824048dab36} 
+void http\+\_\+server\+\_\+stop (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Detener servidor HTTP y liberar recursos. 
+
+Detiene el servidor HTTP y elimina la tarea monitor asociada. Usado típicamente al cambiar configuración Wi\+Fi o antes de reiniciar.
+
+Detener servidor HTTP y liberar recursos.
+
+Secuencia de parada\+:
+\begin{DoxyEnumerate}
+\item Detiene servidor HTTP con httpd\+\_\+stop()
+\item Elimina tarea http\+\_\+server\+\_\+monitor
+\item Libera cola http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle
+\end{DoxyEnumerate}
+
+\begin{DoxyNote}{Nota}
+Solo ejecuta si http\+\_\+server\+\_\+handle != NULL 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+No detiene fan\+\_\+task ni sensor\+\_\+task 
+\end{DoxyWarning}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01404}{1404}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00137}{http\+\_\+server\+\_\+handle}}, \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}} y \mbox{\hyperlink{http__server_8c_source_l00140}{task\+\_\+http\+\_\+server\+\_\+monitor}}.
+
+\Hypertarget{http__server_8h_a0d7dc83276db640fb3589828dae229e9}\index{http\_server.h@{http\_server.h}!toogle\_led@{toogle\_led}}
+\index{toogle\_led@{toogle\_led}!http\_server.h@{http\_server.h}}
+\doxysubsubsection{\texorpdfstring{toogle\_led()}{toogle\_led()}}
+{\footnotesize\ttfamily \label{http__server_8h_a0d7dc83276db640fb3589828dae229e9} 
+void toogle\+\_\+led (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Alternar LED de estado. 
+
+Cambia el estado del LED en BLINK\+\_\+\+GPIO. Usado para indicadores visuales durante operaciones del sistema.
+
+Alternar LED de estado.
+
+Toggle simple del GPIO definido como BLINK\+\_\+\+GPIO. Usado para debug visual del sistema. \texorpdfstring{$<$}{<} GPIO del LED de estado
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00201}{201}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8h_source_l00043}{BLINK\+\_\+\+GPIO}} y \mbox{\hyperlink{http__server_8c_source_l00192}{s\+\_\+led\+\_\+state}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00967}{compare\+\_\+hour\+\_\+day\+\_\+structs()}} y \mbox{\hyperlink{http__server_8c_source_l00359}{http\+\_\+server\+\_\+toogle\+\_\+led\+\_\+handler()}}.
+

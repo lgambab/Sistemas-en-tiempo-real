@@ -1,0 +1,1413 @@
+\doxysection{Referencia del archivo http\+\_\+server.\+c}
+\hypertarget{http__server_8c}{}\label{http__server_8c}\index{http\_server.c@{http\_server.c}}
+
+
+Servidor HTTP con REST API para control del sistema.  
+
+
+{\ttfamily \#include "{}esp\+\_\+http\+\_\+server.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+ota\+\_\+ops.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+timer.\+h"{}}\newline
+{\ttfamily \#include "{}sys/param.\+h"{}}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include "{}http\+\_\+server.\+h"{}}\newline
+{\ttfamily \#include "{}tasks\+\_\+common.\+h"{}}\newline
+{\ttfamily \#include "{}wifi\+\_\+app.\+h"{}}\newline
+{\ttfamily \#include "{}c\+JSON.\+h"{}}\newline
+{\ttfamily \#include "{}driver/gpio.\+h"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include "{}esp\+\_\+wifi.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+system.\+h"{}}\newline
+{\ttfamily \#include "{}nvs\+\_\+flash.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+event.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+netif.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/task.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/semphr.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/queue.\+h"{}}\newline
+{\ttfamily \#include "{}lwip/sockets.\+h"{}}\newline
+{\ttfamily \#include "{}lwip/dns.\+h"{}}\newline
+{\ttfamily \#include "{}lwip/netdb.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+sntp.\+h"{}}\newline
+{\ttfamily \#include "{}ntc\+\_\+driver.\+h"{}}\newline
+{\ttfamily \#include "{}pir\+\_\+driver.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+adc/adc\+\_\+oneshot.\+h"{}}\newline
+{\ttfamily \#include "{}fan\+\_\+control.\+h"{}}\newline
+{\ttfamily \#include "{}registers.\+h"{}}\newline
+{\ttfamily \#include "{}sensor\+\_\+task.\+h"{}}\newline
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_acf44ffde7b268213f9fbcbaed7e9b066}{http\+\_\+server\+\_\+read\+\_\+register\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_ae521c42d06e5b900fcb1bac76ab9c0d8}{http\+\_\+server\+\_\+register\+\_\+erase\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler POST /regerase.json -\/ Borrar registro (legacy). \end{DoxyCompactList}\item 
+const uint8\+\_\+t jquery\+\_\+3\+\_\+3\+\_\+1\+\_\+min\+\_\+js\+\_\+start\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_ga8ef26845cf712b3784a202859acc2e85}{asm}} ("{}\+\_\+binary\+\_\+jquery\+\_\+3\+\_\+3\+\_\+1\+\_\+min\+\_\+js\+\_\+start"{})
+\begin{DoxyCompactList}\small\item\em Inicio de j\+Query 3.\+3.\+1 en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t jquery\+\_\+3\+\_\+3\+\_\+1\+\_\+min\+\_\+js\+\_\+end\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_ga6638c0c14a9ef7f914c9198af2dada1b}{asm}} ("{}\+\_\+binary\+\_\+jquery\+\_\+3\+\_\+3\+\_\+1\+\_\+min\+\_\+js\+\_\+end"{})
+\begin{DoxyCompactList}\small\item\em Fin de j\+Query 3.\+3.\+1 en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t index\+\_\+html\+\_\+start\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_gaede8f0bb2c45776a5718d8e7b8acbb6a}{asm}} ("{}\+\_\+binary\+\_\+index\+\_\+html\+\_\+start"{})
+\begin{DoxyCompactList}\small\item\em Inicio de \doxylink{index_8html}{index.\+html} en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t index\+\_\+html\+\_\+end\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_ga7b39f1fcc418da402de3d6966546ef7d}{asm}} ("{}\+\_\+binary\+\_\+index\+\_\+html\+\_\+end"{})
+\begin{DoxyCompactList}\small\item\em Fin de \doxylink{index_8html}{index.\+html} en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t app\+\_\+css\+\_\+start\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_ga9244ba5260d10d4123426c271185e1be}{asm}} ("{}\+\_\+binary\+\_\+app\+\_\+css\+\_\+start"{})
+\begin{DoxyCompactList}\small\item\em Inicio de app.\+css en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t app\+\_\+css\+\_\+end\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_gaa24663d0779ecc33c5ad8e23fc43eb38}{asm}} ("{}\+\_\+binary\+\_\+app\+\_\+css\+\_\+end"{})
+\begin{DoxyCompactList}\small\item\em Fin de app.\+css en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t app\+\_\+js\+\_\+start\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_gac26de1a80dac4a73d1b67c5008afc2e8}{asm}} ("{}\+\_\+binary\+\_\+app\+\_\+js\+\_\+start"{})
+\begin{DoxyCompactList}\small\item\em Inicio de \doxylink{app_8js}{app.\+js} en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t app\+\_\+js\+\_\+end\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_gafb40daa6bc7c43c57851110ab190fc4b}{asm}} ("{}\+\_\+binary\+\_\+app\+\_\+js\+\_\+end"{})
+\begin{DoxyCompactList}\small\item\em Fin de \doxylink{app_8js}{app.\+js} en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t favicon\+\_\+ico\+\_\+start\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_ga6b0380c4515b49f9f71d01a188fda1c4}{asm}} ("{}\+\_\+binary\+\_\+favicon\+\_\+ico\+\_\+start"{})
+\begin{DoxyCompactList}\small\item\em Inicio de favicon.\+ico en memoria. \end{DoxyCompactList}\item 
+const uint8\+\_\+t favicon\+\_\+ico\+\_\+end\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{group___embedded_files_gad4e8db8ceb133b2f52a893c00c559b5e}{asm}} ("{}\+\_\+binary\+\_\+favicon\+\_\+ico\+\_\+end"{})
+\begin{DoxyCompactList}\small\item\em Fin de favicon.\+ico en memoria. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8c_a0d7dc83276db640fb3589828dae229e9}{toogle\+\_\+led}} (void)
+\begin{DoxyCompactList}\small\item\em Alterna el estado del LED de depuración. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_ad4d559f65a1223680c853f9df5be5ffb}{http\+\_\+server\+\_\+fan\+\_\+control\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler POST /fan\+Control.json -\/ Control del ventilador. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_ab185e6554c1eb3c4a386375eb87d2901}{http\+\_\+server\+\_\+time\+\_\+json\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET /time.json -\/ Obtiene hora del sistema. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a4172bd779fa518b7262f0f1410635b74}{http\+\_\+server\+\_\+toogle\+\_\+led\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\item 
+static void \mbox{\hyperlink{http__server_8c_a7f8a15d29ffe1832250f92032705ddd6}{log\+\_\+error\+\_\+if\+\_\+nonzero}} (const char \texorpdfstring{$\ast$}{*}message, int error\+\_\+code)
+\item 
+static void \mbox{\hyperlink{http__server_8c_a78199b321bd67d798d91cb9b920b7894}{sensors\+\_\+init}} (void)
+\begin{DoxyCompactList}\small\item\em Inicializa periféricos de sensores. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{http__server_8c_a485e257e30e27229a9609348467183ac}{http\+\_\+server\+\_\+monitor}} (void \texorpdfstring{$\ast$}{*}parameter)
+\begin{DoxyCompactList}\small\item\em Tarea monitor de eventos Wi\+Fi. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{http__server_8c_a97b7b3b19b17425082078eec697f2dd3}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+timer}} (void)
+\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a76ae00db7345fc99769d7a184c0b1846}{http\+\_\+server\+\_\+jquery\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET /jquery-\/3.3.\+1.\+min.\+js. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a6b9b5a22e77f419c680e93e21009216b}{http\+\_\+server\+\_\+index\+\_\+html\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET / (\doxylink{index_8html}{index.\+html}). \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_afa3468a9e2906a45df6a21aaf0d350e7}{http\+\_\+server\+\_\+app\+\_\+css\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET /app.css. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a627af28895f5e77abe6d4b3be767fe7b}{http\+\_\+server\+\_\+app\+\_\+js\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET /app.js. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_ac5df3865572c3abea7ca9bc43b4a2a23}{http\+\_\+server\+\_\+favicon\+\_\+ico\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET /favicon.ico. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_afa6d4df0ab1362bd53d11b52fe486d94}{http\+\_\+server\+\_\+\+OTA\+\_\+update\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler POST /\+OTAupdate -\/ Actualización de firmware OTA. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a17943ba8d92714b90c1d48233f642d15}{http\+\_\+server\+\_\+\+OTA\+\_\+status\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a3b8145dd054fd41a8498320e7a85a4cb}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+json\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler POST /wifi\+Connect.json -\/ Conectar a red Wi\+Fi. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a34de4e2dc4bbb91cccdef9f90c9097f5}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status\+\_\+json\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET /wifi\+Connect\+Status -\/ Estado de conexión Wi\+Fi. \end{DoxyCompactList}\item 
+static esp\+\_\+err\+\_\+t \mbox{\hyperlink{http__server_8c_a283402319442f9dbd9f3b15a4256c314}{http\+\_\+server\+\_\+get\+\_\+dht\+\_\+sensor\+\_\+readings\+\_\+json\+\_\+handler}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler GET /dht\+Sensor.json -\/ Lectura de sensores. \end{DoxyCompactList}\item 
+static httpd\+\_\+handle\+\_\+t \mbox{\hyperlink{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc}{http\+\_\+server\+\_\+configure}} (void)
+\begin{DoxyCompactList}\small\item\em Configura e inicia el servidor HTTP con todos los endpoints. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{http__server_8c_a81d987e42a660d479981eefd99e51d6f}{fan\+\_\+task}} (void \texorpdfstring{$\ast$}{*}arg)
+\begin{DoxyCompactList}\small\item\em Tarea RTOS que actualiza el ventilador en modo AUTO. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8c_ae5fb127f629ed9aecaba445bd1512221}{http\+\_\+server\+\_\+start}} (void)
+\begin{DoxyCompactList}\small\item\em Inicia el servidor HTTP y sus tareas asociadas. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8c_afffb5f05a179c9702078a824048dab36}{http\+\_\+server\+\_\+stop}} (void)
+\begin{DoxyCompactList}\small\item\em Detiene el servidor HTTP y limpia recursos. \end{DoxyCompactList}\item 
+Base\+Type\+\_\+t \mbox{\hyperlink{http__server_8c_aa40c7544f908043547e60dcba8a41963}{http\+\_\+server\+\_\+monitor\+\_\+send\+\_\+message}} (\mbox{\hyperlink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e}} msg\+ID)
+\begin{DoxyCompactList}\small\item\em Enviar mensaje a la cola del monitor HTTP. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{http__server_8c_aa252e797e5e0e5945501a429bba37f1c}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+callback}} (void \texorpdfstring{$\ast$}{*}arg)
+\begin{DoxyCompactList}\small\item\em Callback de timer para reinicio tras OTA exitoso. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static const char \mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}} \mbox{[}$\,$\mbox{]} = "{}http\+\_\+server"{}
+\begin{DoxyCompactList}\small\item\em Tag para logging ESP-\/\+IDF. \end{DoxyCompactList}\item 
+adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t \mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\+\_\+ntc\+\_\+adc\+\_\+handle}} = NULL
+\begin{DoxyCompactList}\small\item\em Handle del ADC para sensor NTC (compartido globalmente). \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}{g\+\_\+wifi\+\_\+connect\+\_\+status}} = \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2}{NONE}}
+\begin{DoxyCompactList}\small\item\em Estado de conexión Wi\+Fi (NONE, CONNECTING, SUCCESS, FAIL). \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}{g\+\_\+fw\+\_\+update\+\_\+status}} = 0
+\begin{DoxyCompactList}\small\item\em Estado de actualización OTA (PENDING, SUCCESSFUL, FAILED). \end{DoxyCompactList}\item 
+static httpd\+\_\+handle\+\_\+t \mbox{\hyperlink{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}{http\+\_\+server\+\_\+handle}} = NULL
+\begin{DoxyCompactList}\small\item\em Handle del servidor HTTP. \end{DoxyCompactList}\item 
+static Task\+Handle\+\_\+t \mbox{\hyperlink{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}{task\+\_\+http\+\_\+server\+\_\+monitor}} = NULL
+\begin{DoxyCompactList}\small\item\em Handle de tarea monitora de eventos HTTP/\+Wi\+Fi. \end{DoxyCompactList}\item 
+static Queue\+Handle\+\_\+t \mbox{\hyperlink{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd}{http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle}}
+\begin{DoxyCompactList}\small\item\em Cola de mensajes para http\+\_\+server\+\_\+monitor. \end{DoxyCompactList}\item 
+const esp\+\_\+timer\+\_\+create\+\_\+args\+\_\+t \mbox{\hyperlink{http__server_8c_ae2877887269a0c9a741915ca971c1909}{fw\+\_\+update\+\_\+reset\+\_\+args}}
+\begin{DoxyCompactList}\small\item\em Configuración del timer para reinicio post-\/\+OTA. \end{DoxyCompactList}\item 
+esp\+\_\+timer\+\_\+handle\+\_\+t \mbox{\hyperlink{http__server_8c_adca1b9e825cb767104d798e1a3b33bc2}{fw\+\_\+update\+\_\+reset}}
+\begin{DoxyCompactList}\small\item\em Handle del timer de reinicio OTA. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c}{s\+\_\+led\+\_\+state}} = 0
+\begin{DoxyCompactList}\small\item\em Estado del LED de depuración. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Servidor HTTP con REST API para control del sistema. 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025
+\end{DoxyDate}
+Implementa servidor HTTP completo con endpoints REST para\+:
+\begin{DoxyItemize}
+\item Control de ventilador (manual/auto/registros)
+\item Lectura de sensores (temperatura, PIR)
+\item Gestión de registros programados (CRUD)
+\item Configuración Wi\+Fi
+\item Actualización OTA de firmware
+\item Servicio de archivos estáticos (HTML, CSS, JS)
+\end{DoxyItemize}
+
+{\bfseries{Endpoints principales\+:}}
+\begin{DoxyItemize}
+\item GET /dht\+Sensor.json → Sensores (temp, PIR)
+\item POST /fan\+Control.json → Control ventilador
+\item GET /api/registers → Lista todos los registros
+\item POST /api/register → Crear/actualizar registro
+\item DELETE /api/register/\{id\} → Eliminar registro
+\item POST /wifi\+Connect.json → Conectar Wi\+Fi
+\item POST /\+OTAupdate → Actualización firmware
+\end{DoxyItemize}
+
+{\bfseries{Arquitectura\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[HTTP\ Requests]\ -\/-\/>\ [esp\_http\_server]}
+\DoxyCodeLine{\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{\ \ \ \ \ \ v\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v}
+\DoxyCodeLine{[Handler\ Functions]\ -\/-\/>\ [fan\_control]}
+\DoxyCodeLine{\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{\ \ \ \ \ \ v\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v}
+\DoxyCodeLine{[JSON\ Response]\ <-\/-\/-\/-\/\ [sensor\_task]}
+\DoxyCodeLine{\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{\ \ \ \ \ \ v\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v}
+\DoxyCodeLine{[Client\ Browser]\ \ \ \ \ \ [registers.c]}
+
+\end{DoxyCode}
+
+
+{\bfseries{Tareas RTOS\+:}}
+\begin{DoxyItemize}
+\item http\+\_\+server\+\_\+monitor\+: Monitorea eventos de Wi\+Fi y OTA
+\item fan\+\_\+task\+: Actualiza ventilador cada 1s en modo AUTO
+\end{DoxyItemize}
+
+{\bfseries{Archivos embebidos\+:}}
+\begin{DoxyItemize}
+\item \doxylink{index_8html}{index.\+html}\+: Página principal
+\item \doxylink{app_8js}{app.\+js}\+: Lógica Java\+Script
+\item app.\+css\+: Estilos
+\item jquery-\/3.\+3.\+1.\+min.\+js\+: Biblioteca j\+Query
+\item favicon.\+ico\+: Icono del sitio
+\end{DoxyItemize}
+
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{http__server_8h}{http\+\_\+server.\+h} Para la API pública 
+
+\doxylink{registers_8c}{registers.\+c} Para gestión de programación 
+
+\doxylink{fan__control_8c}{fan\+\_\+control.\+c} Para control del ventilador 
+\end{DoxySeeAlso}
+
+
+Definición en el archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{http__server_8c_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{http__server_8c_a81d987e42a660d479981eefd99e51d6f}\index{http\_server.c@{http\_server.c}!fan\_task@{fan\_task}}
+\index{fan\_task@{fan\_task}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{fan\_task()}{fan\_task()}}
+{\footnotesize\ttfamily \label{http__server_8c_a81d987e42a660d479981eefd99e51d6f} 
+void fan\+\_\+task (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{arg}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Tarea RTOS que actualiza el ventilador en modo AUTO. 
+
+Llama \doxylink{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}{fan\+\_\+control\+\_\+update()} cada 1 segundo. Solo tiene efecto si el modo es FAN\+\_\+\+MODE\+\_\+\+AUTO.
+
+{\bfseries{Parámetros tarea\+:}}
+\begin{DoxyItemize}
+\item Stack\+: 2048 bytes
+\item Prioridad\+: config\+MAX\+\_\+\+PRIORITIES -\/ 4 (media-\/baja)
+\item Periodo\+: 1000ms
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em arg} & Parámetro de tarea (no usado)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Tarea infinita creada en \doxylink{http__server_8c_ae5fb127f629ed9aecaba445bd1512221}{http\+\_\+server\+\_\+start()} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}{fan\+\_\+control\+\_\+update()} Función llamada cada segundo 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01345}{1345}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00367}{fan\+\_\+control\+\_\+update()}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01375}{http\+\_\+server\+\_\+start()}}.
+
+\Hypertarget{http__server_8c_afa3468a9e2906a45df6a21aaf0d350e7}\index{http\_server.c@{http\_server.c}!http\_server\_app\_css\_handler@{http\_server\_app\_css\_handler}}
+\index{http\_server\_app\_css\_handler@{http\_server\_app\_css\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_app\_css\_handler()}{http\_server\_app\_css\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_afa3468a9e2906a45df6a21aaf0d350e7} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+app\+\_\+css\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET /app.css. 
+
+Sirve estilos CSS embebidos desde flash. Content-\/\+Type\+: text/css
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t Siempre ESP\+\_\+\+OK 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00568}{568}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a627af28895f5e77abe6d4b3be767fe7b}\index{http\_server.c@{http\_server.c}!http\_server\_app\_js\_handler@{http\_server\_app\_js\_handler}}
+\index{http\_server\_app\_js\_handler@{http\_server\_app\_js\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_app\_js\_handler()}{http\_server\_app\_js\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a627af28895f5e77abe6d4b3be767fe7b} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+app\+\_\+js\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET /app.js. 
+
+Sirve Java\+Script de aplicación embebido desde flash. Content-\/\+Type\+: application/javascript
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t Siempre ESP\+\_\+\+OK 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00589}{589}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc}\index{http\_server.c@{http\_server.c}!http\_server\_configure@{http\_server\_configure}}
+\index{http\_server\_configure@{http\_server\_configure}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_configure()}{http\_server\_configure()}}
+{\footnotesize\ttfamily \label{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc} 
+httpd\+\_\+handle\+\_\+t http\+\_\+server\+\_\+configure (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Configura e inicia el servidor HTTP con todos los endpoints. 
+
+Crea servidor HTTP y registra todos los handlers\+:
+
+{\bfseries{Archivos estáticos\+:}}
+\begin{DoxyItemize}
+\item GET / → \doxylink{index_8html}{index.\+html}
+\item GET /jquery-\/3.3.\+1.\+min.\+js
+\item GET /app.css
+\item GET /app.js
+\item GET /favicon.ico
+\end{DoxyItemize}
+
+{\bfseries{API REST\+:}}
+\begin{DoxyItemize}
+\item POST /fan\+Control.json
+\item GET /dht\+Sensor.json
+\item POST /wifi\+Connect.json
+\item GET /wifi\+Connect\+Status
+\item GET /api/registers (\doxylink{registers_8c}{registers.\+c})
+\item POST /api/register (\doxylink{registers_8c}{registers.\+c})
+\item DELETE /api/register/\texorpdfstring{$\ast$}{*} (\doxylink{registers_8c}{registers.\+c})
+\end{DoxyItemize}
+
+{\bfseries{OTA\+:}}
+\begin{DoxyItemize}
+\item POST /\+OTAupdate
+\item GET /\+OTAstatus
+\end{DoxyItemize}
+
+{\bfseries{Configuración servidor\+:}}
+\begin{DoxyItemize}
+\item Puerto\+: 80
+\item Stack\+: 4096 bytes por conexión
+\item Conexiones simultáneas\+: CONFIG\+\_\+\+LWIP\+\_\+\+MAX\+\_\+\+SOCKETS
+\end{DoxyItemize}
+
+\begin{DoxyReturn}{Devuelve}
+httpd\+\_\+handle\+\_\+t Handle del servidor o NULL si error
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Registra endpoints de \doxylink{registers_8c}{registers.\+c} automáticamente 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01086}{1086}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00568}{http\+\_\+server\+\_\+app\+\_\+css\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00589}{http\+\_\+server\+\_\+app\+\_\+js\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00233}{http\+\_\+server\+\_\+fan\+\_\+control\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00610}{http\+\_\+server\+\_\+favicon\+\_\+ico\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00935}{http\+\_\+server\+\_\+get\+\_\+dht\+\_\+sensor\+\_\+readings\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00137}{http\+\_\+server\+\_\+handle}}, \mbox{\hyperlink{http__server_8c_source_l00547}{http\+\_\+server\+\_\+index\+\_\+html\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00526}{http\+\_\+server\+\_\+jquery\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00468}{http\+\_\+server\+\_\+monitor()}}, \mbox{\hyperlink{http__server_8c_source_l00143}{http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle}}, \mbox{\hyperlink{http__server_8c_source_l00743}{http\+\_\+server\+\_\+\+OTA\+\_\+status\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00655}{http\+\_\+server\+\_\+\+OTA\+\_\+update\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l01256}{http\+\_\+server\+\_\+read\+\_\+register\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00991}{http\+\_\+server\+\_\+register\+\_\+erase\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00329}{http\+\_\+server\+\_\+time\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00359}{http\+\_\+server\+\_\+toogle\+\_\+led\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00791}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00898}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{registers_8c_source_l00592}{register\+\_\+registers\+\_\+endpoints()}}, \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}} y \mbox{\hyperlink{http__server_8c_source_l00140}{task\+\_\+http\+\_\+server\+\_\+monitor}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01375}{http\+\_\+server\+\_\+start()}}.
+
+\Hypertarget{http__server_8c_ad4d559f65a1223680c853f9df5be5ffb}\index{http\_server.c@{http\_server.c}!http\_server\_fan\_control\_handler@{http\_server\_fan\_control\_handler}}
+\index{http\_server\_fan\_control\_handler@{http\_server\_fan\_control\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_fan\_control\_handler()}{http\_server\_fan\_control\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_ad4d559f65a1223680c853f9df5be5ffb} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+fan\+\_\+control\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler POST /fan\+Control.json -\/ Control del ventilador. 
+
+Endpoint para controlar el ventilador desde la interfaz web.
+
+{\bfseries{Request JSON\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}mode"{}}:\ \textcolor{stringliteral}{"{}manual"{}}\ |\ \textcolor{stringliteral}{"{}auto"{}}\ |\ \textcolor{stringliteral}{"{}registers"{}},}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}speed"{}}:\ 0-\/100\ \ \textcolor{comment}{//\ Solo\ para\ modo\ manual}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Parsea JSON del body
+\item Extrae modo y velocidad
+\item Llama \doxylink{fan__control_8h_ad70079e6a01813020cce4bb17aa7db48}{fan\+\_\+control\+\_\+set\+\_\+mode()}
+\item Llama \doxylink{fan__control_8h_a86862beca4b5da7bd5bdb3a9973f88f6}{fan\+\_\+control\+\_\+set\+\_\+manual\+\_\+speed()} si aplica
+\item Retorna "{}\+OK"{}
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Comando aplicado exitosamente \\
+\hline
+{\em ESP\+\_\+\+FAIL} & Error en parsing o memoria \\
+\hline
+\end{DoxyRetVals}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00233}{233}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00266}{fan\+\_\+control\+\_\+set\+\_\+manual\+\_\+speed()}}, \mbox{\hyperlink{fan__control_8c_source_l00184}{fan\+\_\+control\+\_\+set\+\_\+mode()}}, \mbox{\hyperlink{fan__control_8h_source_l00028}{FAN\+\_\+\+MODE\+\_\+\+AUTO}}, \mbox{\hyperlink{fan__control_8h_source_l00027}{FAN\+\_\+\+MODE\+\_\+\+MANUAL}}, \mbox{\hyperlink{fan__control_8h_source_l00029}{FAN\+\_\+\+MODE\+\_\+\+REGISTERS}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_ac5df3865572c3abea7ca9bc43b4a2a23}\index{http\_server.c@{http\_server.c}!http\_server\_favicon\_ico\_handler@{http\_server\_favicon\_ico\_handler}}
+\index{http\_server\_favicon\_ico\_handler@{http\_server\_favicon\_ico\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_favicon\_ico\_handler()}{http\_server\_favicon\_ico\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_ac5df3865572c3abea7ca9bc43b4a2a23} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+favicon\+\_\+ico\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET /favicon.ico. 
+
+Sirve favicon embebido desde flash. Content-\/\+Type\+: image/x-\/icon
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t Siempre ESP\+\_\+\+OK 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00610}{610}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_aa252e797e5e0e5945501a429bba37f1c}\index{http\_server.c@{http\_server.c}!http\_server\_fw\_update\_reset\_callback@{http\_server\_fw\_update\_reset\_callback}}
+\index{http\_server\_fw\_update\_reset\_callback@{http\_server\_fw\_update\_reset\_callback}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_fw\_update\_reset\_callback()}{http\_server\_fw\_update\_reset\_callback()}}
+{\footnotesize\ttfamily \label{http__server_8c_aa252e797e5e0e5945501a429bba37f1c} 
+void http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+callback (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{arg}{}\end{DoxyParamCaption})}
+
+
+
+Callback de timer para reinicio tras OTA exitoso. 
+
+Se ejecuta 8 segundos después de una actualización OTA exitosa, dando tiempo a que el navegador reciba la respuesta HTTP antes de reiniciar.
+
+
+\begin{DoxyParams}{Parámetros}
+{\em arg} & Argumento del timer (sin usar)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Llama a esp\+\_\+restart() para aplicar nuevo firmware 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01430}{1430}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+\Hypertarget{http__server_8c_a97b7b3b19b17425082078eec697f2dd3}\index{http\_server.c@{http\_server.c}!http\_server\_fw\_update\_reset\_timer@{http\_server\_fw\_update\_reset\_timer}}
+\index{http\_server\_fw\_update\_reset\_timer@{http\_server\_fw\_update\_reset\_timer}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_fw\_update\_reset\_timer()}{http\_server\_fw\_update\_reset\_timer()}}
+{\footnotesize\ttfamily \label{http__server_8c_a97b7b3b19b17425082078eec697f2dd3} 
+void http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+timer (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\texorpdfstring{$<$}{<} Actualización OTA exitosa
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00451}{451}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00160}{fw\+\_\+update\+\_\+reset}}, \mbox{\hyperlink{http__server_8c_source_l00152}{fw\+\_\+update\+\_\+reset\+\_\+args}}, \mbox{\hyperlink{http__server_8c_source_l00134}{g\+\_\+fw\+\_\+update\+\_\+status}}, \mbox{\hyperlink{http__server_8h_source_l00039}{OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00468}{http\+\_\+server\+\_\+monitor()}}.
+
+\Hypertarget{http__server_8c_a283402319442f9dbd9f3b15a4256c314}\index{http\_server.c@{http\_server.c}!http\_server\_get\_dht\_sensor\_readings\_json\_handler@{http\_server\_get\_dht\_sensor\_readings\_json\_handler}}
+\index{http\_server\_get\_dht\_sensor\_readings\_json\_handler@{http\_server\_get\_dht\_sensor\_readings\_json\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_get\_dht\_sensor\_readings\_json\_handler()}{http\_server\_get\_dht\_sensor\_readings\_json\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a283402319442f9dbd9f3b15a4256c314} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+get\+\_\+dht\+\_\+sensor\+\_\+readings\+\_\+json\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET /dht\+Sensor.json -\/ Lectura de sensores. 
+
+Endpoint para leer temperatura NTC y sensor PIR.
+
+{\bfseries{Response JSON\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}temp"{}}:\ 25.5,\ \textcolor{stringliteral}{"{}pir"{}}:\ 1\}\ \ \textcolor{comment}{//\ Temp\ válida,\ movimiento\ detectado}}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}temp"{}}:\ null,\ \textcolor{stringliteral}{"{}pir"{}}:\ 0\}\ \ \textcolor{comment}{//\ Error\ NTC,\ sin\ movimiento}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Valores\+:}}
+\begin{DoxyItemize}
+\item temp\+: Temperatura en °C o null si error (\texorpdfstring{$<$}{<} -\/100°C)
+\item pir\+: 1 = movimiento, 0 = sin movimiento
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t ESP\+\_\+\+OK siempre
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Llamado cada 1-\/2 segundos desde \doxylink{app_8js}{app.\+js} 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00935}{935}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}, \mbox{\hyperlink{pir__driver_8c_source_l00146}{pir\+\_\+is\+\_\+motion\+\_\+active()}}, \mbox{\hyperlink{http__server_8c_source_l00128}{s\+\_\+ntc\+\_\+adc\+\_\+handle}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a6b9b5a22e77f419c680e93e21009216b}\index{http\_server.c@{http\_server.c}!http\_server\_index\_html\_handler@{http\_server\_index\_html\_handler}}
+\index{http\_server\_index\_html\_handler@{http\_server\_index\_html\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_index\_html\_handler()}{http\_server\_index\_html\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a6b9b5a22e77f419c680e93e21009216b} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+index\+\_\+html\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET / (\doxylink{index_8html}{index.\+html}). 
+
+Sirve página principal HTML embebida desde flash. Content-\/\+Type\+: text/html
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t Siempre ESP\+\_\+\+OK 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00547}{547}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a76ae00db7345fc99769d7a184c0b1846}\index{http\_server.c@{http\_server.c}!http\_server\_jquery\_handler@{http\_server\_jquery\_handler}}
+\index{http\_server\_jquery\_handler@{http\_server\_jquery\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_jquery\_handler()}{http\_server\_jquery\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a76ae00db7345fc99769d7a184c0b1846} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+jquery\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET /jquery-\/3.3.\+1.\+min.\+js. 
+
+Sirve j\+Query embebido desde flash. Content-\/\+Type\+: application/javascript
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t Siempre ESP\+\_\+\+OK 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00526}{526}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a485e257e30e27229a9609348467183ac}\index{http\_server.c@{http\_server.c}!http\_server\_monitor@{http\_server\_monitor}}
+\index{http\_server\_monitor@{http\_server\_monitor}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_monitor()}{http\_server\_monitor()}}
+{\footnotesize\ttfamily \label{http__server_8c_a485e257e30e27229a9609348467183ac} 
+void http\+\_\+server\+\_\+monitor (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{parameter}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Tarea monitor de eventos Wi\+Fi. 
+
+Recibe mensajes de wifi\+\_\+app vía http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle.
+
+{\bfseries{Mensajes\+:}}
+\begin{DoxyItemize}
+\item HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+INIT\+: Intento de conexión
+\item HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+SUCCESS\+: Conexión exitosa
+\item HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+FAIL\+: Fallo en conexión
+\end{DoxyItemize}
+
+{\bfseries{Funcionalidad\+:}}
+\begin{DoxyItemize}
+\item Actualiza g\+\_\+wifi\+\_\+connect\+\_\+status
+\item Envía mensajes LED RGB para indicar estado
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em parameter} & Parámetro de tarea (no usado)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Tarea infinita, stack 3072 bytes, prioridad 4 
+\end{DoxyNote}
+\texorpdfstring{$<$}{<} Actualización OTA exitosa
+
+\texorpdfstring{$<$}{<} Actualización OTA fallida
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00468}{468}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00134}{g\+\_\+fw\+\_\+update\+\_\+status}}, \mbox{\hyperlink{http__server_8c_source_l00131}{g\+\_\+wifi\+\_\+connect\+\_\+status}}, \mbox{\hyperlink{http__server_8h_source_l00071}{HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+FAILED}}, \mbox{\hyperlink{http__server_8h_source_l00070}{HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL}}, \mbox{\hyperlink{http__server_8h_source_l00069}{HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+FAIL}}, \mbox{\hyperlink{http__server_8h_source_l00067}{HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+INIT}}, \mbox{\hyperlink{http__server_8h_source_l00068}{HTTP\+\_\+\+MSG\+\_\+\+WIFI\+\_\+\+CONNECT\+\_\+\+SUCCESS}}, \mbox{\hyperlink{http__server_8c_source_l00451}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+timer()}}, \mbox{\hyperlink{http__server_8c_source_l00143}{http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle}}, \mbox{\hyperlink{http__server_8h_source_l00053}{HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECT\+\_\+\+FAILED}}, \mbox{\hyperlink{http__server_8h_source_l00054}{HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECT\+\_\+\+SUCCESS}}, \mbox{\hyperlink{http__server_8h_source_l00052}{HTTP\+\_\+\+WIFI\+\_\+\+STATUS\+\_\+\+CONNECTING}}, \mbox{\hyperlink{http__server_8h_source_l00040}{OTA\+\_\+\+UPDATE\+\_\+\+FAILED}}, \mbox{\hyperlink{http__server_8h_source_l00039}{OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_aa40c7544f908043547e60dcba8a41963}\index{http\_server.c@{http\_server.c}!http\_server\_monitor\_send\_message@{http\_server\_monitor\_send\_message}}
+\index{http\_server\_monitor\_send\_message@{http\_server\_monitor\_send\_message}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_monitor\_send\_message()}{http\_server\_monitor\_send\_message()}}
+{\footnotesize\ttfamily \label{http__server_8c_aa40c7544f908043547e60dcba8a41963} 
+Base\+Type\+\_\+t http\+\_\+server\+\_\+monitor\+\_\+send\+\_\+message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e}}}]{msg\+ID}{}\end{DoxyParamCaption})}
+
+
+
+Enviar mensaje a la cola del monitor HTTP. 
+
+Permite comunicación thread-\/safe entre módulos del sistema y el servidor HTTP. Los mensajes se procesan en orden FIFO por la tarea http\+\_\+server\+\_\+monitor.
+
+
+\begin{DoxyParams}{Parámetros}
+{\em msg\+ID} & ID del mensaje desde \doxylink{http__server_8h_af3e42acc0daaaa0e7992f1be99d28e08}{http\+\_\+server\+\_\+message\+\_\+e} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+pd\+TRUE si el mensaje se envió correctamente 
+
+pd\+FALSE si la cola está llena (espera indefinida activada)
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Esta función usa port\+MAX\+\_\+\+DELAY, bloqueará hasta que haya espacio en la cola 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01423}{1423}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00143}{http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00655}{http\+\_\+server\+\_\+\+OTA\+\_\+update\+\_\+handler()}} y \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{http__server_8c_a17943ba8d92714b90c1d48233f642d15}\index{http\_server.c@{http\_server.c}!http\_server\_OTA\_status\_handler@{http\_server\_OTA\_status\_handler}}
+\index{http\_server\_OTA\_status\_handler@{http\_server\_OTA\_status\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_OTA\_status\_handler()}{http\_server\_OTA\_status\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a17943ba8d92714b90c1d48233f642d15} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+\+OTA\+\_\+status\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})}
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00743}{743}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00134}{g\+\_\+fw\+\_\+update\+\_\+status}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_afa6d4df0ab1362bd53d11b52fe486d94}\index{http\_server.c@{http\_server.c}!http\_server\_OTA\_update\_handler@{http\_server\_OTA\_update\_handler}}
+\index{http\_server\_OTA\_update\_handler@{http\_server\_OTA\_update\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_OTA\_update\_handler()}{http\_server\_OTA\_update\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_afa6d4df0ab1362bd53d11b52fe486d94} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+\+OTA\+\_\+update\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})}
+
+
+
+Handler POST /\+OTAupdate -\/ Actualización de firmware OTA. 
+
+Recibe archivo binario (.bin) y actualiza firmware del ESP32.
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Inicia partición OTA con esp\+\_\+ota\+\_\+begin()
+\item Recibe datos en chunks de 1024 bytes
+\item Escribe cada chunk con esp\+\_\+ota\+\_\+write()
+\item Finaliza con esp\+\_\+ota\+\_\+end()
+\item Marca partición como booteable
+\item Programa reinicio en 8 segundos
+\end{DoxyEnumerate}
+
+{\bfseries{Request\+:}}
+\begin{DoxyItemize}
+\item Content-\/\+Type\+: multipart/form-\/data
+\item Body\+: Archivo .bin del firmware
+\end{DoxyItemize}
+
+{\bfseries{Estados\+:}}
+\begin{DoxyItemize}
+\item g\+\_\+fw\+\_\+update\+\_\+status = OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL\+: Éxito
+\item g\+\_\+fw\+\_\+update\+\_\+status = OTA\+\_\+\+UPDATE\+\_\+\+FAILED\+: Error
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Actualización exitosa \\
+\hline
+{\em ESP\+\_\+\+FAIL} & Error en proceso\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyWarning}{Atención}
+El ESP32 se reinicia 8s después de éxito 
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Usa LED RGB para indicar progreso 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00655}{655}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8h_source_l00071}{HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+FAILED}}, \mbox{\hyperlink{http__server_8h_source_l00070}{HTTP\+\_\+\+MSG\+\_\+\+OTA\+\_\+\+UPDATE\+\_\+\+SUCCESSFUL}}, \mbox{\hyperlink{http__server_8c_source_l01423}{http\+\_\+server\+\_\+monitor\+\_\+send\+\_\+message()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_acf44ffde7b268213f9fbcbaed7e9b066}\index{http\_server.c@{http\_server.c}!http\_server\_read\_register\_handler@{http\_server\_read\_register\_handler}}
+\index{http\_server\_read\_register\_handler@{http\_server\_read\_register\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_read\_register\_handler()}{http\_server\_read\_register\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_acf44ffde7b268213f9fbcbaed7e9b066} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+read\+\_\+register\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01256}{1256}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{registers_8c_source_l00192}{load\+\_\+register\+\_\+from\+\_\+nvs()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_ae521c42d06e5b900fcb1bac76ab9c0d8}\index{http\_server.c@{http\_server.c}!http\_server\_register\_erase\_handler@{http\_server\_register\_erase\_handler}}
+\index{http\_server\_register\_erase\_handler@{http\_server\_register\_erase\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_register\_erase\_handler()}{http\_server\_register\_erase\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_ae521c42d06e5b900fcb1bac76ab9c0d8} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+register\+\_\+erase\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler POST /regerase.json -\/ Borrar registro (legacy). 
+
+Endpoint legacy para borrar registros. Usa JSON diferente a API REST.
+
+{\bfseries{Request JSON\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}selectedNumber"{}}:\ \textcolor{stringliteral}{"{}3"{}}\}\ \ \textcolor{comment}{//\ String,\ no\ número}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Parsea JSON
+\item Extrae selected\+Number (como string)
+\item Convierte a entero
+\item Valida rango 1-\/10
+\item Llama \doxylink{registers_8h_a96fc67199ae4e05f5cb25a0b8020573f}{delete\+\_\+register\+\_\+from\+\_\+nvs()}
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Registro eliminado \\
+\hline
+{\em ESP\+\_\+\+FAIL} & Error en parsing o ID inválido\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Nota}
+Prefer usar DELETE /api/register/\{id\} (API moderna) 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00991}{991}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{registers_8c_source_l00229}{delete\+\_\+register\+\_\+from\+\_\+nvs()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_ae5fb127f629ed9aecaba445bd1512221}\index{http\_server.c@{http\_server.c}!http\_server\_start@{http\_server\_start}}
+\index{http\_server\_start@{http\_server\_start}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_start()}{http\_server\_start()}}
+{\footnotesize\ttfamily \label{http__server_8c_ae5fb127f629ed9aecaba445bd1512221} 
+void http\+\_\+server\+\_\+start (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Inicia el servidor HTTP y sus tareas asociadas. 
+
+Iniciar servidor HTTP y tareas relacionadas.
+
+Secuencia de inicialización completa\+:
+\begin{DoxyEnumerate}
+\item Configura periféricos (ADC, NTC, PIR, sensor\+\_\+task)
+\item Inicializa control del ventilador
+\item Crea cola de mensajes http\+\_\+server\+\_\+monitor
+\item Crea tarea http\+\_\+server\+\_\+monitor
+\item Configura y arranca servidor HTTP
+\item Crea fan\+\_\+task para modo AUTO
+\end{DoxyEnumerate}
+
+\begin{DoxyNote}{Nota}
+Llamar después de que Wi\+Fi obtenga IP 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+Debe llamarse solo una vez
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{http__server_8c_a144f3a03b04b7f1669cd84e63a4d03cc}{http\+\_\+server\+\_\+configure()} Configuración del servidor 
+
+\doxylink{http__server_8c_a81d987e42a660d479981eefd99e51d6f}{fan\+\_\+task()} Tarea de actualización automática 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01375}{1375}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00146}{fan\+\_\+control\+\_\+init()}}, \mbox{\hyperlink{http__server_8c_source_l01345}{fan\+\_\+task()}}, \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}, \mbox{\hyperlink{http__server_8c_source_l00137}{http\+\_\+server\+\_\+handle}}, \mbox{\hyperlink{http__server_8c_source_l00402}{sensors\+\_\+init()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{http__server_8c_afffb5f05a179c9702078a824048dab36}\index{http\_server.c@{http\_server.c}!http\_server\_stop@{http\_server\_stop}}
+\index{http\_server\_stop@{http\_server\_stop}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_stop()}{http\_server\_stop()}}
+{\footnotesize\ttfamily \label{http__server_8c_afffb5f05a179c9702078a824048dab36} 
+void http\+\_\+server\+\_\+stop (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Detiene el servidor HTTP y limpia recursos. 
+
+Detener servidor HTTP y liberar recursos.
+
+Secuencia de parada\+:
+\begin{DoxyEnumerate}
+\item Detiene servidor HTTP con httpd\+\_\+stop()
+\item Elimina tarea http\+\_\+server\+\_\+monitor
+\item Libera cola http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle
+\end{DoxyEnumerate}
+
+\begin{DoxyNote}{Nota}
+Solo ejecuta si http\+\_\+server\+\_\+handle != NULL 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+No detiene fan\+\_\+task ni sensor\+\_\+task 
+\end{DoxyWarning}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l01404}{1404}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00137}{http\+\_\+server\+\_\+handle}}, \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}} y \mbox{\hyperlink{http__server_8c_source_l00140}{task\+\_\+http\+\_\+server\+\_\+monitor}}.
+
+\Hypertarget{http__server_8c_ab185e6554c1eb3c4a386375eb87d2901}\index{http\_server.c@{http\_server.c}!http\_server\_time\_json\_handler@{http\_server\_time\_json\_handler}}
+\index{http\_server\_time\_json\_handler@{http\_server\_time\_json\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_time\_json\_handler()}{http\_server\_time\_json\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_ab185e6554c1eb3c4a386375eb87d2901} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+time\+\_\+json\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET /time.json -\/ Obtiene hora del sistema. 
+
+Retorna hora actual en formato JSON si SNTP está sincronizado.
+
+{\bfseries{Response JSON\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}hour"{}}:\ 14,}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}minute"{}}:\ 30,}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}second"{}}:\ 45,}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}day"{}}:\ 15,}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}month"{}}:\ 3,}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}year"{}}:\ 2024}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Estado\+:}} Solo retorna si \doxylink{wifi__app_8h_af889cf6e5d320085772f871cf468ffb1}{get\+\_\+state\+\_\+time\+\_\+was\+\_\+synchronized()} == true
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Hora enviada \\
+\hline
+{\em ESP\+\_\+\+FAIL} & SNTP no sincronizado \\
+\hline
+\end{DoxyRetVals}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00329}{329}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a4172bd779fa518b7262f0f1410635b74}\index{http\_server.c@{http\_server.c}!http\_server\_toogle\_led\_handler@{http\_server\_toogle\_led\_handler}}
+\index{http\_server\_toogle\_led\_handler@{http\_server\_toogle\_led\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_toogle\_led\_handler()}{http\_server\_toogle\_led\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a4172bd779fa518b7262f0f1410635b74} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+toogle\+\_\+led\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00359}{359}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}} y \mbox{\hyperlink{http__server_8c_source_l00201}{toogle\+\_\+led()}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a3b8145dd054fd41a8498320e7a85a4cb}\index{http\_server.c@{http\_server.c}!http\_server\_wifi\_connect\_json\_handler@{http\_server\_wifi\_connect\_json\_handler}}
+\index{http\_server\_wifi\_connect\_json\_handler@{http\_server\_wifi\_connect\_json\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_wifi\_connect\_json\_handler()}{http\_server\_wifi\_connect\_json\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a3b8145dd054fd41a8498320e7a85a4cb} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+json\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler POST /wifi\+Connect.json -\/ Conectar a red Wi\+Fi. 
+
+Endpoint para configurar credenciales Wi\+Fi y conectar.
+
+{\bfseries{Request JSON\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}selectedSSID"{}}:\ \textcolor{stringliteral}{"{}MiRed"{}},}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}pwd"{}}:\ \textcolor{stringliteral}{"{}password123"{}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Parsea JSON del body
+\item Extrae SSID y password
+\item Guarda en NVS con \doxylink{wifi__app_8h_a1eb1e37bd21abc738271e8c1a8a876f8}{save\+\_\+wifi\+\_\+credentials()}
+\item Envía mensaje a wifi\+\_\+app para conectar
+\item Retorna "{}\+OK"{}
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Credenciales guardadas, conexión iniciada \\
+\hline
+{\em ESP\+\_\+\+FAIL} & Error en parsing o memoria\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Nota}
+El estado de conexión se consulta con GET /wifi\+Connect\+Status 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00791}{791}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{wifi__app_8c_source_l00569}{connect\+\_\+to\+\_\+wifi()}}, \mbox{\hyperlink{wifi__app_8c_source_l00208}{save\+\_\+wifi\+\_\+credentials()}}, \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}, \mbox{\hyperlink{wifi__app_8c_source_l00962}{wifi\+\_\+app\+\_\+get\+\_\+wifi\+\_\+config()}} y \mbox{\hyperlink{wifi__app_8c_source_l00086}{wifi\+\_\+config}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a34de4e2dc4bbb91cccdef9f90c9097f5}\index{http\_server.c@{http\_server.c}!http\_server\_wifi\_connect\_status\_json\_handler@{http\_server\_wifi\_connect\_status\_json\_handler}}
+\index{http\_server\_wifi\_connect\_status\_json\_handler@{http\_server\_wifi\_connect\_status\_json\_handler}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_wifi\_connect\_status\_json\_handler()}{http\_server\_wifi\_connect\_status\_json\_handler()}}
+{\footnotesize\ttfamily \label{http__server_8c_a34de4e2dc4bbb91cccdef9f90c9097f5} 
+esp\+\_\+err\+\_\+t http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status\+\_\+json\+\_\+handler (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler GET /wifi\+Connect\+Status -\/ Estado de conexión Wi\+Fi. 
+
+Retorna el estado actual de la conexión Wi\+Fi.
+
+{\bfseries{Response JSON\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}wifi\_connect\_status"{}}:\ 0\}\ \ \textcolor{comment}{//\ NONE}}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}wifi\_connect\_status"{}}:\ 1\}\ \ \textcolor{comment}{//\ CONNECTING}}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}wifi\_connect\_status"{}}:\ 2\}\ \ \textcolor{comment}{//\ SUCCESS}}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}wifi\_connect\_status"{}}:\ 3\}\ \ \textcolor{comment}{//\ FAIL}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em req} & Request HTTP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t ESP\+\_\+\+OK siempre 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00898}{898}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00131}{g\+\_\+wifi\+\_\+connect\+\_\+status}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{http__server_8c_a7f8a15d29ffe1832250f92032705ddd6}\index{http\_server.c@{http\_server.c}!log\_error\_if\_nonzero@{log\_error\_if\_nonzero}}
+\index{log\_error\_if\_nonzero@{log\_error\_if\_nonzero}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{log\_error\_if\_nonzero()}{log\_error\_if\_nonzero()}}
+{\footnotesize\ttfamily \label{http__server_8c_a7f8a15d29ffe1832250f92032705ddd6} 
+void log\+\_\+error\+\_\+if\+\_\+nonzero (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{message}{, }\item[{int}]{error\+\_\+code}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00374}{374}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+\Hypertarget{http__server_8c_a78199b321bd67d798d91cb9b920b7894}\index{http\_server.c@{http\_server.c}!sensors\_init@{sensors\_init}}
+\index{sensors\_init@{sensors\_init}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{sensors\_init()}{sensors\_init()}}
+{\footnotesize\ttfamily \label{http__server_8c_a78199b321bd67d798d91cb9b920b7894} 
+void sensors\+\_\+init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Inicializa periféricos de sensores. 
+
+Configura\+:
+\begin{DoxyItemize}
+\item ADC1 para NTC (oneshot mode)
+\item NTC driver con ADC handle
+\item PIR driver (GPIO 35)
+\item sensor\+\_\+task (tarea RTOS de lectura)
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Nota}
+Llamada desde \doxylink{http__server_8c_ae5fb127f629ed9aecaba445bd1512221}{http\+\_\+server\+\_\+start()} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+ntc\+\_\+init() Inicializa driver NTC 
+
+\doxylink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\+\_\+init()} Inicializa driver PIR 
+
+\doxylink{sensor__task_8h_aeff89d705d5b4afb8039e4deec09ab27}{sensor\+\_\+task\+\_\+init()} Crea tarea de sensores 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00402}{402}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{ntc__driver_8c_source_l00087}{inicializar\+\_\+ntc()}}, \mbox{\hyperlink{pir__driver_8c_source_l00102}{pir\+\_\+init()}}, \mbox{\hyperlink{http__server_8c_source_l00128}{s\+\_\+ntc\+\_\+adc\+\_\+handle}}, \mbox{\hyperlink{sensor__task_8c_source_l00175}{sensor\+\_\+task\+\_\+init()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01375}{http\+\_\+server\+\_\+start()}}.
+
+\Hypertarget{http__server_8c_a0d7dc83276db640fb3589828dae229e9}\index{http\_server.c@{http\_server.c}!toogle\_led@{toogle\_led}}
+\index{toogle\_led@{toogle\_led}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{toogle\_led()}{toogle\_led()}}
+{\footnotesize\ttfamily \label{http__server_8c_a0d7dc83276db640fb3589828dae229e9} 
+void toogle\+\_\+led (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Alterna el estado del LED de depuración. 
+
+Alternar LED de estado.
+
+Toggle simple del GPIO definido como BLINK\+\_\+\+GPIO. Usado para debug visual del sistema. \texorpdfstring{$<$}{<} GPIO del LED de estado
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00201}{201}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{http__server_8h_source_l00043}{BLINK\+\_\+\+GPIO}} y \mbox{\hyperlink{http__server_8c_source_l00192}{s\+\_\+led\+\_\+state}}.
+
+
+
+Referenciado por \mbox{\hyperlink{wifi__app_8c_source_l00967}{compare\+\_\+hour\+\_\+day\+\_\+structs()}} y \mbox{\hyperlink{http__server_8c_source_l00359}{http\+\_\+server\+\_\+toogle\+\_\+led\+\_\+handler()}}.
+
+
+
+\label{doc-var-members}
+\Hypertarget{http__server_8c_doc-var-members}
+\doxysubsection{Documentación de variables}
+\Hypertarget{http__server_8c_adca1b9e825cb767104d798e1a3b33bc2}\index{http\_server.c@{http\_server.c}!fw\_update\_reset@{fw\_update\_reset}}
+\index{fw\_update\_reset@{fw\_update\_reset}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{fw\_update\_reset}{fw\_update\_reset}}
+{\footnotesize\ttfamily \label{http__server_8c_adca1b9e825cb767104d798e1a3b33bc2} 
+esp\+\_\+timer\+\_\+handle\+\_\+t fw\+\_\+update\+\_\+reset}
+
+
+
+Handle del timer de reinicio OTA. 
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00160}{160}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00451}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+timer()}}.
+
+\Hypertarget{http__server_8c_ae2877887269a0c9a741915ca971c1909}\index{http\_server.c@{http\_server.c}!fw\_update\_reset\_args@{fw\_update\_reset\_args}}
+\index{fw\_update\_reset\_args@{fw\_update\_reset\_args}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{fw\_update\_reset\_args}{fw\_update\_reset\_args}}
+{\footnotesize\ttfamily \label{http__server_8c_ae2877887269a0c9a741915ca971c1909} 
+const esp\+\_\+timer\+\_\+create\+\_\+args\+\_\+t fw\+\_\+update\+\_\+reset\+\_\+args}
+
+{\bfseries Valor inicial\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \ \ .callback\ =\ \&\mbox{\hyperlink{http__server_8h_aa252e797e5e0e5945501a429bba37f1c}{http\_server\_fw\_update\_reset\_callback}},}
+\DoxyCodeLine{\ \ \ \ .arg\ =\ NULL,}
+\DoxyCodeLine{\ \ \ \ .dispatch\_method\ =\ ESP\_TIMER\_TASK,}
+\DoxyCodeLine{\ \ \ \ .name\ =\ \textcolor{stringliteral}{"{}fw\_update\_reset"{}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Configuración del timer para reinicio post-\/\+OTA. 
+
+Timer de 8 segundos que reinicia el ESP32 después de actualizar firmware. Callback\+: \doxylink{http__server_8c_aa252e797e5e0e5945501a429bba37f1c}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+callback()} 
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00152}{152}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00451}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+timer()}}.
+
+\Hypertarget{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d}\index{http\_server.c@{http\_server.c}!g\_fw\_update\_status@{g\_fw\_update\_status}}
+\index{g\_fw\_update\_status@{g\_fw\_update\_status}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{g\_fw\_update\_status}{g\_fw\_update\_status}}
+{\footnotesize\ttfamily \label{http__server_8c_a12a8106985d9948c772f5e02c95c4f3d} 
+int g\+\_\+fw\+\_\+update\+\_\+status = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Estado de actualización OTA (PENDING, SUCCESSFUL, FAILED). 
+
+Actualización OTA pendiente 
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00134}{134}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00451}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+timer()}}, \mbox{\hyperlink{http__server_8c_source_l00468}{http\+\_\+server\+\_\+monitor()}} y \mbox{\hyperlink{http__server_8c_source_l00743}{http\+\_\+server\+\_\+\+OTA\+\_\+status\+\_\+handler()}}.
+
+\Hypertarget{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6}\index{http\_server.c@{http\_server.c}!g\_wifi\_connect\_status@{g\_wifi\_connect\_status}}
+\index{g\_wifi\_connect\_status@{g\_wifi\_connect\_status}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{g\_wifi\_connect\_status}{g\_wifi\_connect\_status}}
+{\footnotesize\ttfamily \label{http__server_8c_a557b7c067ae1f6e741623beaf0e550e6} 
+int g\+\_\+wifi\+\_\+connect\+\_\+status = \mbox{\hyperlink{http__server_8h_a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2}{NONE}}\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Estado de conexión Wi\+Fi (NONE, CONNECTING, SUCCESS, FAIL). 
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00131}{131}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00468}{http\+\_\+server\+\_\+monitor()}} y \mbox{\hyperlink{http__server_8c_source_l00898}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status\+\_\+json\+\_\+handler()}}.
+
+\Hypertarget{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8}\index{http\_server.c@{http\_server.c}!http\_server\_handle@{http\_server\_handle}}
+\index{http\_server\_handle@{http\_server\_handle}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_handle}{http\_server\_handle}}
+{\footnotesize\ttfamily \label{http__server_8c_a1eeac67816e33298043d12a2f5ea69d8} 
+httpd\+\_\+handle\+\_\+t http\+\_\+server\+\_\+handle = NULL\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handle del servidor HTTP. 
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00137}{137}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}, \mbox{\hyperlink{http__server_8c_source_l01375}{http\+\_\+server\+\_\+start()}} y \mbox{\hyperlink{http__server_8c_source_l01404}{http\+\_\+server\+\_\+stop()}}.
+
+\Hypertarget{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd}\index{http\_server.c@{http\_server.c}!http\_server\_monitor\_queue\_handle@{http\_server\_monitor\_queue\_handle}}
+\index{http\_server\_monitor\_queue\_handle@{http\_server\_monitor\_queue\_handle}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{http\_server\_monitor\_queue\_handle}{http\_server\_monitor\_queue\_handle}}
+{\footnotesize\ttfamily \label{http__server_8c_aafe519fb5609f618182ff37dcfea0ecd} 
+Queue\+Handle\+\_\+t http\+\_\+server\+\_\+monitor\+\_\+queue\+\_\+handle\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Cola de mensajes para http\+\_\+server\+\_\+monitor. 
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00143}{143}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}, \mbox{\hyperlink{http__server_8c_source_l00468}{http\+\_\+server\+\_\+monitor()}} y \mbox{\hyperlink{http__server_8c_source_l01423}{http\+\_\+server\+\_\+monitor\+\_\+send\+\_\+message()}}.
+
+\Hypertarget{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c}\index{http\_server.c@{http\_server.c}!s\_led\_state@{s\_led\_state}}
+\index{s\_led\_state@{s\_led\_state}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{s\_led\_state}{s\_led\_state}}
+{\footnotesize\ttfamily \label{http__server_8c_a4ed953b2ba4513f63e76d1f65192ef1c} 
+uint8\+\_\+t s\+\_\+led\+\_\+state = 0}
+
+
+
+Estado del LED de depuración. 
+
+Estado del LED RGB (externo). 
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00192}{192}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00201}{toogle\+\_\+led()}}.
+
+\Hypertarget{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}\index{http\_server.c@{http\_server.c}!s\_ntc\_adc\_handle@{s\_ntc\_adc\_handle}}
+\index{s\_ntc\_adc\_handle@{s\_ntc\_adc\_handle}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{s\_ntc\_adc\_handle}{s\_ntc\_adc\_handle}}
+{\footnotesize\ttfamily \label{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6} 
+adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t s\+\_\+ntc\+\_\+adc\+\_\+handle = NULL}
+
+
+
+Handle del ADC para sensor NTC (compartido globalmente). 
+
+Handle externo del ADC para lectura de temperatura.
+
+Inicializado en http\+\_\+server\+\_\+configure\+\_\+peripherals(). Usado por endpoint /dht\+Sensor.json para leer temperatura. También usado por \doxylink{fan__control_8c}{fan\+\_\+control.\+c} (extern).
+
+Definido en \doxylink{http__server_8c}{http\+\_\+server.\+c} e inicializado durante el arranque. Usado por \doxylink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{compute\+\_\+auto\+\_\+speed()} para leer temperatura del NTC. Si es NULL, modo AUTO retorna velocidad 0\%. 
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00128}{128}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{fan__control_8c_source_l00184}{fan\+\_\+control\+\_\+set\+\_\+mode()}}, \mbox{\hyperlink{fan__control_8c_source_l00367}{fan\+\_\+control\+\_\+update()}}, \mbox{\hyperlink{http__server_8c_source_l00935}{http\+\_\+server\+\_\+get\+\_\+dht\+\_\+sensor\+\_\+readings\+\_\+json\+\_\+handler()}} y \mbox{\hyperlink{http__server_8c_source_l00402}{sensors\+\_\+init()}}.
+
+\Hypertarget{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}\index{http\_server.c@{http\_server.c}!TAG@{TAG}}
+\index{TAG@{TAG}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{TAG}{TAG}}
+{\footnotesize\ttfamily \label{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605} 
+const char TAG\mbox{[}$\,$\mbox{]} = "{}http\+\_\+server"{}\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Tag para logging ESP-\/\+IDF. 
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00117}{117}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00508}{api\+\_\+delete\+\_\+register()}}, \mbox{\hyperlink{registers_8c_source_l00371}{api\+\_\+post\+\_\+register()}}, \mbox{\hyperlink{wifi__app_8c_source_l00611}{check\+\_\+sta\+\_\+connection\+\_\+state()}}, \mbox{\hyperlink{wifi__app_8c_source_l00569}{connect\+\_\+to\+\_\+wifi()}}, \mbox{\hyperlink{http__server_8c_source_l00568}{http\+\_\+server\+\_\+app\+\_\+css\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00589}{http\+\_\+server\+\_\+app\+\_\+js\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}, \mbox{\hyperlink{http__server_8c_source_l00233}{http\+\_\+server\+\_\+fan\+\_\+control\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00610}{http\+\_\+server\+\_\+favicon\+\_\+ico\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l01430}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+callback()}}, \mbox{\hyperlink{http__server_8c_source_l00451}{http\+\_\+server\+\_\+fw\+\_\+update\+\_\+reset\+\_\+timer()}}, \mbox{\hyperlink{http__server_8c_source_l00935}{http\+\_\+server\+\_\+get\+\_\+dht\+\_\+sensor\+\_\+readings\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00547}{http\+\_\+server\+\_\+index\+\_\+html\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00526}{http\+\_\+server\+\_\+jquery\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00468}{http\+\_\+server\+\_\+monitor()}}, \mbox{\hyperlink{http__server_8c_source_l00743}{http\+\_\+server\+\_\+\+OTA\+\_\+status\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00655}{http\+\_\+server\+\_\+\+OTA\+\_\+update\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l01256}{http\+\_\+server\+\_\+read\+\_\+register\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00991}{http\+\_\+server\+\_\+register\+\_\+erase\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l01375}{http\+\_\+server\+\_\+start()}}, \mbox{\hyperlink{http__server_8c_source_l01404}{http\+\_\+server\+\_\+stop()}}, \mbox{\hyperlink{http__server_8c_source_l00329}{http\+\_\+server\+\_\+time\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00359}{http\+\_\+server\+\_\+toogle\+\_\+led\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00791}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{http__server_8c_source_l00898}{http\+\_\+server\+\_\+wifi\+\_\+connect\+\_\+status\+\_\+json\+\_\+handler()}}, \mbox{\hyperlink{wifi__app_8c_source_l00508}{load\+\_\+wifi\+\_\+credentials()}}, \mbox{\hyperlink{http__server_8c_source_l00374}{log\+\_\+error\+\_\+if\+\_\+nonzero()}}, \mbox{\hyperlink{wifi__app_8c_source_l00149}{obtain\+\_\+time()}}, \mbox{\hyperlink{wifi__app_8c_source_l00279}{read\+\_\+reg\+\_\+data()}}, \mbox{\hyperlink{registers_8c_source_l00592}{register\+\_\+registers\+\_\+endpoints()}}, \mbox{\hyperlink{registers_8c_source_l00568}{registers\+\_\+scheduler\+\_\+task()}}, \mbox{\hyperlink{registers_8c_source_l00137}{save\+\_\+register\+\_\+to\+\_\+nvs()}}, \mbox{\hyperlink{sensor__task_8c_source_l00244}{sensor\+\_\+task\+\_\+get\+\_\+data()}}, \mbox{\hyperlink{sensor__task_8c_source_l00175}{sensor\+\_\+task\+\_\+init()}}, \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}, \mbox{\hyperlink{http__server_8c_source_l00402}{sensors\+\_\+init()}}, \mbox{\hyperlink{wifi__app_8c_source_l01058}{task\+\_\+compare\+\_\+hour\+\_\+to\+\_\+execute\+\_\+action()}}, \mbox{\hyperlink{wifi__app_8c_source_l00387}{update\+\_\+register()}}, \mbox{\hyperlink{wifi__app_8c_source_l00676}{wifi\+\_\+app\+\_\+event\+\_\+handler()}}, \mbox{\hyperlink{wifi__app_8c_source_l01115}{wifi\+\_\+app\+\_\+start()}} y \mbox{\hyperlink{wifi__app_8c_source_l00862}{wifi\+\_\+app\+\_\+task()}}.
+
+\Hypertarget{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4}\index{http\_server.c@{http\_server.c}!task\_http\_server\_monitor@{task\_http\_server\_monitor}}
+\index{task\_http\_server\_monitor@{task\_http\_server\_monitor}!http\_server.c@{http\_server.c}}
+\doxysubsubsection{\texorpdfstring{task\_http\_server\_monitor}{task\_http\_server\_monitor}}
+{\footnotesize\ttfamily \label{http__server_8c_aa49f95f5b8518304eb2d1f6c2c166dd4} 
+Task\+Handle\+\_\+t task\+\_\+http\+\_\+server\+\_\+monitor = NULL\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handle de tarea monitora de eventos HTTP/\+Wi\+Fi. 
+
+
+
+Definición en la línea \mbox{\hyperlink{http__server_8c_source_l00140}{140}} del archivo \mbox{\hyperlink{http__server_8c_source}{http\+\_\+server.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}} y \mbox{\hyperlink{http__server_8c_source_l01404}{http\+\_\+server\+\_\+stop()}}.
+

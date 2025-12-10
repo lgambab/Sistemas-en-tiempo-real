@@ -1,0 +1,66 @@
+\doxysection{Referencia de la estructura pir\+\_\+event\+\_\+t}
+\hypertarget{structpir__event__t}{}\label{structpir__event__t}\index{pir\_event\_t@{pir\_event\_t}}
+
+
+Evento enviado por la cola cuando el PIR detecta cambio.  
+
+
+
+
+{\ttfamily \#include $<$pir\+\_\+driver.\+h$>$}
+
+\doxysubsubsection*{Campos de datos}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{structpir__event__t_a004644a6ca1a85e87991196121348589}{motion}}
+\begin{DoxyCompactList}\small\item\em true = movimiento detectado (pin HIGH), false = sin movimiento (pin LOW) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Evento enviado por la cola cuando el PIR detecta cambio. 
+
+Esta estructura se envía a través de la cola cuando el sensor PIR cambia de estado (flanco de subida o bajada).
+
+{\bfseries{Uso\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{QueueHandle\_t\ pir\_queue\ =\ xQueueCreate(10,\ \textcolor{keyword}{sizeof}(pir\_event\_t));}
+\DoxyCodeLine{\mbox{\hyperlink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\_init}}(GPIO\_NUM\_35,\ pir\_queue);}
+\DoxyCodeLine{}
+\DoxyCodeLine{pir\_event\_t\ evt;}
+\DoxyCodeLine{\textcolor{keywordflow}{if}\ (xQueueReceive(pir\_queue,\ \&evt,\ portMAX\_DELAY))\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (evt.\mbox{\hyperlink{structpir__event__t_a004644a6ca1a85e87991196121348589}{motion}})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Movimiento\ detectado!\(\backslash\)n"{}});}
+\DoxyCodeLine{\ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Fin\ de\ movimiento\(\backslash\)n"{}});}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 
+
+Definición en la línea \mbox{\hyperlink{pir__driver_8h_source_l00062}{62}} del archivo \mbox{\hyperlink{pir__driver_8h_source}{pir\+\_\+driver.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{structpir__event__t_doc-variable-members}
+\doxysubsection{Documentación de campos}
+\Hypertarget{structpir__event__t_a004644a6ca1a85e87991196121348589}\index{pir\_event\_t@{pir\_event\_t}!motion@{motion}}
+\index{motion@{motion}!pir\_event\_t@{pir\_event\_t}}
+\doxysubsubsection{\texorpdfstring{motion}{motion}}
+{\footnotesize\ttfamily \label{structpir__event__t_a004644a6ca1a85e87991196121348589} 
+bool pir\+\_\+event\+\_\+t\+::motion}
+
+
+
+true = movimiento detectado (pin HIGH), false = sin movimiento (pin LOW) 
+
+
+
+Definición en la línea \mbox{\hyperlink{pir__driver_8h_source_l00063}{63}} del archivo \mbox{\hyperlink{pir__driver_8h_source}{pir\+\_\+driver.\+h}}.
+
+
+
+La documentación de esta estructura está generada del siguiente archivo\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{pir__driver_8h}{pir\+\_\+driver.\+h}}\end{DoxyCompactItemize}

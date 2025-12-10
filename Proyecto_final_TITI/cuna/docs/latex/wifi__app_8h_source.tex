@@ -1,0 +1,133 @@
+\doxysection{wifi\+\_\+app.\+h}
+\hypertarget{wifi__app_8h_source}{}\label{wifi__app_8h_source}\mbox{\hyperlink{wifi__app_8h}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00022}00022\ \textcolor{preprocessor}{\#ifndef\ MAIN\_WIFI\_APP\_H\_}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00023}00023\ \textcolor{preprocessor}{\#define\ MAIN\_WIFI\_APP\_H\_}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00025}00025\ \textcolor{preprocessor}{\#include\ "{}esp\_netif.h"{}}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00026}00026\ \textcolor{preprocessor}{\#include\ "{}esp\_wifi\_types.h"{}}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00027}00027\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00029}00029\ \textcolor{comment}{//\ Callback\ typedef}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00030}\mbox{\hyperlink{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445}{00030}}\ \textcolor{keyword}{typedef}\ void\ (*\mbox{\hyperlink{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445}{wifi\_connected\_event\_callback\_t}})(void);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00035}\mbox{\hyperlink{group___wi_fi___config_ga8e19d13af09f7ed0afad391730f1e3e7}{00035}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_SSID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Mi\_esp"{}\ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00036}\mbox{\hyperlink{group___wi_fi___config_gac80c92af8bf29cfe0442a28b6a7ec5a3}{00036}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_PASSWORD\ \ \ \ \ \ \ \ \ \ \ \ "{}12345678"{}\ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00037}\mbox{\hyperlink{group___wi_fi___config_gac0a1dba58f0e6d7f07d3050fa0291dd0}{00037}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_CHANNEL\ \ \ \ \ \ \ \ \ \ \ \ \ 1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00038}\mbox{\hyperlink{group___wi_fi___config_ga02f4226bd6b0e2adad29fddd345a0918}{00038}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_SSID\_HIDDEN\ \ \ \ \ \ \ \ \ 0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00039}\mbox{\hyperlink{group___wi_fi___config_gab689d29cda2d350ce6652141df530fd0}{00039}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_MAX\_CONNECTIONS\ \ \ \ \ 5\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00040}\mbox{\hyperlink{group___wi_fi___config_ga532527c416f545aaa0b3adf4185ed3f4}{00040}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_BEACON\_INTERVAL\ \ \ \ \ 100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00041}\mbox{\hyperlink{group___wi_fi___config_ga067a8d9ec14859ad6237320d2cec686a}{00041}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_IP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}192.168.0.1"{}\ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00042}\mbox{\hyperlink{group___wi_fi___config_ga2782b50f9a156696a1708c61823aa3a3}{00042}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_GATEWAY\ \ \ \ \ \ \ \ \ \ \ \ \ "{}192.168.0.1"{}\ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00043}\mbox{\hyperlink{group___wi_fi___config_gaf48472f62a4bab9896e181b25d439f34}{00043}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_NETMASK\ \ \ \ \ \ \ \ \ \ \ \ \ "{}255.255.255.0"{}\ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00044}\mbox{\hyperlink{group___wi_fi___config_ga7581843f542963f235dd70d339f106f5}{00044}}\ \textcolor{preprocessor}{\#define\ WIFI\_AP\_BANDWIDTH\ \ \ \ \ \ \ \ \ \ \ WIFI\_BW\_HT20\ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00045}\mbox{\hyperlink{group___wi_fi___config_ga08b834aec05f183ace828469af10b817}{00045}}\ \textcolor{preprocessor}{\#define\ WIFI\_STA\_POWER\_SAVE\ \ \ \ \ \ \ \ \ WIFI\_PS\_NONE\ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00046}\mbox{\hyperlink{group___wi_fi___config_ga1a3e371dfda6b729e6c7a890cf94f6ca}{00046}}\ \textcolor{preprocessor}{\#define\ MAX\_SSID\_LENGTH\ \ \ \ \ \ \ \ \ \ \ \ \ 32\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00047}\mbox{\hyperlink{group___wi_fi___config_ga7f264fafe78080f8ea68715854b9bc24}{00047}}\ \textcolor{preprocessor}{\#define\ MAX\_PASSWORD\_LENGTH\ \ \ \ \ \ \ \ \ 64\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00048}\mbox{\hyperlink{group___wi_fi___config_ga72a2cf74d03d2705748164a8202c8f48}{00048}}\ \textcolor{preprocessor}{\#define\ MAX\_CONNECTION\_RETRIES\ \ \ \ \ \ 5\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00051}\mbox{\hyperlink{wifi__app_8h_a5b6bbc36d5b71c9bebeb124a6216a3d4}{00051}}\ \textcolor{preprocessor}{\#define\ NUM\_REGISTERS\_AV\ \ \ \ \ \ \ \ \ \ \ \ 10\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00054}00054\ \textcolor{keyword}{extern}\ esp\_netif\_t*\ \mbox{\hyperlink{wifi__app_8h_a9d201c9b3c512f5569c685bd04488cbe}{esp\_netif\_sta}};}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00056}00056\ \textcolor{keyword}{extern}\ esp\_netif\_t*\ \mbox{\hyperlink{wifi__app_8h_a9d04dd561f9f32dd175245abb38a868a}{esp\_netif\_ap}};}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00065}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7}{00065}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7}{wifi\_app\_message}}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00067}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26}{00067}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26}{WIFI\_APP\_MSG\_START\_HTTP\_SERVER}}\ =\ 0,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00068}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd}{00068}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd}{WIFI\_APP\_MSG\_CONNECTING\_FROM\_HTTP\_SERVER}},\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00069}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081}{00069}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081}{WIFI\_APP\_MSG\_STA\_CONNECTED\_GOT\_IP}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00070}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19}{00070}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19}{WIFI\_APP\_MSG\_USER\_REQUESTED\_STA\_DISCONNECT}},\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00071}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f}{00071}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f}{WIFI\_APP\_MSG\_LOAD\_SAVED\_CREDENTIALS}},\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00072}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8}{00072}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8}{WIFI\_APP\_MSG\_STA\_DISCONNECTED}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00073}\mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e}{00073}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e}{WIFI\_APP\_CONNECT\_TO\_STA}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00074}\mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{00074}}\ \}\ \mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\_app\_message\_e}};}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00080}\mbox{\hyperlink{structwifi__app__queue__message}{00080}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structwifi__app__queue__message}{wifi\_app\_queue\_message}}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00081}00081\ \{}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00082}\mbox{\hyperlink{structwifi__app__queue__message_aa1f98d162abc86ed12edebaec160b5c0}{00082}}\ \ \ \ \ \mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\_app\_message\_e}}\ \mbox{\hyperlink{structwifi__app__queue__message_aa1f98d162abc86ed12edebaec160b5c0}{msgID}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00083}\mbox{\hyperlink{wifi__app_8h_a92e7931e4ccac09641270ca66333c912}{00083}}\ \}\ \mbox{\hyperlink{structwifi__app__queue__message__t}{wifi\_app\_queue\_message\_t}};}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00091}\mbox{\hyperlink{structregister__saved}{00091}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structregister__saved}{register\_saved}}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00092}00092\ \{}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00093}\mbox{\hyperlink{structregister__saved_abdbc23e328dea4dd37d4c389b2def6e4}{00093}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_abdbc23e328dea4dd37d4c389b2def6e4}{hour}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00094}\mbox{\hyperlink{structregister__saved_a0f2d950acbdab39a19ad92558a261d9a}{00094}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_a0f2d950acbdab39a19ad92558a261d9a}{min}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00095}\mbox{\hyperlink{structregister__saved_a8da4642b8bffdc289b47d0c04e1c2240}{00095}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_a8da4642b8bffdc289b47d0c04e1c2240}{monday}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00096}\mbox{\hyperlink{structregister__saved_a6babfd97543ca509632364d0f046f151}{00096}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_a6babfd97543ca509632364d0f046f151}{tuesday}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00097}\mbox{\hyperlink{structregister__saved_aeb4ecc5382fb5842c04b686658f8b5d2}{00097}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_aeb4ecc5382fb5842c04b686658f8b5d2}{wednesday}};\ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00098}\mbox{\hyperlink{structregister__saved_a4b5e5f63fc1575132579238f34b8a39e}{00098}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_a4b5e5f63fc1575132579238f34b8a39e}{thursday}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00099}\mbox{\hyperlink{structregister__saved_aaa849983d598a5dd50eb2e89a1cf7b1e}{00099}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_aaa849983d598a5dd50eb2e89a1cf7b1e}{friday}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00100}\mbox{\hyperlink{structregister__saved_a91d0a802df082b80b0bca3fc075e4c7c}{00100}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_a91d0a802df082b80b0bca3fc075e4c7c}{sunday}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00101}\mbox{\hyperlink{structregister__saved_adfbbf086998927415d7099d94995f879}{00101}}\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{structregister__saved_adfbbf086998927415d7099d94995f879}{saturday}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00102}\mbox{\hyperlink{wifi__app_8h_a8ca04b228d2e75b497bad06dd88566af}{00102}}\ \}\ \mbox{\hyperlink{structregister__saved__e}{register\_saved\_e}};}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00109}\mbox{\hyperlink{wifi__app_8h_ab1c7cd65f7d2ab1a577cd0179c779ee6}{00109}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_ab1c7cd65f7d2ab1a577cd0179c779ee6}{obtain\_time}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00115}00115\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_a8a91d7a19b16ddaf60425245284defd7}{connect\_to\_wifi}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00121}00121\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_a1d00e8eaad99ca85a63b4329a60b4f39}{initialize\_registers}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00129}00129\ esp\_err\_t\ \mbox{\hyperlink{wifi__app_8h_ad0657d784ea25871bdc65ab1a0d10b5a}{read\_reg\_data}}(\textcolor{keywordtype}{char}\ *str\_to\_save,\ uint8\_t\ register\_num);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00135}00135\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_aa25117999d3c679ce2ec34f66a4da463}{init\_obtain\_time}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00141}00141\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{wifi__app_8h_af889cf6e5d320085772f871cf468ffb1}{get\_state\_time\_was\_synchronized}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00148}00148\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_a56633849de02c2abb38c9f47ef6fee1f}{save\_reg\_data}}(uint8\_t\ \textcolor{keyword}{register},\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00156}00156\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_a1eb1e37bd21abc738271e8c1a8a876f8}{save\_wifi\_credentials}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *ssid,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *password);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00163}00163\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_af9612dd1f9a3dccde879268af5c87db5}{load\_wifi\_credentials}}(\textcolor{keywordtype}{char}\ *ssid,\ \textcolor{keywordtype}{char}\ *password);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00169}\mbox{\hyperlink{wifi__app_8h_a68f13dd71722bd75ad3dfbe7a709fa99}{00169}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_a68f13dd71722bd75ad3dfbe7a709fa99}{wifi\_app\_connect\_sta}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00176}00176\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_ac29bf6013014643966e099049b102dfd}{check\_sta\_connection\_state}}(\textcolor{keywordtype}{void}\ *pvParameters);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00183}00183\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_acb668c2a5fc2215e71e0688d577f4085}{task\_compare\_hour\_to\_execute\_action}}(\textcolor{keywordtype}{void}\ *pvParameters);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00189}00189\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_a101f4f6f2c139e1ac4d4619328f768d9}{update\_register}}(\textcolor{keywordtype}{int}\ reg\_to\_update);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00197}00197\ BaseType\_t\ \mbox{\hyperlink{wifi__app_8h_aec924a59c0eede746e90c5c04e682fc3}{wifi\_app\_send\_message}}(\mbox{\hyperlink{wifi__app_8h_a61d307eba4836dd61d2630d4bc513c08}{wifi\_app\_message\_e}}\ msgID);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00204}00204\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_ac2af98a9df667dec7b75c10a5717f09d}{wifi\_app\_start}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00210}00210\ wifi\_config\_t*\ \mbox{\hyperlink{wifi__app_8h_acd6606606de84f405065531c1889432a}{wifi\_app\_get\_wifi\_config}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00216}\mbox{\hyperlink{wifi__app_8h_af79551f710f287fae05080e0b8e4de3b}{00216}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_af79551f710f287fae05080e0b8e4de3b}{wifi\_app\_set\_callback}}(\mbox{\hyperlink{wifi__app_8h_a1e6520a64db9bed8110e12b1dcf22445}{wifi\_connected\_event\_callback\_t}}\ cb);}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00222}\mbox{\hyperlink{wifi__app_8h_a8da3123ee9e699631055034de29f9bb5}{00222}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{wifi__app_8h_a8da3123ee9e699631055034de29f9bb5}{wifi\_app\_call\_callback}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00229}\mbox{\hyperlink{wifi__app_8h_a5d07d8b446d099d9791b275a1635a33b}{00229}}\ int8\_t\ \mbox{\hyperlink{wifi__app_8h_a5d07d8b446d099d9791b275a1635a33b}{wifi\_app\_get\_rssi}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00231}00231\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ MAIN\_WIFI\_APP\_H\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{wifi__app_8h_source_l00259}00259\ }
+
+\end{DoxyCode}

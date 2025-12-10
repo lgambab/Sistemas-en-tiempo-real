@@ -1,0 +1,67 @@
+\doxysection{pir\+\_\+driver.\+c}
+\hypertarget{pir__driver_8c_source}{}\label{pir__driver_8c_source}\mbox{\hyperlink{pir__driver_8c}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00027}00027\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{pir__driver_8h}{pir\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00028}00028\ \textcolor{preprocessor}{\#include\ "{}driver/gpio.h"{}}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00031}\mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{00031}}\ \textcolor{keyword}{static}\ gpio\_num\_t\ \mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{s\_pir\_gpio}}\ =\ GPIO\_NUM\_NC;}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00034}\mbox{\hyperlink{pir__driver_8c_ac84d370a4a3a7e50d4d640c54ba08a99}{00034}}\ \textcolor{keyword}{static}\ QueueHandle\_t\ \mbox{\hyperlink{pir__driver_8c_ac84d370a4a3a7e50d4d640c54ba08a99}{s\_pir\_evt\_queue}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00059}\mbox{\hyperlink{pir__driver_8c_a717c58bf39bf14aedb3a011971f640c7}{00059}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ IRAM\_ATTR\ \mbox{\hyperlink{pir__driver_8c_a717c58bf39bf14aedb3a011971f640c7}{pir\_isr\_handler}}(\textcolor{keywordtype}{void}\ *arg)}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00060}00060\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{pir__driver_8c_ac84d370a4a3a7e50d4d640c54ba08a99}{s\_pir\_evt\_queue}}\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00063}00063\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00065}00065\ \ \ \ \ \textcolor{keywordtype}{int}\ level\ =\ gpio\_get\_level(\mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{s\_pir\_gpio}});}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00067}00067\ \ \ \ \ \mbox{\hyperlink{structpir__event__t}{pir\_event\_t}}\ evt\ =\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00068}00068\ \ \ \ \ \ \ \ \ .motion\ =\ (level\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00069}00069\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00071}00071\ \ \ \ \ BaseType\_t\ xHigherPriorityTaskWoken\ =\ pdFALSE;}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00072}00072\ \ \ \ \ xQueueSendFromISR(\mbox{\hyperlink{pir__driver_8c_ac84d370a4a3a7e50d4d640c54ba08a99}{s\_pir\_evt\_queue}},\ \&evt,\ \&xHigherPriorityTaskWoken);}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{if}\ (xHigherPriorityTaskWoken\ ==\ pdTRUE)\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00075}00075\ \ \ \ \ \ \ \ \ portYIELD\_FROM\_ISR();}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00076}00076\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00077}00077\ \}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00102}\mbox{\hyperlink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{00102}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pir__driver_8c_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\_init}}(gpio\_num\_t\ pir\_gpio,\ QueueHandle\_t\ pir\_queue)}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00103}00103\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00104}00104\ \ \ \ \ \mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{s\_pir\_gpio}}\ =\ pir\_gpio;}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00105}00105\ \ \ \ \ \mbox{\hyperlink{pir__driver_8c_ac84d370a4a3a7e50d4d640c54ba08a99}{s\_pir\_evt\_queue}}\ =\ pir\_queue;}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00107}00107\ \ \ \ \ \textcolor{comment}{//\ Configuración\ del\ GPIO\ como\ entrada\ con\ detección\ de\ flancos}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00108}00108\ \ \ \ \ gpio\_config\_t\ io\_conf\ =\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00109}00109\ \ \ \ \ \ \ \ \ .pin\_bit\_mask\ \ =\ 1ULL\ <<\ \mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{s\_pir\_gpio}},\ \ \ \ \ \ \ \textcolor{comment}{//\ Máscara\ de\ bits\ para\ el\ pin}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00110}00110\ \ \ \ \ \ \ \ \ .mode\ \ \ \ \ \ \ \ \ \ =\ GPIO\_MODE\_INPUT,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Modo\ entrada}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00111}00111\ \ \ \ \ \ \ \ \ .pull\_up\_en\ \ \ \ =\ GPIO\_PULLUP\_DISABLE,\ \ \ \ \ \ \textcolor{comment}{//\ Sin\ pull-\/up\ (sensor\ lo\ incluye)}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00112}00112\ \ \ \ \ \ \ \ \ .pull\_down\_en\ \ =\ GPIO\_PULLDOWN\_DISABLE,\ \ \ \ \textcolor{comment}{//\ Sin\ pull-\/down}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00113}00113\ \ \ \ \ \ \ \ \ .intr\_type\ \ \ \ \ =\ GPIO\_INTR\_ANYEDGE\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Interrupción\ en\ ambos\ flancos}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Alternativa:\ GPIO\_INTR\_POSEDGE\ para\ solo\ flanco\ de\ subida}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00115}00115\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00117}00117\ \ \ \ \ gpio\_config(\&io\_conf);}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00119}00119\ \ \ \ \ \textcolor{comment}{//\ Instalar\ servicio\ global\ de\ ISR\ (solo\ primera\ vez)}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00120}00120\ \ \ \ \ \textcolor{comment}{//\ Flags=0\ usa\ valores\ por\ defecto}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00121}00121\ \ \ \ \ gpio\_install\_isr\_service(0);}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00123}00123\ \ \ \ \ \textcolor{comment}{//\ Registrar\ ISR\ específica\ para\ este\ pin}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00124}00124\ \ \ \ \ gpio\_isr\_handler\_add(\mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{s\_pir\_gpio}},\ \mbox{\hyperlink{pir__driver_8c_a717c58bf39bf14aedb3a011971f640c7}{pir\_isr\_handler}},\ NULL);}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00125}00125\ \}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00146}\mbox{\hyperlink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{00146}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{pir__driver_8c_a81ffd3f243f99fd46341ee96793e6310}{pir\_is\_motion\_active}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00147}00147\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{s\_pir\_gpio}}\ ==\ GPIO\_NUM\_NC)\ \{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00150}00150\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00151}00151\ \ \ \ \ \textcolor{keywordtype}{int}\ level\ =\ gpio\_get\_level(\mbox{\hyperlink{pir__driver_8c_a40e6d5e02e46c056df3474a8372375a2}{s\_pir\_gpio}});}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{return}\ (level\ ==\ 1);}
+\DoxyCodeLine{\Hypertarget{pir__driver_8c_source_l00153}00153\ \}}
+
+\end{DoxyCode}

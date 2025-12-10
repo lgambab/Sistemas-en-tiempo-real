@@ -1,0 +1,242 @@
+\doxysection{Referencia del archivo pir\+\_\+driver.\+h}
+\hypertarget{pir__driver_8h}{}\label{pir__driver_8h}\index{pir\_driver.h@{pir\_driver.h}}
+
+
+Driver para sensor PIR (Passive Infrared) de detección de movimiento.  
+
+
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/queue.\+h"{}}\newline
+{\ttfamily \#include "{}driver/gpio.\+h"{}}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+\doxysubsubsection*{Estructuras de datos}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structpir__event__t}{pir\+\_\+event\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Evento enviado por la cola cuando el PIR detecta cambio. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\+\_\+init}} (gpio\+\_\+num\+\_\+t pir\+\_\+gpio, Queue\+Handle\+\_\+t pir\+\_\+queue)
+\begin{DoxyCompactList}\small\item\em Inicializa el sensor PIR con ISR o polling. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\+\_\+is\+\_\+motion\+\_\+active}} (void)
+\begin{DoxyCompactList}\small\item\em Lee el estado actual del sensor PIR (polling). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Driver para sensor PIR (Passive Infrared) de detección de movimiento. 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Versión}
+1.\+0
+\end{DoxyVersion}
+Este módulo proporciona driver para sensores PIR HC-\/\+SR501 o compatibles. El sensor detecta movimiento mediante cambios en la radiación infrarroja.
+
+{\bfseries{Hardware\+:}}
+\begin{DoxyItemize}
+\item Sensor PIR HC-\/\+SR501 (o compatible)
+\item Pin OUT conectado a GPIO 35 (configurable)
+\item VCC\+: 5V, GND\+: GND
+\item Salida digital\+: HIGH cuando detecta movimiento
+\end{DoxyItemize}
+
+{\bfseries{Modos de operación\+:}}
+\begin{DoxyEnumerate}
+\item {\bfseries{Polling\+:}} Llamar \doxylink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\+\_\+is\+\_\+motion\+\_\+active()} periódicamente
+\item {\bfseries{Interrupt\+:}} Pasar una cola a \doxylink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\+\_\+init()} para recibir eventos
+\end{DoxyEnumerate}
+
+{\bfseries{Configuración del sensor HC-\/\+SR501\+:}}
+\begin{DoxyItemize}
+\item Delay time\+: Ajusta cuánto tiempo permanece HIGH después de detección
+\item Sensitivity\+: Ajusta el rango de detección (3-\/7 metros típico)
+\item Trigger mode\+: Repeatable (H) o Non-\/repeatable (L)
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Nota}
+Este driver soporta tanto ISR como polling 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{sensor__task_8c}{sensor\+\_\+task.\+c} Para integración con sistema de sensores 
+\end{DoxySeeAlso}
+
+
+Definición en el archivo \mbox{\hyperlink{pir__driver_8h_source}{pir\+\_\+driver.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{pir__driver_8h_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}\index{pir\_driver.h@{pir\_driver.h}!pir\_init@{pir\_init}}
+\index{pir\_init@{pir\_init}!pir\_driver.h@{pir\_driver.h}}
+\doxysubsubsection{\texorpdfstring{pir\_init()}{pir\_init()}}
+{\footnotesize\ttfamily \label{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d} 
+void pir\+\_\+init (\begin{DoxyParamCaption}\item[{gpio\+\_\+num\+\_\+t}]{pir\+\_\+gpio}{, }\item[{Queue\+Handle\+\_\+t}]{pir\+\_\+queue}{}\end{DoxyParamCaption})}
+
+
+
+Inicializa el sensor PIR con ISR o polling. 
+
+Configura el GPIO como entrada y opcionalmente registra una ISR para detectar cambios automáticamente.
+
+{\bfseries{Configuración del GPIO\+:}}
+\begin{DoxyItemize}
+\item Modo\+: INPUT
+\item Pull-\/up\+: Deshabilitado (sensor tiene pull-\/up interno)
+\item Pull-\/down\+: Deshabilitado
+\item Interrupción\+: Ambos flancos (ANYEDGE) para detectar inicio y fin
+\end{DoxyItemize}
+
+{\bfseries{Con cola (modo interrupt)\+:}}
+\begin{DoxyItemize}
+\item Cada cambio en el pin dispara ISR
+\item ISR envía evento a la cola
+\item Tarea puede esperar en x\+Queue\+Receive()
+\end{DoxyItemize}
+
+{\bfseries{Sin cola (modo polling)\+:}}
+\begin{DoxyItemize}
+\item Pasar NULL como pir\+\_\+queue
+\item Llamar \doxylink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\+\_\+is\+\_\+motion\+\_\+active()} periódicamente
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em pir\+\_\+gpio} & Pin GPIO donde está conectado el sensor (ej\+: GPIO\+\_\+\+NUM\+\_\+35) \\
+\hline
+\mbox{\texttt{in}}  & {\em pir\+\_\+queue} & Cola para eventos (puede ser NULL para modo polling)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Atención}
+Llamar solo una vez durante inicialización 
+
+Si se usa cola, crearla antes con x\+Queue\+Create()
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Instala servicio ISR global si aún no está instalado
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\+\_\+is\+\_\+motion\+\_\+active()} Para lectura directa sin cola
+\end{DoxySeeAlso}
+Inicializa el sensor PIR con ISR o polling.
+
+Secuencia de inicialización\+:
+\begin{DoxyEnumerate}
+\item Guarda parámetros en variables estáticas
+\item Configura GPIO como entrada sin pull-\/up/down
+\item Habilita interrupción en ambos flancos (ANYEDGE)
+\item Instala servicio ISR global (si no existe)
+\item Registra handler específico para este pin
+\end{DoxyEnumerate}
+
+{\bfseries{Configuración GPIO\+:}}
+\begin{DoxyItemize}
+\item Modo INPUT\+: Lee nivel lógico del sensor
+\item Sin pull-\/up/down\+: Sensor tiene electrónica interna
+\item ANYEDGE\+: Detecta inicio (LOW→\+HIGH) y fin (HIGH→\+LOW)
+\end{DoxyItemize}
+
+{\bfseries{Alternativa solo subida\+:}} Cambiar a GPIO\+\_\+\+INTR\+\_\+\+POSEDGE para solo notificar inicio de movimiento.
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em pir\+\_\+gpio} & Pin GPIO (ej\+: GPIO\+\_\+\+NUM\+\_\+35) \\
+\hline
+\mbox{\texttt{in}}  & {\em pir\+\_\+queue} & Cola Free\+RTOS o NULL para modo polling \\
+\hline
+\end{DoxyParams}
+
+
+Definición en la línea \mbox{\hyperlink{pir__driver_8c_source_l00102}{102}} del archivo \mbox{\hyperlink{pir__driver_8c_source}{pir\+\_\+driver.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{pir__driver_8c_source_l00059}{pir\+\_\+isr\+\_\+handler()}}, \mbox{\hyperlink{pir__driver_8c_source_l00034}{s\+\_\+pir\+\_\+evt\+\_\+queue}} y \mbox{\hyperlink{pir__driver_8c_source_l00031}{s\+\_\+pir\+\_\+gpio}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00402}{sensors\+\_\+init()}}.
+
+\Hypertarget{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}\index{pir\_driver.h@{pir\_driver.h}!pir\_is\_motion\_active@{pir\_is\_motion\_active}}
+\index{pir\_is\_motion\_active@{pir\_is\_motion\_active}!pir\_driver.h@{pir\_driver.h}}
+\doxysubsubsection{\texorpdfstring{pir\_is\_motion\_active()}{pir\_is\_motion\_active()}}
+{\footnotesize\ttfamily \label{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310} 
+bool pir\+\_\+is\+\_\+motion\+\_\+active (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Lee el estado actual del sensor PIR (polling). 
+
+Lee directamente el nivel lógico del GPIO configurado. Útil para modo polling sin necesidad de ISR/cola.
+
+{\bfseries{Interpretación\+:}}
+\begin{DoxyItemize}
+\item true (HIGH)\+: Sensor detecta movimiento ahora
+\item false (LOW)\+: No hay movimiento detectado
+\end{DoxyItemize}
+
+{\bfseries{Uso recomendado\+:}} Llamar desde tarea periódica (cada 1-\/2 segundos) en modo polling, o desde sensor\+\_\+task para centralización thread-\/safe.
+
+\begin{DoxyReturn}{Devuelve}
+bool Estado del sensor 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em true} & Movimiento detectado (pin en HIGH) \\
+\hline
+{\em false} & Sin movimiento (pin en LOW) \\
+\hline
+{\em false} & Si el sensor no ha sido inicializado\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Nota}
+Thread-\/safe\+: solo lectura de GPIO 
+
+Tiempo de ejecución\+: \texorpdfstring{$<$}{<}1μs
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\+\_\+init()} Debe llamarse antes de usar esta función 
+
+\doxylink{sensor__task_8c}{sensor\+\_\+task.\+c} Integración con sistema de sensores
+\end{DoxySeeAlso}
+Lee el estado actual del sensor PIR (polling).
+
+Lee directamente el nivel del GPIO sin usar interrupciones.
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Verifica que el GPIO esté inicializado
+\item Lee nivel con gpio\+\_\+get\+\_\+level()
+\item Retorna true si nivel es HIGH (1)
+\end{DoxyEnumerate}
+
+{\bfseries{Seguridad\+:}} Si el sensor no se inicializó, retorna false para evitar lecturas erróneas.
+
+\begin{DoxyReturn}{Devuelve}
+bool Estado actual del sensor 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em true} & Movimiento detectado (GPIO HIGH) \\
+\hline
+{\em false} & Sin movimiento o sensor no inicializado \\
+\hline
+\end{DoxyRetVals}
+
+
+Definición en la línea \mbox{\hyperlink{pir__driver_8c_source_l00146}{146}} del archivo \mbox{\hyperlink{pir__driver_8c_source}{pir\+\_\+driver.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{pir__driver_8c_source_l00031}{s\+\_\+pir\+\_\+gpio}}.
+
+
+
+Referenciado por \mbox{\hyperlink{fan__control_8c_source_l00184}{fan\+\_\+control\+\_\+set\+\_\+mode()}}, \mbox{\hyperlink{fan__control_8c_source_l00367}{fan\+\_\+control\+\_\+update()}} y \mbox{\hyperlink{http__server_8c_source_l00935}{http\+\_\+server\+\_\+get\+\_\+dht\+\_\+sensor\+\_\+readings\+\_\+json\+\_\+handler()}}.
+

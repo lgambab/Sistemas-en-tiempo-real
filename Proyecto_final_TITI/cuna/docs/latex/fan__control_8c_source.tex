@@ -1,0 +1,185 @@
+\doxysection{fan\+\_\+control.\+c}
+\hypertarget{fan__control_8c_source}{}\label{fan__control_8c_source}\mbox{\hyperlink{fan__control_8c}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00054}00054\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{fan__control_8h}{fan\_control.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00055}00055\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{fan__driver_8h}{fan\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00058}00058\ \textcolor{preprocessor}{\#include\ "{}esp\_adc/adc\_oneshot.h"{}}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00059}00059\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ntc__driver_8h}{ntc\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00060}00060\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{pir__driver_8h}{pir\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00071}00071\ \textcolor{keyword}{extern}\ adc\_oneshot\_unit\_handle\_t\ \mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00074}\mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{00074}}\ \textcolor{keyword}{static}\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\_mode\_t}}\ \mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}}\ =\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{FAN\_MODE\_MANUAL}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00077}\mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{00077}}\ \textcolor{keyword}{static}\ uint8\_t\ \ \ \ \mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{s\_manual\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00090}\mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{00090}}\ \textcolor{keyword}{static}\ uint8\_t\ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00099}\mbox{\hyperlink{fan__control_8c_a467bf28438d9df5e52781cf33cc0fd24}{00099}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_a467bf28438d9df5e52781cf33cc0fd24}{s\_reg\_active}}\ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00103}\mbox{\hyperlink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{00103}}\ \textcolor{keyword}{static}\ uint8\_t\ \mbox{\hyperlink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{compute\_auto\_speed}}(\textcolor{keywordtype}{float}\ temp\_c)}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00104}00104\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00105}00105\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00106}00106\ \textcolor{comment}{\ \ \ \ \ \ \ \ Reglas:}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00107}00107\ \textcolor{comment}{\ \ \ \ \ \ \ \ -\/\ <\ 25°C\ =>\ 0\%}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00108}00108\ \textcolor{comment}{\ \ \ \ \ \ \ \ -\/\ 25–30°C\ =>\ proporcional}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00109}00109\ \textcolor{comment}{\ \ \ \ \ \ \ \ -\/\ >\ 30°C\ =>\ 100\%}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00110}00110\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00112}00112\ \ \ \ \ \textcolor{keywordflow}{if}\ (temp\_c\ <\ 25.0f)\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00114}00114\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00116}00116\ \ \ \ \ \textcolor{keywordflow}{if}\ (temp\_c\ >=\ 30.0f)\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 100;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00118}00118\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00120}00120\ \ \ \ \ \textcolor{comment}{//\ Mapeo\ lineal\ 25\ →\ 0\%\ \ \ 30\ →\ 100\%}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00121}00121\ \ \ \ \ \textcolor{keywordtype}{float}\ scale\ =\ (temp\_c\ -\/\ 25.0f)\ /\ 5.0f;\ \ \textcolor{comment}{//\ 0\ a\ 1}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{return}\ (uint8\_t)(scale\ *\ 100.0f);}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00123}00123\ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00146}\mbox{\hyperlink{fan__control_8h_a50dd23e7bf63c1ba17d8d81770e03186}{00146}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8c_a50dd23e7bf63c1ba17d8d81770e03186}{fan\_control\_init}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00147}00147\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00148}00148\ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a648b7e106efd21e3948d16df84409906}{fan\_init}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00149}00149\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}}\ =\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{FAN\_MODE\_MANUAL}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00150}00150\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{s\_manual\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00151}00151\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00152}00152\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_a467bf28438d9df5e52781cf33cc0fd24}{s\_reg\_active}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00153}00153\ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00154}00154\ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00184}\mbox{\hyperlink{fan__control_8h_ad70079e6a01813020cce4bb17aa7db48}{00184}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8c_ad70079e6a01813020cce4bb17aa7db48}{fan\_control\_set\_mode}}(\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\_mode\_t}}\ mode)}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00185}00185\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00186}00186\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}}\ =\ mode;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00188}00188\ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}})\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00190}00190\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{FAN\_MODE\_MANUAL}}:}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00191}00191\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ usa\ directamente\ la\ velocidad\ del\ slider}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ \mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{s\_manual\_speed}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00193}00193\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(\mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00196}00196\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c}{FAN\_MODE\_AUTO}}:\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00197}00197\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Al\ cambiar\ a\ AUTO,\ aplicamos\ una\ primera\ vez\ lógica\ NTC+PIR}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}}\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00202}00202\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ temp\_c\ =\ \mbox{\hyperlink{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}{leer\_temperatura\_celsius}}(\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (temp\_c\ <\ -\/100.0f)\ \{\ \textcolor{comment}{//\ error\ NTC}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00209}00209\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ motion\ =\ \mbox{\hyperlink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\_is\_motion\_active}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!motion)\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00218}00218\ \ \ \ \ \ \ \ \ uint8\_t\ spd\ =\ \mbox{\hyperlink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{compute\_auto\_speed}}(temp\_c);}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00219}00219\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ spd;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00220}00220\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(\mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00221}00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00222}00222\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00224}00224\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418}{FAN\_MODE\_REGISTERS}}:}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{fan__control_8c_a467bf28438d9df5e52781cf33cc0fd24}{s\_reg\_active}})\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ \mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{s\_manual\_speed}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(\mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00228}00228\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00231}00231\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00232}00232\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00233}00233\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00234}00234\ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00244}\mbox{\hyperlink{fan__control_8h_aa08b3a03f8ea8e144f8ec933c5204e45}{00244}}\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\_mode\_t}}\ \mbox{\hyperlink{fan__control_8c_aa08b3a03f8ea8e144f8ec933c5204e45}{fan\_control\_get\_mode}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00245}00245\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00247}00247\ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00266}\mbox{\hyperlink{fan__control_8h_a86862beca4b5da7bd5bdb3a9973f88f6}{00266}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8c_a86862beca4b5da7bd5bdb3a9973f88f6}{fan\_control\_set\_manual\_speed}}(uint8\_t\ percent)}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00267}00267\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{if}\ (percent\ >\ 100)\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00269}00269\ \ \ \ \ \ \ \ \ percent\ =\ 100;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00270}00270\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00271}00271\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{s\_manual\_speed}}\ =\ percent;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00273}00273\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}}\ ==\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{FAN\_MODE\_MANUAL}})\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00274}00274\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ \mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{s\_manual\_speed}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00275}00275\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(\mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00276}00276\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00277}00277\ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00292}\mbox{\hyperlink{fan__control_8h_a11f10e096c3158f9adb5d3930fab3b25}{00292}}\ uint8\_t\ \mbox{\hyperlink{fan__control_8c_a11f10e096c3158f9adb5d3930fab3b25}{fan\_control\_get\_speed}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00293}00293\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00294}00294\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}};\ \ \textcolor{comment}{//\ Devolver\ velocidad\ REAL\ del\ PWM,\ no\ del\ slider}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00295}00295\ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00318}\mbox{\hyperlink{fan__control_8h_a4d1476e55b973e30892503e7f955ef71}{00318}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8c_a4d1476e55b973e30892503e7f955ef71}{fan\_control\_on\_register\_tick}}(\textcolor{keywordtype}{bool}\ any\_match\_now)}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00319}00319\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00320}00320\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_a467bf28438d9df5e52781cf33cc0fd24}{s\_reg\_active}}\ =\ any\_match\_now;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00322}00322\ \ \ \ \ \textcolor{comment}{//\ Solo\ tiene\ efecto\ en\ modo\ REGISTROS}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00323}00323\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}}\ !=\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418}{FAN\_MODE\_REGISTERS}})\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00325}00325\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00327}00327\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{fan__control_8c_a467bf28438d9df5e52781cf33cc0fd24}{s\_reg\_active}})\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Aquí\ decides\ a\ qué\ velocidad\ se\ enciende\ cuando\ un\ registro\ coincide.}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Yo\ uso\ la\ velocidad\ del\ slider\ (s\_manual\_speed).}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00330}00330\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ \mbox{\hyperlink{fan__control_8c_a218b51aa1f08e6d629c6d70d42f13ae6}{s\_manual\_speed}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00331}00331\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(\mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00332}00332\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00333}00333\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ningún\ registro\ activo\ →\ ventilador\ apagado}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00335}00335\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00336}00336\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00337}00337\ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00367}\mbox{\hyperlink{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}{00367}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8c_a35e59d87579aeab44fae1a8dd1a53872}{fan\_control\_update}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00368}00368\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00369}00369\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{fan__control_8c_ad34a59e72dd57c8ec0e073918128c855}{s\_mode}}\ !=\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c}{FAN\_MODE\_AUTO}})\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00370}00370\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00371}00371\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00372}00372\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00373}00373\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}}\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00374}00374\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00375}00375\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00376}00376\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00377}00377\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00379}00379\ \ \ \ \ \textcolor{keywordtype}{float}\ temp\_c\ =\ \mbox{\hyperlink{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}{leer\_temperatura\_celsius}}(\mbox{\hyperlink{http__server_8c_a9d32fbbbd38b5977b829e778d1f2eab6}{s\_ntc\_adc\_handle}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{if}\ (temp\_c\ <\ -\/100.0f)\ \{\ \textcolor{comment}{//\ error\ NTC}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00382}00382\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00383}00383\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00384}00384\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00386}00386\ \ \ \ \ \textcolor{keywordtype}{bool}\ motion\ =\ \mbox{\hyperlink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\_is\_motion\_active}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00387}00387\ \ \ \ \ \textcolor{keywordflow}{if}\ (!motion)\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00388}00388\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}();}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00391}00391\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00393}00393\ \ \ \ \ uint8\_t\ auto\_speed\ =\ \mbox{\hyperlink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{compute\_auto\_speed}}(temp\_c);}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00394}00394\ \ \ \ \ \mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}}\ =\ auto\_speed;}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00395}00395\ \ \ \ \ \mbox{\hyperlink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(\mbox{\hyperlink{fan__control_8c_abb1293ba189348243de8cf43fa87befe}{s\_current\_speed}});}
+\DoxyCodeLine{\Hypertarget{fan__control_8c_source_l00396}00396\ \}}
+
+\end{DoxyCode}

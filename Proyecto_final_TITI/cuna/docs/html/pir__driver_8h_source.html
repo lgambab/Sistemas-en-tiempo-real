@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Archivo de código fuente pir_driver.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('pir__driver_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">pir_driver.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="pir__driver_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#ifndef PIR_DRIVER_H</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#define PIR_DRIVER_H</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;freertos/FreeRTOS.h&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;freertos/queue.h&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &quot;driver/gpio.h&quot;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="foldopen" id="foldopen00062" data-start="{" data-end="};">
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="structpir__event__t.html">   62</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="structpir__event__t.html#a004644a6ca1a85e87991196121348589">   63</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structpir__event__t.html#a004644a6ca1a85e87991196121348589">motion</a>;  </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} <a class="code hl_struct" href="structpir__event__t.html">pir_event_t</a>;</div>
+</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keywordtype">void</span> <a class="code hl_function" href="pir__driver_8h.html#a27ed60104c030cfcf7d4d4cb5d79529d">pir_init</a>(gpio_num_t pir_gpio, QueueHandle_t pir_queue);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keywordtype">bool</span> <a class="code hl_function" href="pir__driver_8h.html#a81ffd3f243f99fd46341ee96793e6310">pir_is_motion_active</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#endif </span><span class="comment">// PIR_DRIVER_H</span></div>
+<div class="ttc" id="apir__driver_8h_html_a27ed60104c030cfcf7d4d4cb5d79529d"><div class="ttname"><a href="pir__driver_8h.html#a27ed60104c030cfcf7d4d4cb5d79529d">pir_init</a></div><div class="ttdeci">void pir_init(gpio_num_t pir_gpio, QueueHandle_t pir_queue)</div><div class="ttdoc">Inicializa el sensor PIR con ISR o polling.</div><div class="ttdef"><b>Definition</b> <a href="pir__driver_8c_source.html#l00102">pir_driver.c:102</a></div></div>
+<div class="ttc" id="apir__driver_8h_html_a81ffd3f243f99fd46341ee96793e6310"><div class="ttname"><a href="pir__driver_8h.html#a81ffd3f243f99fd46341ee96793e6310">pir_is_motion_active</a></div><div class="ttdeci">bool pir_is_motion_active(void)</div><div class="ttdoc">Lee el estado actual del sensor PIR (polling).</div><div class="ttdef"><b>Definition</b> <a href="pir__driver_8c_source.html#l00146">pir_driver.c:146</a></div></div>
+<div class="ttc" id="astructpir__event__t_html"><div class="ttname"><a href="structpir__event__t.html">pir_event_t</a></div><div class="ttdoc">Evento enviado por la cola cuando el PIR detecta cambio.</div><div class="ttdef"><b>Definition</b> <a href="#l00062">pir_driver.h:62</a></div></div>
+<div class="ttc" id="astructpir__event__t_html_a004644a6ca1a85e87991196121348589"><div class="ttname"><a href="structpir__event__t.html#a004644a6ca1a85e87991196121348589">pir_event_t::motion</a></div><div class="ttdeci">bool motion</div><div class="ttdoc">true = movimiento detectado (pin HIGH), false = sin movimiento (pin LOW)</div><div class="ttdef"><b>Definition</b> <a href="#l00063">pir_driver.h:63</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="pir__driver_8h.html">pir_driver.h</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

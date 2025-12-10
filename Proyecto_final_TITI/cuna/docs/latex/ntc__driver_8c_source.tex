@@ -1,0 +1,73 @@
+\doxysection{ntc\+\_\+driver.\+c}
+\hypertarget{ntc__driver_8c_source}{}\label{ntc__driver_8c_source}\mbox{\hyperlink{ntc__driver_8c}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00031}00031\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ntc__driver_8h}{ntc\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00034}00034\ \textcolor{preprocessor}{\#include\ <math.h>}\ \textcolor{comment}{//\ Librería\ matemática\ para\ cálculos\ como\ el\ logaritmo.}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00043}\mbox{\hyperlink{group___n_t_c___config_gaab698d1720ec12184b8f90284dfc1989}{00043}}\ \textcolor{preprocessor}{\#define\ CANAL\_ADC\_NTC\ \ \ \ \ \ \ \ \ \ \ \ \ ADC\_CHANNEL\_6}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00046}\mbox{\hyperlink{group___n_t_c___config_ga0b5710d629a92ab78b76dafb7625d4c7}{00046}}\ \textcolor{preprocessor}{\#define\ RESISTENCIA\_DIVISOR\ \ \ \ \ \ \ 10000.0f}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00049}\mbox{\hyperlink{group___n_t_c___config_gaaf0c0341e36fba4dc5555bef640b6978}{00049}}\ \textcolor{preprocessor}{\#define\ RESISTENCIA\_NOMINAL\_NTC\ \ \ 10000.0f}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00052}\mbox{\hyperlink{group___n_t_c___config_ga44dc29ba897a295c6397380687a37dcd}{00052}}\ \textcolor{preprocessor}{\#define\ TEMP\_NOMINAL\_NTC\ \ \ \ \ \ \ \ \ \ 25.0f}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00066}\mbox{\hyperlink{group___n_t_c___config_gaa6e2ce3f615e6caf26e6793eb737ef0f}{00066}}\ \textcolor{preprocessor}{\#define\ COEFICIENTE\_BETA\_NTC\ \ \ \ \ \ 3950.0f}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00069}\mbox{\hyperlink{group___n_t_c___config_gad21f063c8f3d6a454d15745fa56bd04c}{00069}}\ \textcolor{preprocessor}{\#define\ VOLTAJE\_REFERENCIA\_MV\ \ \ \ \ 3300.0f}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00070}00070\ \ \textcolor{comment}{//\ end\ of\ NTC\_Config}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00087}\mbox{\hyperlink{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419}{00087}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{ntc__driver_8c_ac0d3ab5a8c2f8e723a1fde7e1666e419}{inicializar\_ntc}}(adc\_oneshot\_unit\_handle\_t\ manejador\_adc)\ \{}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00088}00088\ \ \ \ \ \textcolor{comment}{//\ Estructura\ de\ configuración\ del\ canal\ ADC}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00089}00089\ \ \ \ \ adc\_oneshot\_chan\_cfg\_t\ config\ =\ \{}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00090}00090\ \ \ \ \ \ \ \ \ .atten\ =\ ADC\_ATTEN\_DB\_12,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Atenuación\ 12dB:\ rango\ 0-\/3.3V}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00091}00091\ \ \ \ \ \ \ \ \ .bitwidth\ =\ ADC\_BITWIDTH\_DEFAULT,\ \ \ \textcolor{comment}{//\ Resolución\ 12\ bits\ (4096\ niveles)}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00092}00092\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00093}00093\ \ \ \ \ \textcolor{comment}{//\ Aplica\ la\ configuración\ al\ canal\ del\ NTC}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00094}00094\ \ \ \ \ adc\_oneshot\_config\_channel(manejador\_adc,\ \mbox{\hyperlink{group___n_t_c___config_gaab698d1720ec12184b8f90284dfc1989}{CANAL\_ADC\_NTC}},\ \&config);}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00095}00095\ \}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00122}\mbox{\hyperlink{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}{00122}}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{ntc__driver_8c_ad95666f05070d139a7b670e924e5b1be}{leer\_temperatura\_celsius}}(adc\_oneshot\_unit\_handle\_t\ manejador\_adc)\ \{}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00123}00123\ \ \ \ \ \textcolor{keywordtype}{int}\ valor\_adc\_raw;}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00124}00124\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00125}00125\ \ \ \ \ \textcolor{comment}{//\ PASO\ 1:\ Leer\ valor\ digital\ del\ ADC\ (0\ a\ 4095)}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00126}00126\ \ \ \ \ adc\_oneshot\_read(manejador\_adc,\ \mbox{\hyperlink{group___n_t_c___config_gaab698d1720ec12184b8f90284dfc1989}{CANAL\_ADC\_NTC}},\ \&valor\_adc\_raw);}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00128}00128\ \ \ \ \ \textcolor{comment}{//\ PASO\ 2:\ Convertir\ valor\ digital\ a\ voltaje\ analógico}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00129}00129\ \ \ \ \ \textcolor{comment}{//\ Fórmula:\ V\ =\ (ADC\ /\ ADC\_max)\ *\ V\_ref}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00130}00130\ \ \ \ \ \textcolor{keywordtype}{float}\ voltaje\_mv\ =\ (valor\_adc\_raw\ *\ \mbox{\hyperlink{group___n_t_c___config_gad21f063c8f3d6a454d15745fa56bd04c}{VOLTAJE\_REFERENCIA\_MV}})\ /\ 4095.0f;}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00132}00132\ \ \ \ \ \textcolor{comment}{//\ Validación:\ Detectar\ circuito\ abierto\ (NTC\ desconectado)}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00133}00133\ \ \ \ \ \textcolor{comment}{//\ Si\ V\ ≥\ V\_ref,\ no\ hay\ caída\ de\ voltaje\ en\ R\_div\ →\ circuito\ abierto}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00134}00134\ \ \ \ \ \textcolor{keywordflow}{if}\ (voltaje\_mv\ >=\ \mbox{\hyperlink{group___n_t_c___config_gad21f063c8f3d6a454d15745fa56bd04c}{VOLTAJE\_REFERENCIA\_MV}})\ \{}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/999.0f;\ \textcolor{comment}{//\ Código\ de\ error:\ circuito\ abierto}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00136}00136\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00138}00138\ \ \ \ \ \textcolor{comment}{//\ PASO\ 3:\ Calcular\ resistencia\ del\ NTC\ usando\ divisor\ de\ voltaje}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00139}00139\ \ \ \ \ \textcolor{comment}{//\ Del\ divisor\ de\ voltaje:\ V\_out\ =\ V\_in\ *\ (R\_ntc\ /\ (R\_div\ +\ R\_ntc))}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00140}00140\ \ \ \ \ \textcolor{comment}{//\ Despejando\ R\_ntc:\ R\_ntc\ =\ R\_div\ *\ V\_out\ /\ (V\_in\ -\/\ V\_out)}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00141}00141\ \ \ \ \ \textcolor{keywordtype}{float}\ resistencia\_ntc\ =\ \mbox{\hyperlink{group___n_t_c___config_ga0b5710d629a92ab78b76dafb7625d4c7}{RESISTENCIA\_DIVISOR}}\ *\ voltaje\_mv\ /\ (\mbox{\hyperlink{group___n_t_c___config_gad21f063c8f3d6a454d15745fa56bd04c}{VOLTAJE\_REFERENCIA\_MV}}\ -\/\ voltaje\_mv);}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00142}00142\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00143}00143\ \ \ \ \ \textcolor{comment}{//\ Validación:\ Detectar\ cortocircuito\ o\ error\ de\ cálculo}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00144}00144\ \ \ \ \ \textcolor{keywordflow}{if}\ (resistencia\_ntc\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/999.0f;\ \textcolor{comment}{//\ Código\ de\ error:\ resistencia\ inválida}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00146}00146\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00148}00148\ \ \ \ \ \textcolor{comment}{//\ PASO\ 4:\ Aplicar\ ecuación\ de\ Steinhart-\/Hart\ simplificada\ con\ Beta}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00149}00149\ \ \ \ \ \textcolor{comment}{//\ Fórmula:\ 1/T\ =\ 1/T0\ +\ (1/B)\ *\ ln(R/R0)}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00150}00150\ \ \ \ \ \textcolor{comment}{//\ Donde:\ T\ y\ T0\ en\ Kelvin,\ B\ en\ Kelvin,\ R\ y\ R0\ en\ Ohms}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00151}00151\ \ \ \ \ \textcolor{keywordtype}{float}\ steinhart\ =\ log(resistencia\_ntc\ /\ \mbox{\hyperlink{group___n_t_c___config_gaaf0c0341e36fba4dc5555bef640b6978}{RESISTENCIA\_NOMINAL\_NTC}})\ /\ \mbox{\hyperlink{group___n_t_c___config_gaa6e2ce3f615e6caf26e6793eb737ef0f}{COEFICIENTE\_BETA\_NTC}};}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00152}00152\ \ \ \ \ steinhart\ +=\ 1.0\ /\ (\mbox{\hyperlink{group___n_t_c___config_ga44dc29ba897a295c6397380687a37dcd}{TEMP\_NOMINAL\_NTC}}\ +\ 273.15);\ \textcolor{comment}{//\ Suma\ 1/T0\ (T0\ en\ Kelvin)}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00153}00153\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00154}00154\ \ \ \ \ \textcolor{comment}{//\ PASO\ 5:\ Convertir\ de\ Kelvin\ a\ Celsius}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00155}00155\ \ \ \ \ \textcolor{comment}{//\ T\_celsius\ =\ T\_kelvin\ -\/\ 273.15}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00156}00156\ \ \ \ \ \textcolor{comment}{//\ Nota:\ steinhart\ contiene\ 1/T,\ por\ eso\ se\ invierte\ primero}}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00157}00157\ \ \ \ \ \textcolor{keywordflow}{return}\ (1.0\ /\ steinhart)\ -\/\ 273.15;}
+\DoxyCodeLine{\Hypertarget{ntc__driver_8c_source_l00158}00158\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,426 @@
+\doxysection{registers.\+c}
+\hypertarget{registers_8c_source}{}\label{registers_8c_source}\mbox{\hyperlink{registers_8c}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00057}00057\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00058}00058\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00059}00059\ \textcolor{preprocessor}{\#include\ <time.h>}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00061}00061\ \textcolor{preprocessor}{\#include\ "{}sdkconfig.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00062}00062\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{registers_8h}{registers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00064}00064\ \textcolor{preprocessor}{\#include\ "{}esp\_http\_server.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00065}00065\ \textcolor{preprocessor}{\#include\ "{}esp\_log.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00066}00066\ \textcolor{preprocessor}{\#include\ "{}nvs\_flash.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00067}00067\ \textcolor{preprocessor}{\#include\ "{}nvs.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00068}00068\ \textcolor{preprocessor}{\#include\ "{}cJSON.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00070}00070\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00071}00071\ \textcolor{preprocessor}{\#include\ "{}freertos/task.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00073}00073\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{fan__control_8h}{fan\_control.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00075}00075\ \textcolor{comment}{//\ Fix\ for\ VS\ Code\ IntelliSense}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00076}00076\ \textcolor{preprocessor}{\#if\ defined(\_\_INTELLISENSE\_\_)}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00077}00077\ \textcolor{preprocessor}{\#ifndef\ CONFIG\_LOG\_MAXIMUM\_LEVEL}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00078}00078\ \textcolor{preprocessor}{\#define\ CONFIG\_LOG\_MAXIMUM\_LEVEL\ 5}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00079}00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00080}00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00083}\mbox{\hyperlink{registers_8c_a5a85b9c772bbeb480b209a3e6ea92b4c}{00083}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}}\ =\ \textcolor{stringliteral}{"{}REGISTERS"{}};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00100}\mbox{\hyperlink{registers_8h_aa2c353c6e3271404cdf45ce4601951c7}{00100}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{registers_8c_aa2c353c6e3271404cdf45ce4601951c7}{init\_nvs}}()}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00101}00101\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00102}00102\ \ \ \ \ esp\_err\_t\ ret\ =\ nvs\_flash\_init();}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ ESP\_ERR\_NVS\_NO\_FREE\_PAGES\ ||\ ret\ ==\ ESP\_ERR\_NVS\_NEW\_VERSION\_FOUND)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00104}00104\ \ \ \ \ \ \ \ \ ESP\_ERROR\_CHECK(nvs\_flash\_erase());}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00105}00105\ \ \ \ \ \ \ \ \ ret\ =\ nvs\_flash\_init();}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00106}00106\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00107}00107\ \ \ \ \ ESP\_ERROR\_CHECK(ret);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00108}00108\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00137}\mbox{\hyperlink{registers_8h_adba5009ca1c63694a9f24bcbc260515e}{00137}}\ esp\_err\_t\ \mbox{\hyperlink{registers_8c_adba5009ca1c63694a9f24bcbc260515e}{save\_register\_to\_nvs}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \mbox{\hyperlink{structreg__t}{reg\_t}}\ *reg)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00138}00138\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00139}00139\ \ \ \ \ nvs\_handle\_t\ nvs;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00140}00140\ \ \ \ \ \textcolor{keywordtype}{char}\ key[16];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00141}00141\ \ \ \ \ sprintf(key,\ \textcolor{stringliteral}{"{}reg\_\%d"{}},\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00143}00143\ \ \ \ \ cJSON\ *root\ =\ cJSON\_CreateObject();}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00144}00144\ \ \ \ \ cJSON\_AddNumberToObject(root,\ \textcolor{stringliteral}{"{}hour"{}},\ \ \ reg-\/>\mbox{\hyperlink{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}{hour}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00145}00145\ \ \ \ \ cJSON\_AddNumberToObject(root,\ \textcolor{stringliteral}{"{}minute"{}},\ reg-\/>\mbox{\hyperlink{structreg__t_a56b1597b39ecd909069388499dea1cfe}{minute}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00147}00147\ \ \ \ \ cJSON\ *days\ =\ cJSON\_CreateArray();}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ reg-\/>\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}};\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ cJSON\_AddItemToArray(days,\ cJSON\_CreateString(reg-\/>\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i]));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00150}00150\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00151}00151\ \ \ \ \ cJSON\_AddItemToObject(root,\ \textcolor{stringliteral}{"{}days"{}},\ days);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00153}00153\ \ \ \ \ \textcolor{keywordtype}{char}\ *json\_str\ =\ cJSON\_Print(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00155}00155\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}save\_register\_to\_nvs:\ id=\%d\ json=\%s"{}},\ \textcolor{keywordtype}{id},\ json\_str);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00157}00157\ \ \ \ \ ESP\_ERROR\_CHECK(nvs\_open(\textcolor{stringliteral}{"{}storage"{}},\ NVS\_READWRITE,\ \&nvs));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00158}00158\ \ \ \ \ esp\_err\_t\ err\ =\ nvs\_set\_str(nvs,\ key,\ json\_str);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00159}00159\ \ \ \ \ nvs\_commit(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00160}00160\ \ \ \ \ nvs\_close(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00162}00162\ \ \ \ \ free(json\_str);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00163}00163\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{return}\ err;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00166}00166\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00192}\mbox{\hyperlink{registers_8h_aebc3357edd2c8b27aba176cfbf2a7260}{00192}}\ esp\_err\_t\ \mbox{\hyperlink{registers_8c_aebc3357edd2c8b27aba176cfbf2a7260}{load\_register\_from\_nvs}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{char}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ buffer\_len)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00193}00193\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00194}00194\ \ \ \ \ nvs\_handle\_t\ nvs;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00195}00195\ \ \ \ \ \textcolor{keywordtype}{char}\ key[16];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00196}00196\ \ \ \ \ sprintf(key,\ \textcolor{stringliteral}{"{}reg\_\%d"{}},\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00198}00198\ \ \ \ \ ESP\_ERROR\_CHECK(nvs\_open(\textcolor{stringliteral}{"{}storage"{}},\ NVS\_READWRITE,\ \&nvs));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00200}00200\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ required\_size\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00201}00201\ \ \ \ \ esp\_err\_t\ err\ =\ nvs\_get\_str(nvs,\ key,\ NULL,\ \&required\_size);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ ==\ ESP\_ERR\_NVS\_NOT\_FOUND)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00204}00204\ \ \ \ \ \ \ \ \ nvs\_close(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_ERR\_NOT\_FOUND;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00206}00206\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00208}00208\ \ \ \ \ \textcolor{keywordflow}{if}\ (required\_size\ >\ buffer\_len)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00209}00209\ \ \ \ \ \ \ \ \ nvs\_close(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_ERR\_NVS\_INVALID\_LENGTH;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00211}00211\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00213}00213\ \ \ \ \ err\ =\ nvs\_get\_str(nvs,\ key,\ buffer,\ \&required\_size);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00214}00214\ \ \ \ \ nvs\_close(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00215}00215\ \ \ \ \ \textcolor{keywordflow}{return}\ err;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00216}00216\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00229}\mbox{\hyperlink{registers_8h_a96fc67199ae4e05f5cb25a0b8020573f}{00229}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{registers_8c_a96fc67199ae4e05f5cb25a0b8020573f}{delete\_register\_from\_nvs}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00230}00230\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00231}00231\ \ \ \ \ nvs\_handle\_t\ nvs;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00232}00232\ \ \ \ \ \textcolor{keywordtype}{char}\ key[16];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00233}00233\ \ \ \ \ sprintf(key,\ \textcolor{stringliteral}{"{}reg\_\%d"{}},\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00235}00235\ \ \ \ \ ESP\_ERROR\_CHECK(nvs\_open(\textcolor{stringliteral}{"{}storage"{}},\ NVS\_READWRITE,\ \&nvs));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00236}00236\ \ \ \ \ nvs\_erase\_key(nvs,\ key);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00237}00237\ \ \ \ \ nvs\_commit(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00238}00238\ \ \ \ \ nvs\_close(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00239}00239\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00265}\mbox{\hyperlink{registers_8c_af28ab3c20449874dfa46acbc40b48d1b}{00265}}\ \textcolor{keyword}{static}\ esp\_err\_t\ \mbox{\hyperlink{registers_8c_af28ab3c20449874dfa46acbc40b48d1b}{load\_register\_struct\_from\_nvs}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \mbox{\hyperlink{structreg__t}{reg\_t}}\ *out)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00266}00266\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00267}00267\ \ \ \ \ \textcolor{keywordtype}{char}\ buf[512];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00268}00268\ \ \ \ \ esp\_err\_t\ err\ =\ \mbox{\hyperlink{registers_8c_aebc3357edd2c8b27aba176cfbf2a7260}{load\_register\_from\_nvs}}(\textcolor{keywordtype}{id},\ buf,\ \textcolor{keyword}{sizeof}(buf));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00269}00269\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ err;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00271}00271\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00273}00273\ \ \ \ \ cJSON\ *root\ =\ cJSON\_Parse(buf);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00274}00274\ \ \ \ \ \textcolor{keywordflow}{if}\ (!root)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00276}00276\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00278}00278\ \ \ \ \ cJSON\ *hour\_json\ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}hour"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00279}00279\ \ \ \ \ cJSON\ *min\_json\ \ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}minute"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00280}00280\ \ \ \ \ cJSON\ *days\_json\ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}days"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00282}00282\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cJSON\_IsNumber(hour\_json)\ ||\ !cJSON\_IsNumber(min\_json)\ ||\ !cJSON\_IsArray(days\_json))\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00283}00283\ \ \ \ \ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00285}00285\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00287}00287\ \ \ \ \ memset(out,\ 0,\ \textcolor{keyword}{sizeof}(*out));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00288}00288\ \ \ \ \ out-\/>\mbox{\hyperlink{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}{hour}}\ \ \ \ \ \ =\ hour\_json-\/>valueint;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00289}00289\ \ \ \ \ out-\/>\mbox{\hyperlink{structreg__t_a56b1597b39ecd909069388499dea1cfe}{minute}}\ \ \ \ =\ min\_json-\/>valueint;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00290}00290\ \ \ \ \ out-\/>\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}}\ =\ cJSON\_GetArraySize(days\_json);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00291}00291\ \ \ \ \ \textcolor{keywordflow}{if}\ (out-\/>\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}}\ >\ 7)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ out-\/>\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}}\ =\ 7;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00293}00293\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ out-\/>\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}};\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00296}00296\ \ \ \ \ \ \ \ \ cJSON\ *item\ =\ cJSON\_GetArrayItem(days\_json,\ i);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cJSON\_IsString(item)\ \&\&\ item-\/>valuestring)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ strncpy(out-\/>\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i],\ item-\/>valuestring,\ \textcolor{keyword}{sizeof}(out-\/>\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i])\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i][\textcolor{keyword}{sizeof}(out-\/>\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i])\ -\/\ 1]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00300}00300\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i][0]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00302}00302\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00303}00303\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00305}00305\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00306}00306\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00307}00307\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00338}\mbox{\hyperlink{registers_8c_a5615fb0c9761a6b382bb955ae830734d}{00338}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{registers_8c_a5615fb0c9761a6b382bb955ae830734d}{register\_is\_active\_now}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structreg__t}{reg\_t}}\ *reg)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00339}00339\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00340}00340\ \ \ \ \ time\_t\ now;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00341}00341\ \ \ \ \ \textcolor{keyword}{struct\ }tm\ timeinfo;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00342}00342\ \ \ \ \ time(\&now);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00343}00343\ \ \ \ \ localtime\_r(\&now,\ \&timeinfo);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00345}00345\ \ \ \ \ \textcolor{keywordtype}{int}\ cur\_hour\ =\ timeinfo.tm\_hour;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00346}00346\ \ \ \ \ \textcolor{keywordtype}{int}\ cur\_min\ \ =\ timeinfo.tm\_min;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00347}00347\ \ \ \ \ \textcolor{keywordtype}{int}\ cur\_wday\ =\ timeinfo.tm\_wday;\ \ \textcolor{comment}{//\ 0=domingo,\ 1=lunes,\ ...\ 6=sábado}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00349}00349\ \ \ \ \ \textcolor{keywordflow}{if}\ (reg-\/>\mbox{\hyperlink{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}{hour}}\ !=\ cur\_hour\ ||\ reg-\/>\mbox{\hyperlink{structreg__t_a56b1597b39ecd909069388499dea1cfe}{minute}}\ !=\ cur\_min)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00351}00351\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00352}00352\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00353}00353\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ reg-\/>\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}};\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00354}00354\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *d\ =\ reg-\/>\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00356}00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((cur\_wday\ ==\ 1\ \&\&\ strcmp(d,\ \textcolor{stringliteral}{"{}L"{}})\ ==\ 0)\ ||\ \ \ \textcolor{comment}{//\ lunes}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ (cur\_wday\ ==\ 2\ \&\&\ strcmp(d,\ \textcolor{stringliteral}{"{}M"{}})\ ==\ 0)\ ||\ \ \ \textcolor{comment}{//\ martes}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ (cur\_wday\ ==\ 3\ \&\&\ strcmp(d,\ \textcolor{stringliteral}{"{}X"{}})\ ==\ 0)\ ||\ \ \ \textcolor{comment}{//\ miércoles}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ (cur\_wday\ ==\ 4\ \&\&\ strcmp(d,\ \textcolor{stringliteral}{"{}J"{}})\ ==\ 0)\ ||\ \ \ \textcolor{comment}{//\ jueves}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ (cur\_wday\ ==\ 5\ \&\&\ strcmp(d,\ \textcolor{stringliteral}{"{}V"{}})\ ==\ 0)\ ||\ \ \ \textcolor{comment}{//\ viernes}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ (cur\_wday\ ==\ 6\ \&\&\ strcmp(d,\ \textcolor{stringliteral}{"{}S"{}})\ ==\ 0)\ ||\ \ \ \textcolor{comment}{//\ sábado}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ (cur\_wday\ ==\ 0\ \&\&\ strcmp(d,\ \textcolor{stringliteral}{"{}D"{}})\ ==\ 0))\ \{\ \ \ \textcolor{comment}{//\ domingo}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00364}00364\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00365}00365\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00367}00367\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00368}00368\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00370}00370\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ HTTP:\ POST\ /api/register\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00371}\mbox{\hyperlink{registers_8h_a244791f69474ab6fe14dc90c4cf067f3}{00371}}\ esp\_err\_t\ \mbox{\hyperlink{registers_8c_a244791f69474ab6fe14dc90c4cf067f3}{api\_post\_register}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00372}00372\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00373}00373\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ req-\/>content\_len;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00374}00374\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ <=\ 0\ ||\ len\ >\ 4096)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00375}00375\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}invalid\ length"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00376}00376\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00377}00377\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00379}00379\ \ \ \ \ \textcolor{keywordtype}{char}\ *buf\ =\ malloc(len\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{if}\ (!buf)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_500\_INTERNAL\_SERVER\_ERROR,\ \textcolor{stringliteral}{"{}no\ mem"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00382}00382\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00383}00383\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00384}00384\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00385}00385\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ httpd\_req\_recv(req,\ buf,\ len);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00386}00386\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00387}00387\ \ \ \ \ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00388}00388\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_500\_INTERNAL\_SERVER\_ERROR,\ \textcolor{stringliteral}{"{}recv\ failed"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00390}00390\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00391}00391\ \ \ \ \ buf[ret]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00393}00393\ \ \ \ \ cJSON\ *root\ =\ cJSON\_Parse(buf);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00394}00394\ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00395}00395\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00396}00396\ \ \ \ \ \textcolor{keywordflow}{if}\ (!root)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00397}00397\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}invalid\ json"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00398}00398\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00399}00399\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00401}00401\ \ \ \ \ cJSON\ *id\_json\ \ \ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}register"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00402}00402\ \ \ \ \ cJSON\ *hour\_json\ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}hour"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00403}00403\ \ \ \ \ cJSON\ *min\_json\ \ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}minute"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00404}00404\ \ \ \ \ cJSON\ *days\ \ \ \ \ \ =\ cJSON\_GetObjectItem(root,\ \textcolor{stringliteral}{"{}days"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{if}\ (!cJSON\_IsNumber(id\_json)\ ||\ !cJSON\_IsNumber(hour\_json)\ ||}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00407}00407\ \ \ \ \ \ \ \ \ !cJSON\_IsNumber(min\_json)\ ||\ !cJSON\_IsArray(days))\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00408}00408\ \ \ \ \ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00409}00409\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}missing\ fields"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00411}00411\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00412}00412\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00413}00413\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ \ \ \ \ =\ id\_json-\/>valueint;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00414}00414\ \ \ \ \ \textcolor{keywordtype}{int}\ hour\ \ \ =\ hour\_json-\/>valueint;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00415}00415\ \ \ \ \ \textcolor{keywordtype}{int}\ minute\ =\ min\_json-\/>valueint;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00417}00417\ \ \ \ \ \textcolor{keywordtype}{int}\ day\_count\ =\ cJSON\_GetArraySize(days);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00418}00418\ \ \ \ \ \textcolor{keywordflow}{if}\ (day\_count\ >\ 7)\ day\_count\ =\ 7;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00420}00420\ \ \ \ \ \mbox{\hyperlink{structreg__t}{reg\_t}}\ reg\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00421}00421\ \ \ \ \ reg.\mbox{\hyperlink{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}{hour}}\ \ \ \ \ \ =\ hour;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00422}00422\ \ \ \ \ reg.\mbox{\hyperlink{structreg__t_a56b1597b39ecd909069388499dea1cfe}{minute}}\ \ \ \ =\ minute;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00423}00423\ \ \ \ \ reg.\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}}\ =\ day\_count;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00425}00425\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ day\_count;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00426}00426\ \ \ \ \ \ \ \ \ cJSON\ *item\ =\ cJSON\_GetArrayItem(days,\ i);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00427}00427\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cJSON\_IsString(item)\ \&\&\ item-\/>valuestring)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ strncpy(reg.\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i],\ item-\/>valuestring,\ \textcolor{keyword}{sizeof}(reg.\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i])\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ reg.\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i][\textcolor{keyword}{sizeof}(reg.\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i])\ -\/\ 1]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00430}00430\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ reg.\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[i][0]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00432}00432\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00433}00433\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00434}00434\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00435}00435\ \ \ \ \ esp\_err\_t\ err\ =\ \mbox{\hyperlink{registers_8c_adba5009ca1c63694a9f24bcbc260515e}{save\_register\_to\_nvs}}(\textcolor{keywordtype}{id},\ \&reg);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00436}00436\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00438}00438\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00439}00439\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_500\_INTERNAL\_SERVER\_ERROR,\ \textcolor{stringliteral}{"{}nvs\ error"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00440}00440\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00441}00441\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00442}00442\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00443}00443\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}api\_post\_register:\ saved\ id=\%d\ hour=\%d\ minute=\%d\ days=\%d"{}},}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{id},\ hour,\ minute,\ day\_count);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00446}00446\ \ \ \ \ httpd\_resp\_sendstr(req,\ \textcolor{stringliteral}{"{}OK"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00447}00447\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00448}00448\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00449}00449\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00450}00450\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ HTTP:\ GET\ /api/registers\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00451}\mbox{\hyperlink{registers_8h_a17cd923ac85d45dc491784a52e765e7b}{00451}}\ esp\_err\_t\ \mbox{\hyperlink{registers_8c_a17cd923ac85d45dc491784a52e765e7b}{api\_get\_registers}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00452}00452\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00453}00453\ \ \ \ \ cJSON\ *root\ =\ cJSON\_CreateObject();}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00454}00454\ \ \ \ \ \textcolor{keywordtype}{char}\ smallbuf[256];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00456}00456\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <=\ 10;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00457}00457\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ key[8];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00458}00458\ \ \ \ \ \ \ \ \ snprintf(key,\ \textcolor{keyword}{sizeof}(key),\ \textcolor{stringliteral}{"{}\%d"{}},\ i);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00459}00459\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00460}00460\ \ \ \ \ \ \ \ \ esp\_err\_t\ r\ =\ \mbox{\hyperlink{registers_8c_aebc3357edd2c8b27aba176cfbf2a7260}{load\_register\_from\_nvs}}(i,\ smallbuf,\ \textcolor{keyword}{sizeof}(smallbuf));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ ==\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\ *reg\_json\ =\ cJSON\_Parse(smallbuf);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reg\_json)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\_AddItemToObject(root,\ key,\ reg\_json);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00467}00467\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (r\ ==\ ESP\_ERR\_NVS\_INVALID\_LENGTH)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ nvs\_handle\_t\ nvs;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ nkey[16];}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ snprintf(nkey,\ \textcolor{keyword}{sizeof}(nkey),\ \textcolor{stringliteral}{"{}reg\_\%d"{}},\ i);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nvs\_open(\textcolor{stringliteral}{"{}storage"{}},\ NVS\_READWRITE,\ \&nvs)\ ==\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ required\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nvs\_get\_str(nvs,\ nkey,\ NULL,\ \&required)\ ==\ ESP\_OK\ \&\&\ required\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *dyn\ =\ malloc(required);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dyn)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nvs\_get\_str(nvs,\ nkey,\ dyn,\ \&required)\ ==\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\ *reg\_json\ =\ cJSON\_Parse(dyn);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reg\_json)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cJSON\_AddItemToObject(root,\ key,\ reg\_json);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free(dyn);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nvs\_close(nvs);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00488}00488\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00489}00489\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00490}00490\ \ \ \ \ \ \ \ \ cJSON\_AddNullToObject(root,\ key);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00491}00491\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00492}00492\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00493}00493\ \ \ \ \ \textcolor{keywordtype}{char}\ *out\ =\ cJSON\_PrintUnformatted(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00495}00495\ \ \ \ \ httpd\_resp\_set\_type(req,\ \textcolor{stringliteral}{"{}application/json"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00496}00496\ \ \ \ \ httpd\_resp\_send(req,\ out,\ strlen(out));}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00498}00498\ \ \ \ \ free(out);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00499}00499\ \ \ \ \ cJSON\_Delete(root);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00500}00500\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00501}00501\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00502}00502\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00504}00504\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00505}00505\ \textcolor{comment}{//\ Removed\ redundant\ local\ wrapper:\ http\_server.c\ provides\ its\ own\ handler.}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00507}00507\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ HTTP:\ DELETE\ /api/register/\{id\}\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00508}\mbox{\hyperlink{registers_8h_aa5b423dbf986bcd5719586d9a2af9765}{00508}}\ esp\_err\_t\ \mbox{\hyperlink{registers_8c_aa5b423dbf986bcd5719586d9a2af9765}{api\_delete\_register}}(httpd\_req\_t\ *req)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00509}00509\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00510}00510\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *uri\ =\ req-\/>uri;\ \textcolor{comment}{//\ e.g.\ "{}/api/register/3"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00511}00511\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00512}00512\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00513}00513\ \ \ \ \ \textcolor{keywordflow}{if}\ (uri)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00514}00514\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *last\ =\ strrchr(uri,\ \textcolor{charliteral}{'/'});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00515}00515\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (last\ \&\&\ *(last\ +\ 1)\ !=\ \textcolor{charliteral}{'\(\backslash\)0'})\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{id}\ =\ atoi(last\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00517}00517\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00518}00518\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00520}00520\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ query[16]\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00522}00522\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (httpd\_req\_get\_url\_query\_str(req,\ query,\ \textcolor{keyword}{sizeof}(query))\ ==\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{id}\ =\ atoi(query);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00524}00524\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00525}00525\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00526}00526\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00527}00527\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ <=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00528}00528\ \ \ \ \ \ \ \ \ httpd\_resp\_send\_err(req,\ HTTPD\_400\_BAD\_REQUEST,\ \textcolor{stringliteral}{"{}invalid\ id"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00529}00529\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_FAIL;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00530}00530\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00531}00531\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00532}00532\ \ \ \ \ \mbox{\hyperlink{registers_8c_a96fc67199ae4e05f5cb25a0b8020573f}{delete\_register\_from\_nvs}}(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00533}00533\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}api\_delete\_register:\ deleted\ id=\%d"{}},\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00534}00534\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00535}00535\ \ \ \ \ httpd\_resp\_sendstr(req,\ \textcolor{stringliteral}{"{}Deleted"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00536}00536\ \ \ \ \ \textcolor{keywordflow}{return}\ ESP\_OK;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00537}00537\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00538}00538\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00568}\mbox{\hyperlink{registers_8c_a2abf74292d0298531f2ae22f1ffd5bfe}{00568}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{registers_8c_a2abf74292d0298531f2ae22f1ffd5bfe}{registers\_scheduler\_task}}(\textcolor{keywordtype}{void}\ *arg)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00569}00569\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00570}00570\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}registers\_scheduler\_task:\ started"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00572}00572\ \ \ \ \ \textcolor{keywordflow}{while}\ (1)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00573}00573\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ any\_match\_now\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00574}00574\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00575}00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <=\ 10;\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structreg__t}{reg\_t}}\ reg;}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{registers_8c_af28ab3c20449874dfa46acbc40b48d1b}{load\_register\_struct\_from\_nvs}}(i,\ \&reg)\ ==\ ESP\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{registers_8c_a5615fb0c9761a6b382bb955ae830734d}{register\_is\_active\_now}}(\&reg))\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ any\_match\_now\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00583}00583\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00585}00585\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{fan__control_8h_a4d1476e55b973e30892503e7f955ef71}{fan\_control\_on\_register\_tick}}(any\_match\_now);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00586}00586\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00587}00587\ \ \ \ \ \ \ \ \ vTaskDelay(pdMS\_TO\_TICKS(10000));\ \textcolor{comment}{//\ cada\ 10\ s}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00588}00588\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00589}00589\ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00590}00590\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00591}00591\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ REGISTRO\ DE\ ENDPOINTS\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00592}\mbox{\hyperlink{registers_8h_a02b94c84eabd1b5cc88c675a6c75b12f}{00592}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{registers_8c_a02b94c84eabd1b5cc88c675a6c75b12f}{register\_registers\_endpoints}}(httpd\_handle\_t\ server)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00593}00593\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00594}00594\ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}register\_registers\_endpoints:\ registering\ /api/register\ endpoints"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00595}00595\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00596}00596\ \ \ \ \ httpd\_uri\_t\ post\_register\_uri\ =\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00597}00597\ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ =\ \textcolor{stringliteral}{"{}/api/register"{}},}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00598}00598\ \ \ \ \ \ \ \ \ .method\ \ =\ HTTP\_POST,}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00599}00599\ \ \ \ \ \ \ \ \ .handler\ =\ \mbox{\hyperlink{registers_8h_a244791f69474ab6fe14dc90c4cf067f3}{api\_post\_register}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00600}00600\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00602}00602\ \ \ \ \ httpd\_uri\_t\ get\_registers\_uri\ =\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00603}00603\ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ =\ \textcolor{stringliteral}{"{}/api/registers"{}},}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00604}00604\ \ \ \ \ \ \ \ \ .method\ \ =\ HTTP\_GET,}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00605}00605\ \ \ \ \ \ \ \ \ .handler\ =\ \mbox{\hyperlink{registers_8h_a17cd923ac85d45dc491784a52e765e7b}{api\_get\_registers}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00606}00606\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00608}00608\ \ \ \ \ httpd\_uri\_t\ delete\_register\_uri\ =\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00609}00609\ \ \ \ \ \ \ \ \ .uri\ \ \ \ \ =\ \textcolor{stringliteral}{"{}/api/register/*"{}},}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00610}00610\ \ \ \ \ \ \ \ \ .method\ \ =\ HTTP\_DELETE,}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00611}00611\ \ \ \ \ \ \ \ \ .handler\ =\ \mbox{\hyperlink{registers_8h_aa5b423dbf986bcd5719586d9a2af9765}{api\_delete\_register}}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00612}00612\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00613}00613\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00614}00614\ \ \ \ \ httpd\_register\_uri\_handler(server,\ \&post\_register\_uri);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00615}00615\ \ \ \ \ httpd\_register\_uri\_handler(server,\ \&get\_registers\_uri);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00616}00616\ \ \ \ \ httpd\_register\_uri\_handler(server,\ \&delete\_register\_uri);}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00617}00617\ }
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00618}00618\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ s\_scheduler\_started\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00619}00619\ \ \ \ \ \textcolor{keywordflow}{if}\ (!s\_scheduler\_started)\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00620}00620\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xTaskCreate(}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{registers_8c_a2abf74292d0298531f2ae22f1ffd5bfe}{registers\_scheduler\_task}},}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}registers\_scheduler"{}},}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4096,}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NULL,}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 5,}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NULL}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ )\ ==\ pdPASS)}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00628}00628\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ s\_scheduler\_started\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00630}00630\ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGI(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}registers\_scheduler\_task\ created"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00631}00631\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00632}00632\ \ \ \ \ \ \ \ \ \ \ \ \ ESP\_LOGE(\mbox{\hyperlink{http__server_8c_a1bcdde0bdfcf0a2da9335e0cfdc2c605}{TAG}},\ \textcolor{stringliteral}{"{}Failed\ to\ create\ registers\_scheduler\_task"{}});}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00633}00633\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00634}00634\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{registers_8c_source_l00635}00635\ \}}
+
+\end{DoxyCode}

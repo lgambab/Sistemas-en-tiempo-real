@@ -1,0 +1,242 @@
+\doxysection{Referencia del archivo ntc\+\_\+driver.\+h}
+\hypertarget{ntc__driver_8h}{}\label{ntc__driver_8h}\index{ntc\_driver.h@{ntc\_driver.h}}
+
+
+Driver para sensor de temperatura NTC (Negative Temperature Coefficient).  
+
+
+{\ttfamily \#include "{}esp\+\_\+adc/adc\+\_\+oneshot.\+h"{}}\newline
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419}{inicializar\+\_\+ntc}} (adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t manejador\+\_\+adc)
+\begin{DoxyCompactList}\small\item\em Inicializa el canal ADC para el sensor NTC. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}{leer\+\_\+temperatura\+\_\+celsius}} (adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t manejador\+\_\+adc)
+\begin{DoxyCompactList}\small\item\em Lee la temperatura actual del sensor NTC en grados Celsius. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Driver para sensor de temperatura NTC (Negative Temperature Coefficient). 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Versión}
+1.\+0
+\end{DoxyVersion}
+Este módulo implementa el driver para leer temperatura mediante un termistor NTC 10KΩ conectado en configuración divisor de voltaje con el ADC del ESP32.
+
+{\bfseries{Hardware\+:}}
+\begin{DoxyItemize}
+\item Termistor NTC 10KΩ @ 25°C (Beta = 3950K)
+\item Conectado a GPIO 34 (ADC1 Canal 6)
+\item Resistencia divisor\+: 10KΩ
+\item Rango de medición\+: -\/40°C a 125°C
+\end{DoxyItemize}
+
+{\bfseries{Ecuación de conversión\+:}} Se utiliza la ecuación simplificada de Steinhart-\/\+Hart\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1/T\ =\ 1/T0\ +\ (1/B)\ *\ ln(R/R0)}
+
+\end{DoxyCode}
+ Donde\+:
+\begin{DoxyItemize}
+\item T = Temperatura absoluta en Kelvin
+\item T0 = Temperatura nominal (298.\+15K = 25°C)
+\item B = Coeficiente Beta (3950K)
+\item R = Resistencia actual del NTC
+\item R0 = Resistencia nominal (10kΩ)
+\end{DoxyItemize}
+
+{\bfseries{Manejo de errores\+:}}
+\begin{DoxyItemize}
+\item Retorna -\/999.\+0f en caso de circuito abierto o cortocircuito
+\item Verifica voltajes fuera de rango (\texorpdfstring{$>$}{>}3.\+3V o \texorpdfstring{$<$}{<}0V)
+\item Valida resistencias negativas o nulas 
+\end{DoxyItemize}
+
+Definición en el archivo \mbox{\hyperlink{ntc__driver_8h_source}{ntc\+\_\+driver.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{ntc__driver_8h_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419}\index{ntc\_driver.h@{ntc\_driver.h}!inicializar\_ntc@{inicializar\_ntc}}
+\index{inicializar\_ntc@{inicializar\_ntc}!ntc\_driver.h@{ntc\_driver.h}}
+\doxysubsubsection{\texorpdfstring{inicializar\_ntc()}{inicializar\_ntc()}}
+{\footnotesize\ttfamily \label{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419} 
+void inicializar\+\_\+ntc (\begin{DoxyParamCaption}\item[{adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t}]{manejador\+\_\+adc}{}\end{DoxyParamCaption})}
+
+
+
+Inicializa el canal ADC para el sensor NTC. 
+
+Configura el canal ADC\+\_\+\+CHANNEL\+\_\+6 (GPIO 34) con las siguientes características\+:
+\begin{DoxyItemize}
+\item Atenuación\+: 12dB (permite medir 0-\/3.\+3V)
+\item Resolución\+: 12 bits (valores 0-\/4095)
+\item Modo\+: Oneshot (lectura bajo demanda)
+\end{DoxyItemize}
+
+Esta función debe llamarse antes de \doxylink{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}{leer\+\_\+temperatura\+\_\+celsius()}. No es thread-\/safe -\/ llamar solo desde una tarea o proteger con mutex.
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em manejador\+\_\+adc} & Handle del ADC previamente inicializado con adc\+\_\+oneshot\+\_\+new\+\_\+unit()\\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Atención}
+El manejador\+\_\+adc debe ser válido. No verifica NULL. 
+
+Llamar solo una vez durante la inicialización del sistema.
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}{leer\+\_\+temperatura\+\_\+celsius()} 
+
+adc\+\_\+oneshot\+\_\+config\+\_\+channel() de ESP-\/\+IDF
+\end{DoxySeeAlso}
+Inicializa el canal ADC para el sensor NTC.
+
+Establece la configuración del canal ADC con\+:
+\begin{DoxyItemize}
+\item Atenuación 12dB\+: rango completo 0-\/3.\+3V
+\item Resolución por defecto\+: 12 bits (0-\/4095)
+\end{DoxyItemize}
+
+La atenuación de 12dB es necesaria porque el divisor de voltaje produce voltajes en todo el rango 0-\/3.\+3V dependiendo de la temperatura.
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em manejador\+\_\+adc} & Handle del ADC previamente inicializado \\
+\hline
+\end{DoxyParams}
+
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00087}{87}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{ntc__driver_8c_source_l00043}{CANAL\+\_\+\+ADC\+\_\+\+NTC}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00402}{sensors\+\_\+init()}}.
+
+\Hypertarget{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be}\index{ntc\_driver.h@{ntc\_driver.h}!leer\_temperatura\_celsius@{leer\_temperatura\_celsius}}
+\index{leer\_temperatura\_celsius@{leer\_temperatura\_celsius}!ntc\_driver.h@{ntc\_driver.h}}
+\doxysubsubsection{\texorpdfstring{leer\_temperatura\_celsius()}{leer\_temperatura\_celsius()}}
+{\footnotesize\ttfamily \label{ntc__driver_8h_ad95666f05070d139a7b670e924e5b1be} 
+float leer\+\_\+temperatura\+\_\+celsius (\begin{DoxyParamCaption}\item[{adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t}]{manejador\+\_\+adc}{}\end{DoxyParamCaption})}
+
+
+
+Lee la temperatura actual del sensor NTC en grados Celsius. 
+
+Proceso de lectura y conversión\+:
+\begin{DoxyEnumerate}
+\item Lee valor ADC raw (0-\/4095)
+\item Convierte a voltaje\+: V = (ADC\+\_\+raw \texorpdfstring{$\ast$}{*} 3300mV) / 4095
+\item Calcula resistencia NTC\+: R\+\_\+ntc = R\+\_\+div \texorpdfstring{$\ast$}{*} V / (V\+\_\+ref -\/ V)
+\item Aplica Steinhart-\/\+Hart\+: 1/T = 1/\+T0 + (1/B)\texorpdfstring{$\ast$}{*}ln(R/\+R0)
+\item Convierte Kelvin a Celsius\+: T\+\_\+c = T\+\_\+k -\/ 273.\+15
+\end{DoxyEnumerate}
+
+{\bfseries{Ecuación del divisor de voltaje\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{V\_out\ =\ V\_in\ *\ (R\_ntc\ /\ (R\_div\ +\ R\_ntc))}
+
+\end{DoxyCode}
+
+
+{\bfseries{Precisión\+:}}
+\begin{DoxyItemize}
+\item Resolución ADC\+: \texorpdfstring{$\sim$}{\string~}0.8mV (3300mV / 4095)
+\item Error típico\+: ±1°C en rango 0-\/50°C
+\item Error aumenta fuera del rango nominal
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em manejador\+\_\+adc} & Handle del ADC (debe estar inicializado)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+float Temperatura en grados Celsius 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em -\/999.\+0f} & Error de lectura (circuito abierto/cortocircuito) \\
+\hline
+{\em -\/40.\+0} & a 125.\+0 Rango válido de temperatura\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyWarning}{Atención}
+Retorna -\/999.\+0f si\+:
+\begin{DoxyItemize}
+\item Voltaje \texorpdfstring{$>$}{>}= 3.\+3V (circuito abierto)
+\item Resistencia \texorpdfstring{$<$}{<}= 0 (cortocircuito o error de cálculo) 
+\end{DoxyItemize}
+
+El manejador\+\_\+adc debe haberse inicializado con \doxylink{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419}{inicializar\+\_\+ntc()}
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+No es thread-\/safe. Si se llama desde múltiples tareas, proteger con mutex. 
+
+Tiempo de ejecución típico\+: \texorpdfstring{$\sim$}{\string~}100μs
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419}{inicializar\+\_\+ntc()} 
+
+\doxylink{sensor__task_8c}{sensor\+\_\+task.\+c} Uso desde tarea RTOS con mutex
+\end{DoxySeeAlso}
+Lee la temperatura actual del sensor NTC en grados Celsius.
+
+Algoritmo de conversión\+:
+\begin{DoxyEnumerate}
+\item {\bfseries{Lectura ADC\+:}} Obtiene valor digital (0-\/4095)
+\item {\bfseries{Conversión a voltaje\+:}} V = ADC\+\_\+raw \texorpdfstring{$\ast$}{*} (3300mV / 4095)
+\item {\bfseries{Cálculo de resistencia NTC\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{R\_ntc\ =\ R\_div\ *\ V\ /\ (V\_ref\ -\/\ V)}
+
+\end{DoxyCode}
+
+\item {\bfseries{Ecuación Steinhart-\/\+Hart simplificada\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1/T\ =\ 1/T0\ +\ (1/B)\ *\ ln(R\_ntc\ /\ R0)}
+
+\end{DoxyCode}
+
+\item {\bfseries{Conversión K → °C\+:}} T\+\_\+celsius = T\+\_\+kelvin -\/ 273.\+15
+\end{DoxyEnumerate}
+
+{\bfseries{Detección de errores\+:}}
+\begin{DoxyItemize}
+\item V ≥ V\+\_\+ref\+: Circuito abierto (NTC desconectado)
+\item R\+\_\+ntc ≤ 0\+: Cortocircuito o error matemático
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em manejador\+\_\+adc} & Handle del ADC configurado \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+Temperatura en °C o -\/999.\+0f en caso de error 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00122}{122}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{ntc__driver_8c_source_l00043}{CANAL\+\_\+\+ADC\+\_\+\+NTC}}, \mbox{\hyperlink{ntc__driver_8c_source_l00066}{COEFICIENTE\+\_\+\+BETA\+\_\+\+NTC}}, \mbox{\hyperlink{ntc__driver_8c_source_l00046}{RESISTENCIA\+\_\+\+DIVISOR}}, \mbox{\hyperlink{ntc__driver_8c_source_l00049}{RESISTENCIA\+\_\+\+NOMINAL\+\_\+\+NTC}}, \mbox{\hyperlink{ntc__driver_8c_source_l00052}{TEMP\+\_\+\+NOMINAL\+\_\+\+NTC}} y \mbox{\hyperlink{ntc__driver_8c_source_l00069}{VOLTAJE\+\_\+\+REFERENCIA\+\_\+\+MV}}.
+
+
+
+Referenciado por \mbox{\hyperlink{fan__control_8c_source_l00184}{fan\+\_\+control\+\_\+set\+\_\+mode()}}, \mbox{\hyperlink{fan__control_8c_source_l00367}{fan\+\_\+control\+\_\+update()}}, \mbox{\hyperlink{http__server_8c_source_l00935}{http\+\_\+server\+\_\+get\+\_\+dht\+\_\+sensor\+\_\+readings\+\_\+json\+\_\+handler()}} y \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+

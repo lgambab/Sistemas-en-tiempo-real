@@ -1,0 +1,24 @@
+\doxysection{pir\+\_\+driver.\+h}
+\hypertarget{pir__driver_8h_source}{}\label{pir__driver_8h_source}\mbox{\hyperlink{pir__driver_8h}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00031}00031\ \textcolor{preprocessor}{\#ifndef\ PIR\_DRIVER\_H}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00032}00032\ \textcolor{preprocessor}{\#define\ PIR\_DRIVER\_H}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00034}00034\ \textcolor{preprocessor}{\#include\ "{}freertos/FreeRTOS.h"{}}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00035}00035\ \textcolor{preprocessor}{\#include\ "{}freertos/queue.h"{}}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00036}00036\ \textcolor{preprocessor}{\#include\ "{}driver/gpio.h"{}}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00037}00037\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00062}\mbox{\hyperlink{structpir__event__t}{00062}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00063}\mbox{\hyperlink{structpir__event__t_a004644a6ca1a85e87991196121348589}{00063}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structpir__event__t_a004644a6ca1a85e87991196121348589}{motion}};\ \ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00064}00064\ \}\ \mbox{\hyperlink{structpir__event__t}{pir\_event\_t}};}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00098}00098\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pir__driver_8h_a27ed60104c030cfcf7d4d4cb5d79529d}{pir\_init}}(gpio\_num\_t\ pir\_gpio,\ QueueHandle\_t\ pir\_queue);}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00126}00126\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{pir__driver_8h_a81ffd3f243f99fd46341ee96793e6310}{pir\_is\_motion\_active}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{pir__driver_8h_source_l00128}00128\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ PIR\_DRIVER\_H}}
+
+\end{DoxyCode}

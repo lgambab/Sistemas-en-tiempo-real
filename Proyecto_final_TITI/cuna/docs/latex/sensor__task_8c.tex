@@ -1,0 +1,406 @@
+\doxysection{Referencia del archivo sensor\+\_\+task.\+c}
+\hypertarget{sensor__task_8c}{}\label{sensor__task_8c}\index{sensor\_task.c@{sensor\_task.c}}
+
+
+Implementación de tarea RTOS para lectura thread-\/safe de sensores.  
+
+
+{\ttfamily \#include "{}sensor\+\_\+task.\+h"{}}\newline
+{\ttfamily \#include "{}ntc\+\_\+driver.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+log.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/\+Free\+RTOS.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/task.\+h"{}}\newline
+{\ttfamily \#include "{}freertos/semphr.\+h"{}}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{sensor__task_8c_a167ab4cecac8ae4665766a3417ab1f93}{sensor\+\_\+update\+\_\+task}} (void \texorpdfstring{$\ast$}{*}arg)
+\begin{DoxyCompactList}\small\item\em Tarea RTOS que actualiza sensores periódicamente. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{sensor__task_8c_ab4d0d78568f91c717367b5e34251433a}{sensor\+\_\+task\+\_\+init}} (adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t handle)
+\begin{DoxyCompactList}\small\item\em Inicializa el subsistema de sensores y crea la tarea RTOS. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{sensor__task_8c_a5ce0ad492339a29aa758148d1ae646c5}{sensor\+\_\+task\+\_\+get\+\_\+data}} (\mbox{\hyperlink{structsensor__data__t}{sensor\+\_\+data\+\_\+t}} \texorpdfstring{$\ast$}{*}data)
+\begin{DoxyCompactList}\small\item\em Obtiene copia thread-\/safe de los datos de sensores. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sensor__task_8c_ad0ab5c647a96efd262b92f9291d37ad1}{sensor\+\_\+task\+\_\+update\+\_\+now}} (void)
+\begin{DoxyCompactList}\small\item\em Solicita actualización inmediata de sensores. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sensor__task_8c_a5a85b9c772bbeb480b209a3e6ea92b4c}{TAG}} = "{}sensor\+\_\+task"{}
+\begin{DoxyCompactList}\small\item\em Tag para logging ESP-\/\+IDF. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structsensor__data__t}{sensor\+\_\+data\+\_\+t}} \mbox{\hyperlink{sensor__task_8c_aa8be8b56ff29125fe4b922393da1ea3b}{shared\+\_\+sensor\+\_\+data}} = \{0\}
+\begin{DoxyCompactList}\small\item\em Datos de sensores compartidos entre tareas. \end{DoxyCompactList}\item 
+static Semaphore\+Handle\+\_\+t \mbox{\hyperlink{sensor__task_8c_a76783b16775bcc310991b51dad2a954b}{sensor\+\_\+mutex}} = NULL
+\begin{DoxyCompactList}\small\item\em Mutex para protección de shared\+\_\+sensor\+\_\+data. \end{DoxyCompactList}\item 
+static adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t \mbox{\hyperlink{sensor__task_8c_a574554647b831c66115ed6322e1faae4}{adc\+\_\+handle}} = NULL
+\begin{DoxyCompactList}\small\item\em Handle del ADC usado para leer el termistor NTC. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Implementación de tarea RTOS para lectura thread-\/safe de sensores. 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025
+\end{DoxyDate}
+Este módulo implementa una arquitectura thread-\/safe para acceso a sensores en Free\+RTOS. Soluciona el problema de compartir el handle del ADC entre múltiples tareas mediante\+:
+\begin{DoxyItemize}
+\item Tarea dedicada que lee sensores cada 2 segundos
+\item Mutex para proteger estructura de datos compartida
+\item API de acceso segura para otras tareas (HTTP server, display, etc.)
+\end{DoxyItemize}
+
+{\bfseries{Arquitectura RTOS\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[\mbox{\hyperlink{sensor__task_8c_a167ab4cecac8ae4665766a3417ab1f93}{sensor\_update\_task}}]\ -\/-\/-\/(cada\ 2s)-\/-\/-\/>\ [Lee\ NTC\ +\ Time]}
+\DoxyCodeLine{\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{\ \ \ \ \ \ v\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v}
+\DoxyCodeLine{xSemaphoreTake()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Actualiza\ datos}
+\DoxyCodeLine{\ \ \ \ \ \ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |}
+\DoxyCodeLine{\ \ \ \ \ \ v\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v}
+\DoxyCodeLine{\mbox{\hyperlink{sensor__task_8c_aa8be8b56ff29125fe4b922393da1ea3b}{shared\_sensor\_data}}\ <-\/-\/-\/-\/\ Mutex\ -\/-\/-\/-\/>\ xSemaphoreGive()}
+\DoxyCodeLine{\ \ \ \ \ \ \string^}
+\DoxyCodeLine{\ \ \ \ \ \ |}
+\DoxyCodeLine{\mbox{\hyperlink{sensor__task_8h_a5ce0ad492339a29aa758148d1ae646c5}{sensor\_task\_get\_data}}()\ <-\/-\/-\/\ Llamado\ desde\ otras\ tareas}
+
+\end{DoxyCode}
+
+
+{\bfseries{Ventajas sobre acceso directo\+:}}
+\begin{DoxyItemize}
+\item No hay race conditions en el ADC handle
+\item Lectura centralizada cada 2s reduce overhead
+\item Todas las tareas obtienen datos consistentes
+\item Cumple con las reglas de RTOS para recursos compartidos
+\end{DoxyItemize}
+
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{sensor__task_8h}{sensor\+\_\+task.\+h} Para la API pública 
+
+\doxylink{ntc__driver_8h}{ntc\+\_\+driver.\+h} Para lectura de temperatura 
+\end{DoxySeeAlso}
+
+
+Definición en el archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{sensor__task_8c_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{sensor__task_8c_a5ce0ad492339a29aa758148d1ae646c5}\index{sensor\_task.c@{sensor\_task.c}!sensor\_task\_get\_data@{sensor\_task\_get\_data}}
+\index{sensor\_task\_get\_data@{sensor\_task\_get\_data}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{sensor\_task\_get\_data()}{sensor\_task\_get\_data()}}
+{\footnotesize\ttfamily \label{sensor__task_8c_a5ce0ad492339a29aa758148d1ae646c5} 
+esp\+\_\+err\+\_\+t sensor\+\_\+task\+\_\+get\+\_\+data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsensor__data__t}{sensor\+\_\+data\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Obtiene copia thread-\/safe de los datos de sensores. 
+
+Obtener datos de sensores de forma thread-\/safe.
+
+Implementa lectura segura desde cualquier contexto (tarea o ISR si se usa From\+ISR).
+\begin{DoxyItemize}
+\item Adquiere mutex con timeout de 100ms
+\item Copia estructura completa (atomic memcpy)
+\item Libera mutex inmediatamente
+\end{DoxyItemize}
+
+{\bfseries{Uso desde múltiples tareas\+:}} Esta función es completamente thread-\/safe. Puede ser llamada simultáneamente desde HTTP server, display task, keypad task, etc. El mutex garantiza que nunca se lean datos parcialmente actualizados.
+
+{\bfseries{Ejemplo de uso\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{structsensor__data__t}{sensor\_data\_t}}\ data;}
+\DoxyCodeLine{\textcolor{keywordflow}{if}\ (\mbox{\hyperlink{sensor__task_8h_a5ce0ad492339a29aa758148d1ae646c5}{sensor\_task\_get\_data}}(\&data)\ ==\ ESP\_OK)\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (data.\mbox{\hyperlink{structsensor__data__t_ac6fe246d5f2706739461241580629d32}{temperature\_valid}})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Temp:\ \%.1f\ C\(\backslash\)n"{}},\ data.\mbox{\hyperlink{structsensor__data__t_ae6d8659a177684bdb6d870f73cd7c4c2}{temperature\_celsius}});}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (data.\mbox{\hyperlink{structsensor__data__t_ac74240336d16e1ba85135f860dc1b052}{time\_valid}})\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Hora:\ \%02d:\%02d\(\backslash\)n"{}},\ data.\mbox{\hyperlink{structsensor__data__t_ae6f5a976aa302e3c9158ccb10e063d42}{time\_info}}.tm\_hour,\ data.\mbox{\hyperlink{structsensor__data__t_ae6f5a976aa302e3c9158ccb10e063d42}{time\_info}}.tm\_min);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{out}}  & {\em data} & Puntero a estructura donde se copiarán los datos\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Datos copiados exitosamente \\
+\hline
+{\em ESP\+\_\+\+ERR\+\_\+\+INVALID\+\_\+\+ARG} & data es NULL \\
+\hline
+{\em ESP\+\_\+\+ERR\+\_\+\+INVALID\+\_\+\+STATE} & \doxylink{sensor__task_8h_aeff89d705d5b4afb8039e4deec09ab27}{sensor\+\_\+task\+\_\+init()} no ha sido llamado \\
+\hline
+{\em ESP\+\_\+\+ERR\+\_\+\+TIMEOUT} & No se pudo adquirir mutex en 100ms\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Nota}
+Si retorna error, data se rellena con ceros (memset) 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+No llamar desde ISR -\/ usar versión From\+ISR si existe 
+\end{DoxyWarning}
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00244}{244}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{sensor__task_8c_source_l00076}{sensor\+\_\+mutex}}, \mbox{\hyperlink{sensor__task_8c_source_l00064}{shared\+\_\+sensor\+\_\+data}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+\Hypertarget{sensor__task_8c_ab4d0d78568f91c717367b5e34251433a}\index{sensor\_task.c@{sensor\_task.c}!sensor\_task\_init@{sensor\_task\_init}}
+\index{sensor\_task\_init@{sensor\_task\_init}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{sensor\_task\_init()}{sensor\_task\_init()}}
+{\footnotesize\ttfamily \label{sensor__task_8c_ab4d0d78568f91c717367b5e34251433a} 
+esp\+\_\+err\+\_\+t sensor\+\_\+task\+\_\+init (\begin{DoxyParamCaption}\item[{adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t}]{handle}{}\end{DoxyParamCaption})}
+
+
+
+Inicializa el subsistema de sensores y crea la tarea RTOS. 
+
+Inicializar tarea de sensores.
+
+Secuencia de inicialización\+:
+\begin{DoxyEnumerate}
+\item Guarda handle del ADC en variable estática
+\item Crea mutex para protección de datos compartidos
+\item Crea tarea sensor\+\_\+update\+\_\+task con parámetros predefinidos
+\end{DoxyEnumerate}
+
+{\bfseries{Recursos creados\+:}}
+\begin{DoxyItemize}
+\item 1 Mutex binario (sensor\+\_\+mutex)
+\item 1 Tarea RTOS (3072 bytes de stack)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em handle} & Handle del ADC previamente configurado con ntc\+\_\+driver\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Inicialización exitosa \\
+\hline
+{\em ESP\+\_\+\+ERR\+\_\+\+NO\+\_\+\+MEM} & No hay memoria para crear mutex \\
+\hline
+{\em ESP\+\_\+\+FAIL} & Error al crear tarea RTOS\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyWarning}{Atención}
+Llamar solo una vez durante inicialización del sistema 
+
+El handle del ADC debe estar inicializado con \doxylink{ntc__driver_8h_ac0d3ab5a8c2f8e723a1fde7e1666e419}{inicializar\+\_\+ntc()}
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{ntc__driver_8h}{ntc\+\_\+driver.\+h} Para inicialización del ADC 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00175}{175}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{sensor__task_8c_source_l00087}{adc\+\_\+handle}}, \mbox{\hyperlink{sensor__task_8c_source_l00076}{sensor\+\_\+mutex}}, \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00402}{sensors\+\_\+init()}}.
+
+\Hypertarget{sensor__task_8c_ad0ab5c647a96efd262b92f9291d37ad1}\index{sensor\_task.c@{sensor\_task.c}!sensor\_task\_update\_now@{sensor\_task\_update\_now}}
+\index{sensor\_task\_update\_now@{sensor\_task\_update\_now}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{sensor\_task\_update\_now()}{sensor\_task\_update\_now()}}
+{\footnotesize\ttfamily \label{sensor__task_8c_ad0ab5c647a96efd262b92f9291d37ad1} 
+void sensor\+\_\+task\+\_\+update\+\_\+now (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Solicita actualización inmediata de sensores. 
+
+Forzar actualización inmediata de sensores.
+
+{\bfseries{Nota de implementación\+:}} Actualmente no implementado (stub). La tarea actualiza automáticamente cada 2s.
+
+{\bfseries{Implementación futura\+:}} Podría usar x\+Task\+Notify() para despertar sensor\+\_\+update\+\_\+task inmediatamente\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{static}\ TaskHandle\_t\ sensor\_task\_handle\ =\ NULL;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{//\ En\ sensor\_task\_init:}}
+\DoxyCodeLine{xTaskCreate(...,\ \&sensor\_task\_handle);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{//\ En\ sensor\_update\_task:}}
+\DoxyCodeLine{ulTaskNotifyTake(pdTRUE,\ pdMS\_TO\_TICKS(2000));\ \textcolor{comment}{//\ Wait\ 2s\ o\ notificación}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{//\ En\ sensor\_task\_update\_now:}}
+\DoxyCodeLine{\textcolor{keywordflow}{if}\ (sensor\_task\_handle)\ \{}
+\DoxyCodeLine{\ \ \ \ xTaskNotifyGive(sensor\_task\_handle);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Nota}
+Por ahora, esperar hasta 2 segundos para nueva lectura automática 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00291}{291}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+\Hypertarget{sensor__task_8c_a167ab4cecac8ae4665766a3417ab1f93}\index{sensor\_task.c@{sensor\_task.c}!sensor\_update\_task@{sensor\_update\_task}}
+\index{sensor\_update\_task@{sensor\_update\_task}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{sensor\_update\_task()}{sensor\_update\_task()}}
+{\footnotesize\ttfamily \label{sensor__task_8c_a167ab4cecac8ae4665766a3417ab1f93} 
+void sensor\+\_\+update\+\_\+task (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{arg}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Tarea RTOS que actualiza sensores periódicamente. 
+
+{\bfseries{Ciclo de ejecución\+:}}
+\begin{DoxyEnumerate}
+\item Lee temperatura del NTC (si adc\+\_\+handle válido)
+\item Obtiene hora actual del sistema (time() + localtime\+\_\+r())
+\item Valida datos (temperatura \texorpdfstring{$>$}{>} -\/100°C, año \texorpdfstring{$>$}{>} 2000)
+\item Actualiza shared\+\_\+sensor\+\_\+data con protección de mutex
+\item Espera 2 segundos (v\+Task\+Delay)
+\end{DoxyEnumerate}
+
+{\bfseries{Parámetros de la tarea\+:}}
+\begin{DoxyItemize}
+\item Nombre\+: "{}sensor\+\_\+task"{}
+\item Stack\+: 3072 bytes
+\item Prioridad\+: config\+MAX\+\_\+\+PRIORITIES -\/ 3 (prioridad media)
+\item Periodo\+: 2000ms
+\end{DoxyItemize}
+
+{\bfseries{Manejo de errores\+:}}
+\begin{DoxyItemize}
+\item Si ADC handle es NULL\+: temperature\+\_\+valid = false
+\item Si temperatura \texorpdfstring{$<$}{<} -\/100°C\+: temperatura inválida (error NTC)
+\item Si tm\+\_\+year \texorpdfstring{$<$}{<} 100\+: hora aún no sincronizada con SNTP
+\item Si mutex no disponible en 100ms\+: skip update (sin crash)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em arg} & Parámetro de tarea (no usado)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Esta tarea nunca termina (bucle infinito) 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+No modificar periodo sin revisar consumo de otros recursos 
+\end{DoxyWarning}
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00118}{118}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{sensor__task_8c_source_l00087}{adc\+\_\+handle}}, \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}, \mbox{\hyperlink{sensor__task_8c_source_l00076}{sensor\+\_\+mutex}}, \mbox{\hyperlink{sensor__task_8c_source_l00064}{shared\+\_\+sensor\+\_\+data}}, \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}, \mbox{\hyperlink{sensor__task_8h_source_l00030}{sensor\+\_\+data\+\_\+t\+::temperature\+\_\+celsius}}, \mbox{\hyperlink{sensor__task_8h_source_l00033}{sensor\+\_\+data\+\_\+t\+::temperature\+\_\+valid}}, \mbox{\hyperlink{sensor__task_8h_source_l00031}{sensor\+\_\+data\+\_\+t\+::time\+\_\+info}} y \mbox{\hyperlink{sensor__task_8h_source_l00032}{sensor\+\_\+data\+\_\+t\+::time\+\_\+valid}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00175}{sensor\+\_\+task\+\_\+init()}}.
+
+
+
+\label{doc-var-members}
+\Hypertarget{sensor__task_8c_doc-var-members}
+\doxysubsection{Documentación de variables}
+\Hypertarget{sensor__task_8c_a574554647b831c66115ed6322e1faae4}\index{sensor\_task.c@{sensor\_task.c}!adc\_handle@{adc\_handle}}
+\index{adc\_handle@{adc\_handle}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{adc\_handle}{adc\_handle}}
+{\footnotesize\ttfamily \label{sensor__task_8c_a574554647b831c66115ed6322e1faae4} 
+adc\+\_\+oneshot\+\_\+unit\+\_\+handle\+\_\+t adc\+\_\+handle = NULL\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handle del ADC usado para leer el termistor NTC. 
+
+Inicializado por \doxylink{sensor__task_8c_ab4d0d78568f91c717367b5e34251433a}{sensor\+\_\+task\+\_\+init()}. Compartido solo dentro de esta tarea (no hay race conditions). Si es NULL, temperature\+\_\+valid se marca como false. 
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00087}{87}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00175}{sensor\+\_\+task\+\_\+init()}} y \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+
+\Hypertarget{sensor__task_8c_a76783b16775bcc310991b51dad2a954b}\index{sensor\_task.c@{sensor\_task.c}!sensor\_mutex@{sensor\_mutex}}
+\index{sensor\_mutex@{sensor\_mutex}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{sensor\_mutex}{sensor\_mutex}}
+{\footnotesize\ttfamily \label{sensor__task_8c_a76783b16775bcc310991b51dad2a954b} 
+Semaphore\+Handle\+\_\+t sensor\+\_\+mutex = NULL\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Mutex para protección de shared\+\_\+sensor\+\_\+data. 
+
+Implementa exclusión mutua para evitar race conditions.
+\begin{DoxyItemize}
+\item Toma\+: sensor\+\_\+update\+\_\+task (escritura) y sensor\+\_\+task\+\_\+get\+\_\+data (lectura)
+\item Timeout\+: 100ms para evitar bloqueos prolongados
+\item Tipo\+: Mutex binario de Free\+RTOS 
+\end{DoxyItemize}
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00076}{76}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00244}{sensor\+\_\+task\+\_\+get\+\_\+data()}}, \mbox{\hyperlink{sensor__task_8c_source_l00175}{sensor\+\_\+task\+\_\+init()}} y \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+
+\Hypertarget{sensor__task_8c_aa8be8b56ff29125fe4b922393da1ea3b}\index{sensor\_task.c@{sensor\_task.c}!shared\_sensor\_data@{shared\_sensor\_data}}
+\index{shared\_sensor\_data@{shared\_sensor\_data}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{shared\_sensor\_data}{shared\_sensor\_data}}
+{\footnotesize\ttfamily \label{sensor__task_8c_aa8be8b56ff29125fe4b922393da1ea3b} 
+\mbox{\hyperlink{structsensor__data__t}{sensor\+\_\+data\+\_\+t}} shared\+\_\+sensor\+\_\+data = \{0\}\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Datos de sensores compartidos entre tareas. 
+
+Esta variable contiene la última lectura válida de\+:
+\begin{DoxyItemize}
+\item Temperatura del NTC (en °C)
+\item Hora actual del sistema (struct tm)
+\item Flags de validez para cada sensor
+\end{DoxyItemize}
+
+{\bfseries{IMPORTANTE\+:}} Acceso protegido por sensor\+\_\+mutex. Nunca acceder directamente -\/ usar \doxylink{sensor__task_8c_a5ce0ad492339a29aa758148d1ae646c5}{sensor\+\_\+task\+\_\+get\+\_\+data()}. 
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00064}{64}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00244}{sensor\+\_\+task\+\_\+get\+\_\+data()}} y \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+
+\Hypertarget{sensor__task_8c_a5a85b9c772bbeb480b209a3e6ea92b4c}\index{sensor\_task.c@{sensor\_task.c}!TAG@{TAG}}
+\index{TAG@{TAG}!sensor\_task.c@{sensor\_task.c}}
+\doxysubsubsection{\texorpdfstring{TAG}{TAG}}
+{\footnotesize\ttfamily \label{sensor__task_8c_a5a85b9c772bbeb480b209a3e6ea92b4c} 
+const char\texorpdfstring{$\ast$}{*} TAG = "{}sensor\+\_\+task"{}\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Tag para logging ESP-\/\+IDF. 
+
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8c_source_l00049}{49}} del archivo \mbox{\hyperlink{sensor__task_8c_source}{sensor\+\_\+task.\+c}}.
+

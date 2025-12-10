@@ -1,0 +1,51 @@
+\doxysection{fan\+\_\+driver.\+c}
+\hypertarget{fan__driver_8c_source}{}\label{fan__driver_8c_source}\mbox{\hyperlink{fan__driver_8c}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00001}00001\ \textcolor{comment}{//\ fan\_driver.c}}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{fan__driver_8h}{fan\_driver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00004}\mbox{\hyperlink{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e}{00004}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e}{s\_fan\_initialized}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00006}\mbox{\hyperlink{fan__driver_8h_a648b7e106efd21e3948d16df84409906}{00006}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__driver_8c_a648b7e106efd21e3948d16df84409906}{fan\_init}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00007}00007\ \{}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00008}00008\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e}{s\_fan\_initialized}})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00010}00010\ \ \ \ \ ledc\_timer\_config\_t\ ledc\_timer\ =\ \{}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00011}00011\ \ \ \ \ \ \ \ \ .duty\_resolution\ =\ \mbox{\hyperlink{fan__driver_8h_ac36445724fd1836cce14c6a78470835c}{FAN\_LEDC\_DUTY\_RES}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00012}00012\ \ \ \ \ \ \ \ \ .freq\_hz\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{fan__driver_8h_adf325f944a472af73de280580d8cc56d}{FAN\_LEDC\_FREQ\_HZ}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00013}00013\ \ \ \ \ \ \ \ \ .speed\_mode\ \ \ \ \ \ =\ \mbox{\hyperlink{fan__driver_8h_a852bfcc772fe871409c99ccf5d4b88b1}{FAN\_LEDC\_MODE}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00014}00014\ \ \ \ \ \ \ \ \ .timer\_num\ \ \ \ \ \ \ =\ \mbox{\hyperlink{fan__driver_8h_a6d7c64ea572ed7b5017ba20a105b96f7}{FAN\_LEDC\_TIMER}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00015}00015\ \ \ \ \ \ \ \ \ .clk\_cfg\ \ \ \ \ \ \ \ \ =\ LEDC\_AUTO\_CLK,}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00016}00016\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00017}00017\ \ \ \ \ ledc\_timer\_config(\&ledc\_timer);}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00019}00019\ \ \ \ \ ledc\_channel\_config\_t\ ledc\_channel\ =\ \{}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00020}00020\ \ \ \ \ \ \ \ \ .channel\ \ \ \ =\ \mbox{\hyperlink{fan__driver_8h_a766b42db8a2d0d9abd70125498bf8059}{FAN\_LEDC\_CHANNEL}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00021}00021\ \ \ \ \ \ \ \ \ .duty\ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00022}00022\ \ \ \ \ \ \ \ \ .hpoint\ \ \ \ \ =\ 0,}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00023}00023\ \ \ \ \ \ \ \ \ .gpio\_num\ \ \ =\ \mbox{\hyperlink{fan__driver_8h_a66d158b5f25551c0db2f1033fd8bcf07}{FAN\_PWM\_GPIO}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00024}00024\ \ \ \ \ \ \ \ \ .intr\_type\ \ =\ LEDC\_INTR\_DISABLE,}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00025}00025\ \ \ \ \ \ \ \ \ .speed\_mode\ =\ \mbox{\hyperlink{fan__driver_8h_a852bfcc772fe871409c99ccf5d4b88b1}{FAN\_LEDC\_MODE}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00026}00026\ \ \ \ \ \ \ \ \ .timer\_sel\ \ =\ \mbox{\hyperlink{fan__driver_8h_a6d7c64ea572ed7b5017ba20a105b96f7}{FAN\_LEDC\_TIMER}},}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00027}00027\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00028}00028\ \ \ \ \ ledc\_channel\_config(\&ledc\_channel);}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00030}00030\ \ \ \ \ \mbox{\hyperlink{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e}{s\_fan\_initialized}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00031}00031\ \}}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00033}\mbox{\hyperlink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{00033}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__driver_8c_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(uint8\_t\ percent)}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00034}00034\ \{}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e}{s\_fan\_initialized}})\ \mbox{\hyperlink{fan__driver_8c_a648b7e106efd21e3948d16df84409906}{fan\_init}}();}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{if}\ (percent\ >\ 100)\ percent\ =\ 100;}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00038}00038\ \ \ \ \ uint32\_t\ duty\ =\ (255\ *\ percent)\ /\ 100;}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00039}00039\ \ \ \ \ ledc\_set\_duty(\mbox{\hyperlink{fan__driver_8h_a852bfcc772fe871409c99ccf5d4b88b1}{FAN\_LEDC\_MODE}},\ \mbox{\hyperlink{fan__driver_8h_a766b42db8a2d0d9abd70125498bf8059}{FAN\_LEDC\_CHANNEL}},\ duty);}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00040}00040\ \ \ \ \ ledc\_update\_duty(\mbox{\hyperlink{fan__driver_8h_a852bfcc772fe871409c99ccf5d4b88b1}{FAN\_LEDC\_MODE}},\ \mbox{\hyperlink{fan__driver_8h_a766b42db8a2d0d9abd70125498bf8059}{FAN\_LEDC\_CHANNEL}});}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00041}00041\ \}}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00043}\mbox{\hyperlink{fan__driver_8h_a46cfc38d5476fe8170f5fdcf79e7fc26}{00043}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__driver_8c_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\_off}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00044}00044\ \{}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00045}00045\ \ \ \ \ \mbox{\hyperlink{fan__driver_8c_a6637062d7800066c51c87da1198c2ce9}{fan\_set\_speed\_percent}}(0);}
+\DoxyCodeLine{\Hypertarget{fan__driver_8c_source_l00046}00046\ \}}
+
+\end{DoxyCode}

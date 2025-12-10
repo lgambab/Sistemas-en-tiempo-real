@@ -1,0 +1,518 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Referencia del archivo sensor_task.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('sensor__task_8c.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo sensor_task.c</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Implementación de tarea RTOS para lectura thread-safe de sensores.  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="sensor__task_8h_source.html">sensor_task.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ntc__driver_8h_source.html">ntc_driver.h</a>&quot;</code><br />
+<code>#include &quot;esp_log.h&quot;</code><br />
+<code>#include &quot;freertos/FreeRTOS.h&quot;</code><br />
+<code>#include &quot;freertos/task.h&quot;</code><br />
+<code>#include &quot;freertos/semphr.h&quot;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;sys/time.h&gt;</code><br />
+</div>
+<p><a href="sensor__task_8c_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:a167ab4cecac8ae4665766a3417ab1f93" id="r_a167ab4cecac8ae4665766a3417ab1f93"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a167ab4cecac8ae4665766a3417ab1f93">sensor_update_task</a> (void *arg)</td></tr>
+<tr class="memdesc:a167ab4cecac8ae4665766a3417ab1f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea RTOS que actualiza sensores periódicamente.  <br /></td></tr>
+<tr class="memitem:ab4d0d78568f91c717367b5e34251433a" id="r_ab4d0d78568f91c717367b5e34251433a"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4d0d78568f91c717367b5e34251433a">sensor_task_init</a> (adc_oneshot_unit_handle_t handle)</td></tr>
+<tr class="memdesc:ab4d0d78568f91c717367b5e34251433a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializa el subsistema de sensores y crea la tarea RTOS.  <br /></td></tr>
+<tr class="memitem:a5ce0ad492339a29aa758148d1ae646c5" id="r_a5ce0ad492339a29aa758148d1ae646c5"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ce0ad492339a29aa758148d1ae646c5">sensor_task_get_data</a> (<a class="el" href="structsensor__data__t.html">sensor_data_t</a> *data)</td></tr>
+<tr class="memdesc:a5ce0ad492339a29aa758148d1ae646c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtiene copia thread-safe de los datos de sensores.  <br /></td></tr>
+<tr class="memitem:ad0ab5c647a96efd262b92f9291d37ad1" id="r_ad0ab5c647a96efd262b92f9291d37ad1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0ab5c647a96efd262b92f9291d37ad1">sensor_task_update_now</a> (void)</td></tr>
+<tr class="memdesc:ad0ab5c647a96efd262b92f9291d37ad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solicita actualización inmediata de sensores.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a5a85b9c772bbeb480b209a3e6ea92b4c" id="r_a5a85b9c772bbeb480b209a3e6ea92b4c"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a85b9c772bbeb480b209a3e6ea92b4c">TAG</a> = &quot;sensor_task&quot;</td></tr>
+<tr class="memdesc:a5a85b9c772bbeb480b209a3e6ea92b4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tag para logging ESP-IDF.  <br /></td></tr>
+<tr class="memitem:aa8be8b56ff29125fe4b922393da1ea3b" id="r_aa8be8b56ff29125fe4b922393da1ea3b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structsensor__data__t.html">sensor_data_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8be8b56ff29125fe4b922393da1ea3b">shared_sensor_data</a> = {0}</td></tr>
+<tr class="memdesc:aa8be8b56ff29125fe4b922393da1ea3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Datos de sensores compartidos entre tareas.  <br /></td></tr>
+<tr class="memitem:a76783b16775bcc310991b51dad2a954b" id="r_a76783b16775bcc310991b51dad2a954b"><td class="memItemLeft" align="right" valign="top">static SemaphoreHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76783b16775bcc310991b51dad2a954b">sensor_mutex</a> = NULL</td></tr>
+<tr class="memdesc:a76783b16775bcc310991b51dad2a954b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutex para protección de shared_sensor_data.  <br /></td></tr>
+<tr class="memitem:a574554647b831c66115ed6322e1faae4" id="r_a574554647b831c66115ed6322e1faae4"><td class="memItemLeft" align="right" valign="top">static adc_oneshot_unit_handle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a574554647b831c66115ed6322e1faae4">adc_handle</a> = NULL</td></tr>
+<tr class="memdesc:a574554647b831c66115ed6322e1faae4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle del ADC usado para leer el termistor NTC.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Implementación de tarea RTOS para lectura thread-safe de sensores. </p>
+<dl class="section author"><dt>Autor</dt><dd>Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya </dd></dl>
+<dl class="section date"><dt>Fecha</dt><dd>2025</dd></dl>
+<p>Este módulo implementa una arquitectura thread-safe para acceso a sensores en FreeRTOS. Soluciona el problema de compartir el handle del ADC entre múltiples tareas mediante:</p><ul>
+<li>Tarea dedicada que lee sensores cada 2 segundos</li>
+<li>Mutex para proteger estructura de datos compartida</li>
+<li>API de acceso segura para otras tareas (HTTP server, display, etc.)</li>
+</ul>
+<p><b>Arquitectura RTOS:</b> </p><div class="fragment"><div class="line">[<a class="code hl_function" href="#a167ab4cecac8ae4665766a3417ab1f93">sensor_update_task</a>] ---(cada 2s)---&gt; [Lee NTC + Time]</div>
+<div class="line">      |                                        |</div>
+<div class="line">      v                                        v</div>
+<div class="line">xSemaphoreTake()                      Actualiza datos</div>
+<div class="line">      |                                        |</div>
+<div class="line">      v                                        v</div>
+<div class="line"><a class="code hl_variable" href="#aa8be8b56ff29125fe4b922393da1ea3b">shared_sensor_data</a> &lt;---- Mutex ----&gt; xSemaphoreGive()</div>
+<div class="line">      ^</div>
+<div class="line">      |</div>
+<div class="line"><a class="code hl_function" href="sensor__task_8h.html#a5ce0ad492339a29aa758148d1ae646c5">sensor_task_get_data</a>() &lt;--- Llamado desde otras tareas</div>
+<div class="ttc" id="asensor__task_8c_html_a167ab4cecac8ae4665766a3417ab1f93"><div class="ttname"><a href="#a167ab4cecac8ae4665766a3417ab1f93">sensor_update_task</a></div><div class="ttdeci">static void sensor_update_task(void *arg)</div><div class="ttdoc">Tarea RTOS que actualiza sensores periódicamente.</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8c_source.html#l00118">sensor_task.c:118</a></div></div>
+<div class="ttc" id="asensor__task_8c_html_aa8be8b56ff29125fe4b922393da1ea3b"><div class="ttname"><a href="#aa8be8b56ff29125fe4b922393da1ea3b">shared_sensor_data</a></div><div class="ttdeci">static sensor_data_t shared_sensor_data</div><div class="ttdoc">Datos de sensores compartidos entre tareas.</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8c_source.html#l00064">sensor_task.c:64</a></div></div>
+<div class="ttc" id="asensor__task_8h_html_a5ce0ad492339a29aa758148d1ae646c5"><div class="ttname"><a href="sensor__task_8h.html#a5ce0ad492339a29aa758148d1ae646c5">sensor_task_get_data</a></div><div class="ttdeci">esp_err_t sensor_task_get_data(sensor_data_t *data)</div><div class="ttdoc">Obtener datos de sensores de forma thread-safe.</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8c_source.html#l00244">sensor_task.c:244</a></div></div>
+</div><!-- fragment --><p><b>Ventajas sobre acceso directo:</b></p><ul>
+<li>No hay race conditions en el ADC handle</li>
+<li>Lectura centralizada cada 2s reduce overhead</li>
+<li>Todas las tareas obtienen datos consistentes</li>
+<li>Cumple con las reglas de RTOS para recursos compartidos</li>
+</ul>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="sensor__task_8h.html" title="Tarea dedicada para lectura de sensores con acceso thread-safe mediante mutex.">sensor_task.h</a> Para la API pública </dd>
+<dd>
+<a class="el" href="ntc__driver_8h.html" title="Driver para sensor de temperatura NTC (Negative Temperature Coefficient).">ntc_driver.h</a> Para lectura de temperatura </dd></dl>
+
+<p class="definition">Definición en el archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones</h2>
+<a id="a5ce0ad492339a29aa758148d1ae646c5" name="a5ce0ad492339a29aa758148d1ae646c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ce0ad492339a29aa758148d1ae646c5">&#9670;&#160;</a></span>sensor_task_get_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t sensor_task_get_data </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structsensor__data__t.html">sensor_data_t</a> *</td>          <td class="paramname"><span class="paramname"><em>data</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Obtiene copia thread-safe de los datos de sensores. </p>
+<p>Obtener datos de sensores de forma thread-safe.</p>
+<p>Implementa lectura segura desde cualquier contexto (tarea o ISR si se usa FromISR).</p><ul>
+<li>Adquiere mutex con timeout de 100ms</li>
+<li>Copia estructura completa (atomic memcpy)</li>
+<li>Libera mutex inmediatamente</li>
+</ul>
+<p><b>Uso desde múltiples tareas:</b> Esta función es completamente thread-safe. Puede ser llamada simultáneamente desde HTTP server, display task, keypad task, etc. El mutex garantiza que nunca se lean datos parcialmente actualizados.</p>
+<p><b>Ejemplo de uso:</b> </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structsensor__data__t.html">sensor_data_t</a> data;</div>
+<div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="sensor__task_8h.html#a5ce0ad492339a29aa758148d1ae646c5">sensor_task_get_data</a>(&amp;data) == ESP_OK) {</div>
+<div class="line">    <span class="keywordflow">if</span> (data.<a class="code hl_variable" href="structsensor__data__t.html#ac6fe246d5f2706739461241580629d32">temperature_valid</a>) {</div>
+<div class="line">        printf(<span class="stringliteral">&quot;Temp: %.1f C\n&quot;</span>, data.<a class="code hl_variable" href="structsensor__data__t.html#ae6d8659a177684bdb6d870f73cd7c4c2">temperature_celsius</a>);</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">if</span> (data.<a class="code hl_variable" href="structsensor__data__t.html#ac74240336d16e1ba85135f860dc1b052">time_valid</a>) {</div>
+<div class="line">        printf(<span class="stringliteral">&quot;Hora: %02d:%02d\n&quot;</span>, data.<a class="code hl_variable" href="structsensor__data__t.html#ae6f5a976aa302e3c9158ccb10e063d42">time_info</a>.tm_hour, data.<a class="code hl_variable" href="structsensor__data__t.html#ae6f5a976aa302e3c9158ccb10e063d42">time_info</a>.tm_min);</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="ttc" id="astructsensor__data__t_html"><div class="ttname"><a href="structsensor__data__t.html">sensor_data_t</a></div><div class="ttdoc">Estructura con datos de sensores protegida por mutex.</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8h_source.html#l00029">sensor_task.h:29</a></div></div>
+<div class="ttc" id="astructsensor__data__t_html_ac6fe246d5f2706739461241580629d32"><div class="ttname"><a href="structsensor__data__t.html#ac6fe246d5f2706739461241580629d32">sensor_data_t::temperature_valid</a></div><div class="ttdeci">bool temperature_valid</div><div class="ttdoc">true si la lectura de temperatura es válida</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8h_source.html#l00033">sensor_task.h:33</a></div></div>
+<div class="ttc" id="astructsensor__data__t_html_ac74240336d16e1ba85135f860dc1b052"><div class="ttname"><a href="structsensor__data__t.html#ac74240336d16e1ba85135f860dc1b052">sensor_data_t::time_valid</a></div><div class="ttdeci">bool time_valid</div><div class="ttdoc">true si la hora está sincronizada por SNTP</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8h_source.html#l00032">sensor_task.h:32</a></div></div>
+<div class="ttc" id="astructsensor__data__t_html_ae6d8659a177684bdb6d870f73cd7c4c2"><div class="ttname"><a href="structsensor__data__t.html#ae6d8659a177684bdb6d870f73cd7c4c2">sensor_data_t::temperature_celsius</a></div><div class="ttdeci">float temperature_celsius</div><div class="ttdoc">Temperatura en grados Celsius del sensor NTC.</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8h_source.html#l00030">sensor_task.h:30</a></div></div>
+<div class="ttc" id="astructsensor__data__t_html_ae6f5a976aa302e3c9158ccb10e063d42"><div class="ttname"><a href="structsensor__data__t.html#ae6f5a976aa302e3c9158ccb10e063d42">sensor_data_t::time_info</a></div><div class="ttdeci">struct tm time_info</div><div class="ttdoc">Información de tiempo del sistema (SNTP).</div><div class="ttdef"><b>Definition</b> <a href="sensor__task_8h_source.html#l00031">sensor_task.h:31</a></div></div>
+</div><!-- fragment --><dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">data</td><td>Puntero a estructura donde se copiarán los datos</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>esp_err_t </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">ESP_OK</td><td>Datos copiados exitosamente </td></tr>
+    <tr><td class="paramname">ESP_ERR_INVALID_ARG</td><td>data es NULL </td></tr>
+    <tr><td class="paramname">ESP_ERR_INVALID_STATE</td><td><a class="el" href="sensor__task_8h.html#aeff89d705d5b4afb8039e4deec09ab27" title="Inicializar tarea de sensores.">sensor_task_init()</a> no ha sido llamado </td></tr>
+    <tr><td class="paramname">ESP_ERR_TIMEOUT</td><td>No se pudo adquirir mutex en 100ms</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Si retorna error, data se rellena con ceros (memset) </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>No llamar desde ISR - usar versión FromISR si existe </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00244">244</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="sensor__task_8c_source.html#l00076">sensor_mutex</a>, <a class="el" href="sensor__task_8c_source.html#l00064">shared_sensor_data</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+</div>
+</div>
+<a id="ab4d0d78568f91c717367b5e34251433a" name="ab4d0d78568f91c717367b5e34251433a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4d0d78568f91c717367b5e34251433a">&#9670;&#160;</a></span>sensor_task_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t sensor_task_init </td>
+          <td>(</td>
+          <td class="paramtype">adc_oneshot_unit_handle_t</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inicializa el subsistema de sensores y crea la tarea RTOS. </p>
+<p>Inicializar tarea de sensores.</p>
+<p>Secuencia de inicialización:</p><ol type="1">
+<li>Guarda handle del ADC en variable estática</li>
+<li>Crea mutex para protección de datos compartidos</li>
+<li>Crea tarea sensor_update_task con parámetros predefinidos</li>
+</ol>
+<p><b>Recursos creados:</b></p><ul>
+<li>1 Mutex binario (sensor_mutex)</li>
+<li>1 Tarea RTOS (3072 bytes de stack)</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>Handle del ADC previamente configurado con ntc_driver</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>esp_err_t </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">ESP_OK</td><td>Inicialización exitosa </td></tr>
+    <tr><td class="paramname">ESP_ERR_NO_MEM</td><td>No hay memoria para crear mutex </td></tr>
+    <tr><td class="paramname">ESP_FAIL</td><td>Error al crear tarea RTOS</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Atención</dt><dd>Llamar solo una vez durante inicialización del sistema </dd>
+<dd>
+El handle del ADC debe estar inicializado con <a class="el" href="ntc__driver_8h.html#ac0d3ab5a8c2f8e723a1fde7e1666e419" title="Inicializa el canal ADC para el sensor NTC.">inicializar_ntc()</a></dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="ntc__driver_8h.html" title="Driver para sensor de temperatura NTC (Negative Temperature Coefficient).">ntc_driver.h</a> Para inicialización del ADC </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00175">175</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="sensor__task_8c_source.html#l00087">adc_handle</a>, <a class="el" href="sensor__task_8c_source.html#l00076">sensor_mutex</a>, <a class="el" href="sensor__task_8c_source.html#l00118">sensor_update_task()</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="http__server_8c_source.html#l00402">sensors_init()</a>.</p>
+
+</div>
+</div>
+<a id="ad0ab5c647a96efd262b92f9291d37ad1" name="ad0ab5c647a96efd262b92f9291d37ad1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0ab5c647a96efd262b92f9291d37ad1">&#9670;&#160;</a></span>sensor_task_update_now()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sensor_task_update_now </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Solicita actualización inmediata de sensores. </p>
+<p>Forzar actualización inmediata de sensores.</p>
+<p><b>Nota de implementación:</b> Actualmente no implementado (stub). La tarea actualiza automáticamente cada 2s.</p>
+<p><b>Implementación futura:</b> Podría usar xTaskNotify() para despertar sensor_update_task inmediatamente: </p><div class="fragment"><div class="line"><span class="keyword">static</span> TaskHandle_t sensor_task_handle = NULL;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// En sensor_task_init:</span></div>
+<div class="line">xTaskCreate(..., &amp;sensor_task_handle);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// En sensor_update_task:</span></div>
+<div class="line">ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(2000)); <span class="comment">// Wait 2s o notificación</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// En sensor_task_update_now:</span></div>
+<div class="line"><span class="keywordflow">if</span> (sensor_task_handle) {</div>
+<div class="line">    xTaskNotifyGive(sensor_task_handle);</div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section note"><dt>Nota</dt><dd>Por ahora, esperar hasta 2 segundos para nueva lectura automática </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00291">291</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+</div>
+</div>
+<a id="a167ab4cecac8ae4665766a3417ab1f93" name="a167ab4cecac8ae4665766a3417ab1f93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a167ab4cecac8ae4665766a3417ab1f93">&#9670;&#160;</a></span>sensor_update_task()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sensor_update_task </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>arg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tarea RTOS que actualiza sensores periódicamente. </p>
+<p><b>Ciclo de ejecución:</b></p><ol type="1">
+<li>Lee temperatura del NTC (si adc_handle válido)</li>
+<li>Obtiene hora actual del sistema (time() + localtime_r())</li>
+<li>Valida datos (temperatura &gt; -100°C, año &gt; 2000)</li>
+<li>Actualiza shared_sensor_data con protección de mutex</li>
+<li>Espera 2 segundos (vTaskDelay)</li>
+</ol>
+<p><b>Parámetros de la tarea:</b></p><ul>
+<li>Nombre: "sensor_task"</li>
+<li>Stack: 3072 bytes</li>
+<li>Prioridad: configMAX_PRIORITIES - 3 (prioridad media)</li>
+<li>Periodo: 2000ms</li>
+</ul>
+<p><b>Manejo de errores:</b></p><ul>
+<li>Si ADC handle es NULL: temperature_valid = false</li>
+<li>Si temperatura &lt; -100°C: temperatura inválida (error NTC)</li>
+<li>Si tm_year &lt; 100: hora aún no sincronizada con SNTP</li>
+<li>Si mutex no disponible en 100ms: skip update (sin crash)</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg</td><td>Parámetro de tarea (no usado)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Esta tarea nunca termina (bucle infinito) </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>No modificar periodo sin revisar consumo de otros recursos </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00118">118</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="sensor__task_8c_source.html#l00087">adc_handle</a>, <a class="el" href="ntc__driver_8c_source.html#l00122">leer_temperatura_celsius()</a>, <a class="el" href="sensor__task_8c_source.html#l00076">sensor_mutex</a>, <a class="el" href="sensor__task_8c_source.html#l00064">shared_sensor_data</a>, <a class="el" href="http__server_8c_source.html#l00117">TAG</a>, <a class="el" href="sensor__task_8h_source.html#l00030">sensor_data_t::temperature_celsius</a>, <a class="el" href="sensor__task_8h_source.html#l00033">sensor_data_t::temperature_valid</a>, <a class="el" href="sensor__task_8h_source.html#l00031">sensor_data_t::time_info</a> y <a class="el" href="sensor__task_8h_source.html#l00032">sensor_data_t::time_valid</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="sensor__task_8c_source.html#l00175">sensor_task_init()</a>.</p>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Documentación de variables</h2>
+<a id="a574554647b831c66115ed6322e1faae4" name="a574554647b831c66115ed6322e1faae4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a574554647b831c66115ed6322e1faae4">&#9670;&#160;</a></span>adc_handle</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">adc_oneshot_unit_handle_t adc_handle = NULL</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle del ADC usado para leer el termistor NTC. </p>
+<p>Inicializado por <a class="el" href="#ab4d0d78568f91c717367b5e34251433a" title="Inicializa el subsistema de sensores y crea la tarea RTOS.">sensor_task_init()</a>. Compartido solo dentro de esta tarea (no hay race conditions). Si es NULL, temperature_valid se marca como false. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00087">87</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="sensor__task_8c_source.html#l00175">sensor_task_init()</a> y <a class="el" href="sensor__task_8c_source.html#l00118">sensor_update_task()</a>.</p>
+
+</div>
+</div>
+<a id="a76783b16775bcc310991b51dad2a954b" name="a76783b16775bcc310991b51dad2a954b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76783b16775bcc310991b51dad2a954b">&#9670;&#160;</a></span>sensor_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SemaphoreHandle_t sensor_mutex = NULL</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Mutex para protección de shared_sensor_data. </p>
+<p>Implementa exclusión mutua para evitar race conditions.</p><ul>
+<li>Toma: sensor_update_task (escritura) y sensor_task_get_data (lectura)</li>
+<li>Timeout: 100ms para evitar bloqueos prolongados</li>
+<li>Tipo: Mutex binario de FreeRTOS </li>
+</ul>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00076">76</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="sensor__task_8c_source.html#l00244">sensor_task_get_data()</a>, <a class="el" href="sensor__task_8c_source.html#l00175">sensor_task_init()</a> y <a class="el" href="sensor__task_8c_source.html#l00118">sensor_update_task()</a>.</p>
+
+</div>
+</div>
+<a id="aa8be8b56ff29125fe4b922393da1ea3b" name="aa8be8b56ff29125fe4b922393da1ea3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8be8b56ff29125fe4b922393da1ea3b">&#9670;&#160;</a></span>shared_sensor_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structsensor__data__t.html">sensor_data_t</a> shared_sensor_data = {0}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Datos de sensores compartidos entre tareas. </p>
+<p>Esta variable contiene la última lectura válida de:</p><ul>
+<li>Temperatura del NTC (en °C)</li>
+<li>Hora actual del sistema (struct tm)</li>
+<li>Flags de validez para cada sensor</li>
+</ul>
+<p><b>IMPORTANTE:</b> Acceso protegido por sensor_mutex. Nunca acceder directamente - usar <a class="el" href="#a5ce0ad492339a29aa758148d1ae646c5" title="Obtiene copia thread-safe de los datos de sensores.">sensor_task_get_data()</a>. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00064">64</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="sensor__task_8c_source.html#l00244">sensor_task_get_data()</a> y <a class="el" href="sensor__task_8c_source.html#l00118">sensor_update_task()</a>.</p>
+
+</div>
+</div>
+<a id="a5a85b9c772bbeb480b209a3e6ea92b4c" name="a5a85b9c772bbeb480b209a3e6ea92b4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a85b9c772bbeb480b209a3e6ea92b4c">&#9670;&#160;</a></span>TAG</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* TAG = &quot;sensor_task&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tag para logging ESP-IDF. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="sensor__task_8c_source.html#l00049">49</a> del archivo <a class="el" href="sensor__task_8c_source.html">sensor_task.c</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="sensor__task_8c.html">sensor_task.c</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

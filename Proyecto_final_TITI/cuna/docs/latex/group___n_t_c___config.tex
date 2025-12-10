@@ -1,0 +1,147 @@
+\doxysection{Configuración del Sensor NTC }
+\hypertarget{group___n_t_c___config}{}\label{group___n_t_c___config}\index{Configuración del Sensor NTC@{Configuración del Sensor NTC}}
+
+
+Parámetros de hardware y calibración del termistor.  
+
+
+\doxysubsubsection*{defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___n_t_c___config_gaab698d1720ec12184b8f90284dfc1989}{CANAL\+\_\+\+ADC\+\_\+\+NTC}}~ADC\+\_\+\+CHANNEL\+\_\+6
+\begin{DoxyCompactList}\small\item\em Canal del ADC donde está conectado el NTC (GPIO 34). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___n_t_c___config_ga0b5710d629a92ab78b76dafb7625d4c7}{RESISTENCIA\+\_\+\+DIVISOR}}~10000.\+0f
+\begin{DoxyCompactList}\small\item\em Resistencia fija del divisor de voltaje (10kΩ). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___n_t_c___config_gaaf0c0341e36fba4dc5555bef640b6978}{RESISTENCIA\+\_\+\+NOMINAL\+\_\+\+NTC}}~10000.\+0f
+\begin{DoxyCompactList}\small\item\em Resistencia nominal del NTC a temperatura de referencia (10kΩ @ 25°C). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___n_t_c___config_ga44dc29ba897a295c6397380687a37dcd}{TEMP\+\_\+\+NOMINAL\+\_\+\+NTC}}~25.\+0f
+\begin{DoxyCompactList}\small\item\em Temperatura nominal de calibración (25°C). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___n_t_c___config_gaa6e2ce3f615e6caf26e6793eb737ef0f}{COEFICIENTE\+\_\+\+BETA\+\_\+\+NTC}}~3950.\+0f
+\begin{DoxyCompactList}\small\item\em Coeficiente Beta del NTC (3950K). \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{group___n_t_c___config_gad21f063c8f3d6a454d15745fa56bd04c}{VOLTAJE\+\_\+\+REFERENCIA\+\_\+\+MV}}~3300.\+0f
+\begin{DoxyCompactList}\small\item\em Voltaje de referencia del ADC (3.\+3V = 3300mV). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Parámetros de hardware y calibración del termistor. 
+
+
+
+\label{doc-define-members}
+\Hypertarget{group___n_t_c___config_doc-define-members}
+\doxysubsection{Documentación de «define»}
+\Hypertarget{group___n_t_c___config_gaab698d1720ec12184b8f90284dfc1989}\index{Configuración del Sensor NTC@{Configuración del Sensor NTC}!CANAL\_ADC\_NTC@{CANAL\_ADC\_NTC}}
+\index{CANAL\_ADC\_NTC@{CANAL\_ADC\_NTC}!Configuración del Sensor NTC@{Configuración del Sensor NTC}}
+\doxysubsubsection{\texorpdfstring{CANAL\_ADC\_NTC}{CANAL\_ADC\_NTC}}
+{\footnotesize\ttfamily \label{group___n_t_c___config_gaab698d1720ec12184b8f90284dfc1989} 
+\#define CANAL\+\_\+\+ADC\+\_\+\+NTC~ADC\+\_\+\+CHANNEL\+\_\+6}
+
+
+
+Canal del ADC donde está conectado el NTC (GPIO 34). 
+
+
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00043}{43}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{ntc__driver_8c_source_l00087}{inicializar\+\_\+ntc()}} y \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}.
+
+\Hypertarget{group___n_t_c___config_gaa6e2ce3f615e6caf26e6793eb737ef0f}\index{Configuración del Sensor NTC@{Configuración del Sensor NTC}!COEFICIENTE\_BETA\_NTC@{COEFICIENTE\_BETA\_NTC}}
+\index{COEFICIENTE\_BETA\_NTC@{COEFICIENTE\_BETA\_NTC}!Configuración del Sensor NTC@{Configuración del Sensor NTC}}
+\doxysubsubsection{\texorpdfstring{COEFICIENTE\_BETA\_NTC}{COEFICIENTE\_BETA\_NTC}}
+{\footnotesize\ttfamily \label{group___n_t_c___config_gaa6e2ce3f615e6caf26e6793eb737ef0f} 
+\#define COEFICIENTE\+\_\+\+BETA\+\_\+\+NTC~3950.\+0f}
+
+
+
+Coeficiente Beta del NTC (3950K). 
+
+El coeficiente Beta caracteriza la variación de resistencia con temperatura. Se obtiene de la hoja de datos del fabricante. Un Beta típico para NTC 10K es 3950K ± 1\%.
+
+La ecuación relacionada es\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{R(T)\ =\ R0\ *\ exp(B\ *\ (1/T\ -\/\ 1/T0))}
+
+\end{DoxyCode}
+ 
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00066}{66}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}.
+
+\Hypertarget{group___n_t_c___config_ga0b5710d629a92ab78b76dafb7625d4c7}\index{Configuración del Sensor NTC@{Configuración del Sensor NTC}!RESISTENCIA\_DIVISOR@{RESISTENCIA\_DIVISOR}}
+\index{RESISTENCIA\_DIVISOR@{RESISTENCIA\_DIVISOR}!Configuración del Sensor NTC@{Configuración del Sensor NTC}}
+\doxysubsubsection{\texorpdfstring{RESISTENCIA\_DIVISOR}{RESISTENCIA\_DIVISOR}}
+{\footnotesize\ttfamily \label{group___n_t_c___config_ga0b5710d629a92ab78b76dafb7625d4c7} 
+\#define RESISTENCIA\+\_\+\+DIVISOR~10000.\+0f}
+
+
+
+Resistencia fija del divisor de voltaje (10kΩ). 
+
+
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00046}{46}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}.
+
+\Hypertarget{group___n_t_c___config_gaaf0c0341e36fba4dc5555bef640b6978}\index{Configuración del Sensor NTC@{Configuración del Sensor NTC}!RESISTENCIA\_NOMINAL\_NTC@{RESISTENCIA\_NOMINAL\_NTC}}
+\index{RESISTENCIA\_NOMINAL\_NTC@{RESISTENCIA\_NOMINAL\_NTC}!Configuración del Sensor NTC@{Configuración del Sensor NTC}}
+\doxysubsubsection{\texorpdfstring{RESISTENCIA\_NOMINAL\_NTC}{RESISTENCIA\_NOMINAL\_NTC}}
+{\footnotesize\ttfamily \label{group___n_t_c___config_gaaf0c0341e36fba4dc5555bef640b6978} 
+\#define RESISTENCIA\+\_\+\+NOMINAL\+\_\+\+NTC~10000.\+0f}
+
+
+
+Resistencia nominal del NTC a temperatura de referencia (10kΩ @ 25°C). 
+
+
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00049}{49}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}.
+
+\Hypertarget{group___n_t_c___config_ga44dc29ba897a295c6397380687a37dcd}\index{Configuración del Sensor NTC@{Configuración del Sensor NTC}!TEMP\_NOMINAL\_NTC@{TEMP\_NOMINAL\_NTC}}
+\index{TEMP\_NOMINAL\_NTC@{TEMP\_NOMINAL\_NTC}!Configuración del Sensor NTC@{Configuración del Sensor NTC}}
+\doxysubsubsection{\texorpdfstring{TEMP\_NOMINAL\_NTC}{TEMP\_NOMINAL\_NTC}}
+{\footnotesize\ttfamily \label{group___n_t_c___config_ga44dc29ba897a295c6397380687a37dcd} 
+\#define TEMP\+\_\+\+NOMINAL\+\_\+\+NTC~25.\+0f}
+
+
+
+Temperatura nominal de calibración (25°C). 
+
+
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00052}{52}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}.
+
+\Hypertarget{group___n_t_c___config_gad21f063c8f3d6a454d15745fa56bd04c}\index{Configuración del Sensor NTC@{Configuración del Sensor NTC}!VOLTAJE\_REFERENCIA\_MV@{VOLTAJE\_REFERENCIA\_MV}}
+\index{VOLTAJE\_REFERENCIA\_MV@{VOLTAJE\_REFERENCIA\_MV}!Configuración del Sensor NTC@{Configuración del Sensor NTC}}
+\doxysubsubsection{\texorpdfstring{VOLTAJE\_REFERENCIA\_MV}{VOLTAJE\_REFERENCIA\_MV}}
+{\footnotesize\ttfamily \label{group___n_t_c___config_gad21f063c8f3d6a454d15745fa56bd04c} 
+\#define VOLTAJE\+\_\+\+REFERENCIA\+\_\+\+MV~3300.\+0f}
+
+
+
+Voltaje de referencia del ADC (3.\+3V = 3300mV). 
+
+
+
+Definición en la línea \mbox{\hyperlink{ntc__driver_8c_source_l00069}{69}} del archivo \mbox{\hyperlink{ntc__driver_8c_source}{ntc\+\_\+driver.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}.
+

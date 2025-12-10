@@ -1,0 +1,371 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}Lista de obsoletos }{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Topic Index}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Topics}{3}{section.2.1}%
+\contentsline {chapter}{\numberline {3}Jerarquía de directorios}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Directorios}{5}{section.3.1}%
+\contentsline {chapter}{\numberline {4}Índice de estructuras de datos}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Estructuras de datos}{7}{section.4.1}%
+\contentsline {chapter}{\numberline {5}Índice de archivos}{9}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Lista de archivos}{9}{section.5.1}%
+\contentsline {chapter}{\numberline {6}Topic Documentation}{11}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Estados de actualización OTA }{11}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Descripción detallada}{11}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Documentación de «define»}{11}{subsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.2.1}OTA\_UPDATE\_FAILED}{11}{subsubsection.6.1.2.1}%
+\contentsline {subsubsection}{\numberline {6.1.2.2}OTA\_UPDATE\_PENDING}{11}{subsubsection.6.1.2.2}%
+\contentsline {subsubsection}{\numberline {6.1.2.3}OTA\_UPDATE\_SUCCESSFUL}{12}{subsubsection.6.1.2.3}%
+\contentsline {section}{\numberline {6.2}Archivos embebidos en el firmware }{12}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Descripción detallada}{12}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Documentación de funciones}{12}{subsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.2.1}asm()\hspace {0.1cm}{\footnotesize \ttfamily [1/10]}}{12}{subsubsection.6.2.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2.2}asm()\hspace {0.1cm}{\footnotesize \ttfamily [2/10]}}{13}{subsubsection.6.2.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.2.3}asm()\hspace {0.1cm}{\footnotesize \ttfamily [3/10]}}{13}{subsubsection.6.2.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.2.4}asm()\hspace {0.1cm}{\footnotesize \ttfamily [4/10]}}{13}{subsubsection.6.2.2.4}%
+\contentsline {subsubsection}{\numberline {6.2.2.5}asm()\hspace {0.1cm}{\footnotesize \ttfamily [5/10]}}{13}{subsubsection.6.2.2.5}%
+\contentsline {subsubsection}{\numberline {6.2.2.6}asm()\hspace {0.1cm}{\footnotesize \ttfamily [6/10]}}{13}{subsubsection.6.2.2.6}%
+\contentsline {subsubsection}{\numberline {6.2.2.7}asm()\hspace {0.1cm}{\footnotesize \ttfamily [7/10]}}{13}{subsubsection.6.2.2.7}%
+\contentsline {subsubsection}{\numberline {6.2.2.8}asm()\hspace {0.1cm}{\footnotesize \ttfamily [8/10]}}{13}{subsubsection.6.2.2.8}%
+\contentsline {subsubsection}{\numberline {6.2.2.9}asm()\hspace {0.1cm}{\footnotesize \ttfamily [9/10]}}{14}{subsubsection.6.2.2.9}%
+\contentsline {subsubsection}{\numberline {6.2.2.10}asm()\hspace {0.1cm}{\footnotesize \ttfamily [10/10]}}{14}{subsubsection.6.2.2.10}%
+\contentsline {section}{\numberline {6.3}Configuración del Access Point }{14}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Descripción detallada}{15}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Documentación de «define»}{15}{subsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.2.1}MAX\_CONNECTION\_RETRIES}{15}{subsubsection.6.3.2.1}%
+\contentsline {subsubsection}{\numberline {6.3.2.2}MAX\_PASSWORD\_LENGTH}{15}{subsubsection.6.3.2.2}%
+\contentsline {subsubsection}{\numberline {6.3.2.3}MAX\_SSID\_LENGTH}{15}{subsubsection.6.3.2.3}%
+\contentsline {subsubsection}{\numberline {6.3.2.4}WIFI\_AP\_BANDWIDTH}{15}{subsubsection.6.3.2.4}%
+\contentsline {subsubsection}{\numberline {6.3.2.5}WIFI\_AP\_BEACON\_INTERVAL}{15}{subsubsection.6.3.2.5}%
+\contentsline {subsubsection}{\numberline {6.3.2.6}WIFI\_AP\_CHANNEL}{16}{subsubsection.6.3.2.6}%
+\contentsline {subsubsection}{\numberline {6.3.2.7}WIFI\_AP\_GATEWAY}{16}{subsubsection.6.3.2.7}%
+\contentsline {subsubsection}{\numberline {6.3.2.8}WIFI\_AP\_IP}{16}{subsubsection.6.3.2.8}%
+\contentsline {subsubsection}{\numberline {6.3.2.9}WIFI\_AP\_MAX\_CONNECTIONS}{16}{subsubsection.6.3.2.9}%
+\contentsline {subsubsection}{\numberline {6.3.2.10}WIFI\_AP\_NETMASK}{16}{subsubsection.6.3.2.10}%
+\contentsline {subsubsection}{\numberline {6.3.2.11}WIFI\_AP\_PASSWORD}{17}{subsubsection.6.3.2.11}%
+\contentsline {subsubsection}{\numberline {6.3.2.12}WIFI\_AP\_SSID}{17}{subsubsection.6.3.2.12}%
+\contentsline {subsubsection}{\numberline {6.3.2.13}WIFI\_AP\_SSID\_HIDDEN}{17}{subsubsection.6.3.2.13}%
+\contentsline {subsubsection}{\numberline {6.3.2.14}WIFI\_STA\_POWER\_SAVE}{17}{subsubsection.6.3.2.14}%
+\contentsline {section}{\numberline {6.4}Configuración del Sensor NTC }{17}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Descripción detallada}{18}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Documentación de «define»}{18}{subsection.6.4.2}%
+\contentsline {subsubsection}{\numberline {6.4.2.1}CANAL\_ADC\_NTC}{18}{subsubsection.6.4.2.1}%
+\contentsline {subsubsection}{\numberline {6.4.2.2}COEFICIENTE\_BETA\_NTC}{18}{subsubsection.6.4.2.2}%
+\contentsline {subsubsection}{\numberline {6.4.2.3}RESISTENCIA\_DIVISOR}{19}{subsubsection.6.4.2.3}%
+\contentsline {subsubsection}{\numberline {6.4.2.4}RESISTENCIA\_NOMINAL\_NTC}{19}{subsubsection.6.4.2.4}%
+\contentsline {subsubsection}{\numberline {6.4.2.5}TEMP\_NOMINAL\_NTC}{19}{subsubsection.6.4.2.5}%
+\contentsline {subsubsection}{\numberline {6.4.2.6}VOLTAJE\_REFERENCIA\_MV}{19}{subsubsection.6.4.2.6}%
+\contentsline {chapter}{\numberline {7}Documentación de directorios}{21}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Referencia del directorio webpage}{21}{section.7.1}%
+\contentsline {chapter}{\numberline {8}Documentación de estructuras de datos}{23}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Referencia de la estructura http\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}server\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}queue\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}message}{23}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Descripción detallada}{23}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}Documentación de campos}{23}{subsection.8.1.2}%
+\contentsline {subsubsection}{\numberline {8.1.2.1}msgID}{23}{subsubsection.8.1.2.1}%
+\contentsline {section}{\numberline {8.2}Referencia de la estructura http\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}server\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}queue\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}message\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t}{23}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}Descripción detallada}{24}{subsection.8.2.1}%
+\contentsline {section}{\numberline {8.3}Referencia de la estructura pir\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}event\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t}{24}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Descripción detallada}{24}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Documentación de campos}{24}{subsection.8.3.2}%
+\contentsline {subsubsection}{\numberline {8.3.2.1}motion}{24}{subsubsection.8.3.2.1}%
+\contentsline {section}{\numberline {8.4}Referencia de la estructura reg\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t}{25}{section.8.4}%
+\contentsline {subsection}{\numberline {8.4.1}Descripción detallada}{25}{subsection.8.4.1}%
+\contentsline {subsection}{\numberline {8.4.2}Documentación de campos}{25}{subsection.8.4.2}%
+\contentsline {subsubsection}{\numberline {8.4.2.1}day\_count}{25}{subsubsection.8.4.2.1}%
+\contentsline {subsubsection}{\numberline {8.4.2.2}days}{25}{subsubsection.8.4.2.2}%
+\contentsline {subsubsection}{\numberline {8.4.2.3}hour}{26}{subsubsection.8.4.2.3}%
+\contentsline {subsubsection}{\numberline {8.4.2.4}minute}{26}{subsubsection.8.4.2.4}%
+\contentsline {section}{\numberline {8.5}Referencia de la estructura register\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}saved}{26}{section.8.5}%
+\contentsline {subsection}{\numberline {8.5.1}Descripción detallada}{27}{subsection.8.5.1}%
+\contentsline {subsection}{\numberline {8.5.2}Documentación de campos}{27}{subsection.8.5.2}%
+\contentsline {subsubsection}{\numberline {8.5.2.1}friday}{27}{subsubsection.8.5.2.1}%
+\contentsline {subsubsection}{\numberline {8.5.2.2}hour}{27}{subsubsection.8.5.2.2}%
+\contentsline {subsubsection}{\numberline {8.5.2.3}min}{27}{subsubsection.8.5.2.3}%
+\contentsline {subsubsection}{\numberline {8.5.2.4}monday}{27}{subsubsection.8.5.2.4}%
+\contentsline {subsubsection}{\numberline {8.5.2.5}saturday}{27}{subsubsection.8.5.2.5}%
+\contentsline {subsubsection}{\numberline {8.5.2.6}sunday}{28}{subsubsection.8.5.2.6}%
+\contentsline {subsubsection}{\numberline {8.5.2.7}thursday}{28}{subsubsection.8.5.2.7}%
+\contentsline {subsubsection}{\numberline {8.5.2.8}tuesday}{28}{subsubsection.8.5.2.8}%
+\contentsline {subsubsection}{\numberline {8.5.2.9}wednesday}{28}{subsubsection.8.5.2.9}%
+\contentsline {section}{\numberline {8.6}Referencia de la estructura register\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}saved\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}e}{28}{section.8.6}%
+\contentsline {subsection}{\numberline {8.6.1}Descripción detallada}{28}{subsection.8.6.1}%
+\contentsline {section}{\numberline {8.7}Referencia de la estructura sensor\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}data\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t}{29}{section.8.7}%
+\contentsline {subsection}{\numberline {8.7.1}Descripción detallada}{29}{subsection.8.7.1}%
+\contentsline {subsection}{\numberline {8.7.2}Documentación de campos}{29}{subsection.8.7.2}%
+\contentsline {subsubsection}{\numberline {8.7.2.1}temperature\_celsius}{29}{subsubsection.8.7.2.1}%
+\contentsline {subsubsection}{\numberline {8.7.2.2}temperature\_valid}{29}{subsubsection.8.7.2.2}%
+\contentsline {subsubsection}{\numberline {8.7.2.3}time\_info}{30}{subsubsection.8.7.2.3}%
+\contentsline {subsubsection}{\numberline {8.7.2.4}time\_valid}{30}{subsubsection.8.7.2.4}%
+\contentsline {section}{\numberline {8.8}Referencia de la estructura wifi\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}app\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}queue\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}message}{30}{section.8.8}%
+\contentsline {subsection}{\numberline {8.8.1}Descripción detallada}{30}{subsection.8.8.1}%
+\contentsline {subsection}{\numberline {8.8.2}Documentación de campos}{30}{subsection.8.8.2}%
+\contentsline {subsubsection}{\numberline {8.8.2.1}msgID}{30}{subsubsection.8.8.2.1}%
+\contentsline {section}{\numberline {8.9}Referencia de la estructura wifi\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}app\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}queue\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}message\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}t}{31}{section.8.9}%
+\contentsline {subsection}{\numberline {8.9.1}Descripción detallada}{31}{subsection.8.9.1}%
+\contentsline {chapter}{\numberline {9}Documentación de archivos}{33}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Referencia del archivo fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}control.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{33}{section.9.1}%
+\contentsline {subsection}{\numberline {9.1.1}Descripción detallada}{34}{subsection.9.1.1}%
+\contentsline {subsection}{\numberline {9.1.2}Documentación de funciones}{35}{subsection.9.1.2}%
+\contentsline {subsubsection}{\numberline {9.1.2.1}compute\_auto\_speed()}{35}{subsubsection.9.1.2.1}%
+\contentsline {subsubsection}{\numberline {9.1.2.2}fan\_control\_get\_mode()}{35}{subsubsection.9.1.2.2}%
+\contentsline {subsubsection}{\numberline {9.1.2.3}fan\_control\_get\_speed()}{36}{subsubsection.9.1.2.3}%
+\contentsline {subsubsection}{\numberline {9.1.2.4}fan\_control\_init()}{36}{subsubsection.9.1.2.4}%
+\contentsline {subsubsection}{\numberline {9.1.2.5}fan\_control\_on\_register\_tick()}{37}{subsubsection.9.1.2.5}%
+\contentsline {subsubsection}{\numberline {9.1.2.6}fan\_control\_set\_manual\_speed()}{37}{subsubsection.9.1.2.6}%
+\contentsline {subsubsection}{\numberline {9.1.2.7}fan\_control\_set\_mode()}{38}{subsubsection.9.1.2.7}%
+\contentsline {subsubsection}{\numberline {9.1.2.8}fan\_control\_update()}{39}{subsubsection.9.1.2.8}%
+\contentsline {subsection}{\numberline {9.1.3}Documentación de variables}{40}{subsection.9.1.3}%
+\contentsline {subsubsection}{\numberline {9.1.3.1}s\_current\_speed}{40}{subsubsection.9.1.3.1}%
+\contentsline {subsubsection}{\numberline {9.1.3.2}s\_manual\_speed}{40}{subsubsection.9.1.3.2}%
+\contentsline {subsubsection}{\numberline {9.1.3.3}s\_mode}{41}{subsubsection.9.1.3.3}%
+\contentsline {subsubsection}{\numberline {9.1.3.4}s\_ntc\_adc\_handle}{41}{subsubsection.9.1.3.4}%
+\contentsline {subsubsection}{\numberline {9.1.3.5}s\_reg\_active}{41}{subsubsection.9.1.3.5}%
+\contentsline {section}{\numberline {9.2}fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}control.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{42}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Referencia del archivo fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}control.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{44}{section.9.3}%
+\contentsline {subsection}{\numberline {9.3.1}Descripción detallada}{44}{subsection.9.3.1}%
+\contentsline {subsection}{\numberline {9.3.2}Documentación de enumeraciones}{45}{subsection.9.3.2}%
+\contentsline {subsubsection}{\numberline {9.3.2.1}fan\_mode\_t}{45}{subsubsection.9.3.2.1}%
+\contentsline {subsection}{\numberline {9.3.3}Documentación de funciones}{45}{subsection.9.3.3}%
+\contentsline {subsubsection}{\numberline {9.3.3.1}fan\_control\_get\_mode()}{45}{subsubsection.9.3.3.1}%
+\contentsline {subsubsection}{\numberline {9.3.3.2}fan\_control\_get\_speed()}{46}{subsubsection.9.3.3.2}%
+\contentsline {subsubsection}{\numberline {9.3.3.3}fan\_control\_init()}{46}{subsubsection.9.3.3.3}%
+\contentsline {subsubsection}{\numberline {9.3.3.4}fan\_control\_on\_register\_tick()}{47}{subsubsection.9.3.3.4}%
+\contentsline {subsubsection}{\numberline {9.3.3.5}fan\_control\_set\_manual\_speed()}{48}{subsubsection.9.3.3.5}%
+\contentsline {subsubsection}{\numberline {9.3.3.6}fan\_control\_set\_mode()}{48}{subsubsection.9.3.3.6}%
+\contentsline {subsubsection}{\numberline {9.3.3.7}fan\_control\_update()}{50}{subsubsection.9.3.3.7}%
+\contentsline {section}{\numberline {9.4}fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}control.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{51}{section.9.4}%
+\contentsline {section}{\numberline {9.5}Referencia del archivo fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{51}{section.9.5}%
+\contentsline {subsection}{\numberline {9.5.1}Documentación de funciones}{51}{subsection.9.5.1}%
+\contentsline {subsubsection}{\numberline {9.5.1.1}fan\_init()}{51}{subsubsection.9.5.1.1}%
+\contentsline {subsubsection}{\numberline {9.5.1.2}fan\_off()}{52}{subsubsection.9.5.1.2}%
+\contentsline {subsubsection}{\numberline {9.5.1.3}fan\_set\_speed\_percent()}{52}{subsubsection.9.5.1.3}%
+\contentsline {subsection}{\numberline {9.5.2}Documentación de variables}{52}{subsection.9.5.2}%
+\contentsline {subsubsection}{\numberline {9.5.2.1}s\_fan\_initialized}{52}{subsubsection.9.5.2.1}%
+\contentsline {section}{\numberline {9.6}fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{52}{section.9.6}%
+\contentsline {section}{\numberline {9.7}Referencia del archivo fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{53}{section.9.7}%
+\contentsline {subsection}{\numberline {9.7.1}Documentación de «define»}{53}{subsection.9.7.1}%
+\contentsline {subsubsection}{\numberline {9.7.1.1}FAN\_LEDC\_CHANNEL}{53}{subsubsection.9.7.1.1}%
+\contentsline {subsubsection}{\numberline {9.7.1.2}FAN\_LEDC\_DUTY\_RES}{54}{subsubsection.9.7.1.2}%
+\contentsline {subsubsection}{\numberline {9.7.1.3}FAN\_LEDC\_FREQ\_HZ}{54}{subsubsection.9.7.1.3}%
+\contentsline {subsubsection}{\numberline {9.7.1.4}FAN\_LEDC\_MODE}{54}{subsubsection.9.7.1.4}%
+\contentsline {subsubsection}{\numberline {9.7.1.5}FAN\_LEDC\_TIMER}{54}{subsubsection.9.7.1.5}%
+\contentsline {subsubsection}{\numberline {9.7.1.6}FAN\_PWM\_GPIO}{54}{subsubsection.9.7.1.6}%
+\contentsline {subsection}{\numberline {9.7.2}Documentación de funciones}{54}{subsection.9.7.2}%
+\contentsline {subsubsection}{\numberline {9.7.2.1}fan\_init()}{54}{subsubsection.9.7.2.1}%
+\contentsline {subsubsection}{\numberline {9.7.2.2}fan\_off()}{55}{subsubsection.9.7.2.2}%
+\contentsline {subsubsection}{\numberline {9.7.2.3}fan\_set\_speed\_percent()}{55}{subsubsection.9.7.2.3}%
+\contentsline {section}{\numberline {9.8}fan\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{55}{section.9.8}%
+\contentsline {section}{\numberline {9.9}Referencia del archivo http\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}server.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{56}{section.9.9}%
+\contentsline {subsection}{\numberline {9.9.1}Descripción detallada}{58}{subsection.9.9.1}%
+\contentsline {subsection}{\numberline {9.9.2}Documentación de funciones}{60}{subsection.9.9.2}%
+\contentsline {subsubsection}{\numberline {9.9.2.1}fan\_task()}{60}{subsubsection.9.9.2.1}%
+\contentsline {subsubsection}{\numberline {9.9.2.2}http\_server\_app\_css\_handler()}{60}{subsubsection.9.9.2.2}%
+\contentsline {subsubsection}{\numberline {9.9.2.3}http\_server\_app\_js\_handler()}{61}{subsubsection.9.9.2.3}%
+\contentsline {subsubsection}{\numberline {9.9.2.4}http\_server\_configure()}{61}{subsubsection.9.9.2.4}%
+\contentsline {subsubsection}{\numberline {9.9.2.5}http\_server\_fan\_control\_handler()}{62}{subsubsection.9.9.2.5}%
+\contentsline {subsubsection}{\numberline {9.9.2.6}http\_server\_favicon\_ico\_handler()}{63}{subsubsection.9.9.2.6}%
+\contentsline {subsubsection}{\numberline {9.9.2.7}http\_server\_fw\_update\_reset\_callback()}{63}{subsubsection.9.9.2.7}%
+\contentsline {subsubsection}{\numberline {9.9.2.8}http\_server\_fw\_update\_reset\_timer()}{64}{subsubsection.9.9.2.8}%
+\contentsline {subsubsection}{\numberline {9.9.2.9}http\_server\_get\_dht\_sensor\_readings\_json\_handler()}{64}{subsubsection.9.9.2.9}%
+\contentsline {subsubsection}{\numberline {9.9.2.10}http\_server\_index\_html\_handler()}{65}{subsubsection.9.9.2.10}%
+\contentsline {subsubsection}{\numberline {9.9.2.11}http\_server\_jquery\_handler()}{65}{subsubsection.9.9.2.11}%
+\contentsline {subsubsection}{\numberline {9.9.2.12}http\_server\_monitor()}{66}{subsubsection.9.9.2.12}%
+\contentsline {subsubsection}{\numberline {9.9.2.13}http\_server\_monitor\_send\_message()}{66}{subsubsection.9.9.2.13}%
+\contentsline {subsubsection}{\numberline {9.9.2.14}http\_server\_OTA\_status\_handler()}{67}{subsubsection.9.9.2.14}%
+\contentsline {subsubsection}{\numberline {9.9.2.15}http\_server\_OTA\_update\_handler()}{67}{subsubsection.9.9.2.15}%
+\contentsline {subsubsection}{\numberline {9.9.2.16}http\_server\_read\_register\_handler()}{68}{subsubsection.9.9.2.16}%
+\contentsline {subsubsection}{\numberline {9.9.2.17}http\_server\_register\_erase\_handler()}{68}{subsubsection.9.9.2.17}%
+\contentsline {subsubsection}{\numberline {9.9.2.18}http\_server\_start()}{69}{subsubsection.9.9.2.18}%
+\contentsline {subsubsection}{\numberline {9.9.2.19}http\_server\_stop()}{70}{subsubsection.9.9.2.19}%
+\contentsline {subsubsection}{\numberline {9.9.2.20}http\_server\_time\_json\_handler()}{70}{subsubsection.9.9.2.20}%
+\contentsline {subsubsection}{\numberline {9.9.2.21}http\_server\_toogle\_led\_handler()}{71}{subsubsection.9.9.2.21}%
+\contentsline {subsubsection}{\numberline {9.9.2.22}http\_server\_wifi\_connect\_json\_handler()}{71}{subsubsection.9.9.2.22}%
+\contentsline {subsubsection}{\numberline {9.9.2.23}http\_server\_wifi\_connect\_status\_json\_handler()}{72}{subsubsection.9.9.2.23}%
+\contentsline {subsubsection}{\numberline {9.9.2.24}log\_error\_if\_nonzero()}{72}{subsubsection.9.9.2.24}%
+\contentsline {subsubsection}{\numberline {9.9.2.25}sensors\_init()}{73}{subsubsection.9.9.2.25}%
+\contentsline {subsubsection}{\numberline {9.9.2.26}toogle\_led()}{73}{subsubsection.9.9.2.26}%
+\contentsline {subsection}{\numberline {9.9.3}Documentación de variables}{74}{subsection.9.9.3}%
+\contentsline {subsubsection}{\numberline {9.9.3.1}fw\_update\_reset}{74}{subsubsection.9.9.3.1}%
+\contentsline {subsubsection}{\numberline {9.9.3.2}fw\_update\_reset\_args}{74}{subsubsection.9.9.3.2}%
+\contentsline {subsubsection}{\numberline {9.9.3.3}g\_fw\_update\_status}{74}{subsubsection.9.9.3.3}%
+\contentsline {subsubsection}{\numberline {9.9.3.4}g\_wifi\_connect\_status}{74}{subsubsection.9.9.3.4}%
+\contentsline {subsubsection}{\numberline {9.9.3.5}http\_server\_handle}{75}{subsubsection.9.9.3.5}%
+\contentsline {subsubsection}{\numberline {9.9.3.6}http\_server\_monitor\_queue\_handle}{75}{subsubsection.9.9.3.6}%
+\contentsline {subsubsection}{\numberline {9.9.3.7}s\_led\_state}{75}{subsubsection.9.9.3.7}%
+\contentsline {subsubsection}{\numberline {9.9.3.8}s\_ntc\_adc\_handle}{75}{subsubsection.9.9.3.8}%
+\contentsline {subsubsection}{\numberline {9.9.3.9}TAG}{76}{subsubsection.9.9.3.9}%
+\contentsline {subsubsection}{\numberline {9.9.3.10}task\_http\_server\_monitor}{76}{subsubsection.9.9.3.10}%
+\contentsline {section}{\numberline {9.10}http\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}server.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{76}{section.9.10}%
+\contentsline {section}{\numberline {9.11}Referencia del archivo http\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}server.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{88}{section.9.11}%
+\contentsline {subsection}{\numberline {9.11.1}Descripción detallada}{89}{subsection.9.11.1}%
+\contentsline {subsection}{\numberline {9.11.2}Documentación de «define»}{90}{subsection.9.11.2}%
+\contentsline {subsubsection}{\numberline {9.11.2.1}BLINK\_GPIO}{90}{subsubsection.9.11.2.1}%
+\contentsline {subsection}{\numberline {9.11.3}Documentación de «typedef»}{90}{subsection.9.11.3}%
+\contentsline {subsubsection}{\numberline {9.11.3.1}http\_server\_message\_e}{90}{subsubsection.9.11.3.1}%
+\contentsline {subsubsection}{\numberline {9.11.3.2}http\_server\_queue\_message\_t}{90}{subsubsection.9.11.3.2}%
+\contentsline {subsubsection}{\numberline {9.11.3.3}http\_server\_wifi\_connect\_status\_e}{90}{subsubsection.9.11.3.3}%
+\contentsline {subsection}{\numberline {9.11.4}Documentación de enumeraciones}{90}{subsection.9.11.4}%
+\contentsline {subsubsection}{\numberline {9.11.4.1}http\_server\_message}{90}{subsubsection.9.11.4.1}%
+\contentsline {subsubsection}{\numberline {9.11.4.2}http\_server\_wifi\_connect\_status}{90}{subsubsection.9.11.4.2}%
+\contentsline {subsection}{\numberline {9.11.5}Documentación de funciones}{91}{subsection.9.11.5}%
+\contentsline {subsubsection}{\numberline {9.11.5.1}http\_server\_fw\_update\_reset\_callback()}{91}{subsubsection.9.11.5.1}%
+\contentsline {subsubsection}{\numberline {9.11.5.2}http\_server\_monitor\_send\_message()}{91}{subsubsection.9.11.5.2}%
+\contentsline {subsubsection}{\numberline {9.11.5.3}http\_server\_start()}{92}{subsubsection.9.11.5.3}%
+\contentsline {subsubsection}{\numberline {9.11.5.4}http\_server\_stop()}{93}{subsubsection.9.11.5.4}%
+\contentsline {subsubsection}{\numberline {9.11.5.5}toogle\_led()}{94}{subsubsection.9.11.5.5}%
+\contentsline {section}{\numberline {9.12}http\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}server.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{94}{section.9.12}%
+\contentsline {section}{\numberline {9.13}Referencia del archivo ntc\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{95}{section.9.13}%
+\contentsline {subsection}{\numberline {9.13.1}Descripción detallada}{95}{subsection.9.13.1}%
+\contentsline {subsection}{\numberline {9.13.2}Documentación de funciones}{96}{subsection.9.13.2}%
+\contentsline {subsubsection}{\numberline {9.13.2.1}inicializar\_ntc()}{96}{subsubsection.9.13.2.1}%
+\contentsline {subsubsection}{\numberline {9.13.2.2}leer\_temperatura\_celsius()}{97}{subsubsection.9.13.2.2}%
+\contentsline {section}{\numberline {9.14}ntc\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{98}{section.9.14}%
+\contentsline {section}{\numberline {9.15}Referencia del archivo ntc\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{98}{section.9.15}%
+\contentsline {subsection}{\numberline {9.15.1}Descripción detallada}{99}{subsection.9.15.1}%
+\contentsline {subsection}{\numberline {9.15.2}Documentación de funciones}{100}{subsection.9.15.2}%
+\contentsline {subsubsection}{\numberline {9.15.2.1}inicializar\_ntc()}{100}{subsubsection.9.15.2.1}%
+\contentsline {subsubsection}{\numberline {9.15.2.2}leer\_temperatura\_celsius()}{101}{subsubsection.9.15.2.2}%
+\contentsline {section}{\numberline {9.16}ntc\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{103}{section.9.16}%
+\contentsline {section}{\numberline {9.17}Referencia del archivo pir\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{103}{section.9.17}%
+\contentsline {subsection}{\numberline {9.17.1}Descripción detallada}{103}{subsection.9.17.1}%
+\contentsline {subsection}{\numberline {9.17.2}Documentación de funciones}{104}{subsection.9.17.2}%
+\contentsline {subsubsection}{\numberline {9.17.2.1}pir\_init()}{104}{subsubsection.9.17.2.1}%
+\contentsline {subsubsection}{\numberline {9.17.2.2}pir\_is\_motion\_active()}{105}{subsubsection.9.17.2.2}%
+\contentsline {subsubsection}{\numberline {9.17.2.3}pir\_isr\_handler()}{106}{subsubsection.9.17.2.3}%
+\contentsline {subsection}{\numberline {9.17.3}Documentación de variables}{106}{subsection.9.17.3}%
+\contentsline {subsubsection}{\numberline {9.17.3.1}s\_pir\_evt\_queue}{106}{subsubsection.9.17.3.1}%
+\contentsline {subsubsection}{\numberline {9.17.3.2}s\_pir\_gpio}{107}{subsubsection.9.17.3.2}%
+\contentsline {section}{\numberline {9.18}pir\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{107}{section.9.18}%
+\contentsline {section}{\numberline {9.19}Referencia del archivo pir\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{108}{section.9.19}%
+\contentsline {subsection}{\numberline {9.19.1}Descripción detallada}{108}{subsection.9.19.1}%
+\contentsline {subsection}{\numberline {9.19.2}Documentación de funciones}{109}{subsection.9.19.2}%
+\contentsline {subsubsection}{\numberline {9.19.2.1}pir\_init()}{109}{subsubsection.9.19.2.1}%
+\contentsline {subsubsection}{\numberline {9.19.2.2}pir\_is\_motion\_active()}{111}{subsubsection.9.19.2.2}%
+\contentsline {section}{\numberline {9.20}pir\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}driver.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{112}{section.9.20}%
+\contentsline {section}{\numberline {9.21}Referencia del archivo registers.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{112}{section.9.21}%
+\contentsline {subsection}{\numberline {9.21.1}Descripción detallada}{113}{subsection.9.21.1}%
+\contentsline {subsection}{\numberline {9.21.2}Documentación de funciones}{114}{subsection.9.21.2}%
+\contentsline {subsubsection}{\numberline {9.21.2.1}api\_delete\_register()}{114}{subsubsection.9.21.2.1}%
+\contentsline {subsubsection}{\numberline {9.21.2.2}api\_get\_registers()}{115}{subsubsection.9.21.2.2}%
+\contentsline {subsubsection}{\numberline {9.21.2.3}api\_post\_register()}{115}{subsubsection.9.21.2.3}%
+\contentsline {subsubsection}{\numberline {9.21.2.4}delete\_register\_from\_nvs()}{116}{subsubsection.9.21.2.4}%
+\contentsline {subsubsection}{\numberline {9.21.2.5}init\_nvs()}{116}{subsubsection.9.21.2.5}%
+\contentsline {subsubsection}{\numberline {9.21.2.6}load\_register\_from\_nvs()}{117}{subsubsection.9.21.2.6}%
+\contentsline {subsubsection}{\numberline {9.21.2.7}load\_register\_struct\_from\_nvs()}{118}{subsubsection.9.21.2.7}%
+\contentsline {subsubsection}{\numberline {9.21.2.8}register\_is\_active\_now()}{119}{subsubsection.9.21.2.8}%
+\contentsline {subsubsection}{\numberline {9.21.2.9}register\_registers\_endpoints()}{120}{subsubsection.9.21.2.9}%
+\contentsline {subsubsection}{\numberline {9.21.2.10}registers\_scheduler\_task()}{121}{subsubsection.9.21.2.10}%
+\contentsline {subsubsection}{\numberline {9.21.2.11}save\_register\_to\_nvs()}{122}{subsubsection.9.21.2.11}%
+\contentsline {subsection}{\numberline {9.21.3}Documentación de variables}{123}{subsection.9.21.3}%
+\contentsline {subsubsection}{\numberline {9.21.3.1}TAG}{123}{subsubsection.9.21.3.1}%
+\contentsline {section}{\numberline {9.22}registers.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{123}{section.9.22}%
+\contentsline {section}{\numberline {9.23}Referencia del archivo registers.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{128}{section.9.23}%
+\contentsline {subsection}{\numberline {9.23.1}Descripción detallada}{129}{subsection.9.23.1}%
+\contentsline {subsection}{\numberline {9.23.2}Documentación de funciones}{129}{subsection.9.23.2}%
+\contentsline {subsubsection}{\numberline {9.23.2.1}api\_delete\_register()}{129}{subsubsection.9.23.2.1}%
+\contentsline {subsubsection}{\numberline {9.23.2.2}api\_get\_registers()}{130}{subsubsection.9.23.2.2}%
+\contentsline {subsubsection}{\numberline {9.23.2.3}api\_post\_register()}{130}{subsubsection.9.23.2.3}%
+\contentsline {subsubsection}{\numberline {9.23.2.4}delete\_register\_from\_nvs()}{131}{subsubsection.9.23.2.4}%
+\contentsline {subsubsection}{\numberline {9.23.2.5}init\_nvs()}{131}{subsubsection.9.23.2.5}%
+\contentsline {subsubsection}{\numberline {9.23.2.6}load\_register\_from\_nvs()}{132}{subsubsection.9.23.2.6}%
+\contentsline {subsubsection}{\numberline {9.23.2.7}register\_registers\_endpoints()}{133}{subsubsection.9.23.2.7}%
+\contentsline {subsubsection}{\numberline {9.23.2.8}save\_register\_to\_nvs()}{133}{subsubsection.9.23.2.8}%
+\contentsline {section}{\numberline {9.24}registers.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{135}{section.9.24}%
+\contentsline {section}{\numberline {9.25}Referencia del archivo sensor\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}task.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{135}{section.9.25}%
+\contentsline {subsection}{\numberline {9.25.1}Descripción detallada}{136}{subsection.9.25.1}%
+\contentsline {subsection}{\numberline {9.25.2}Documentación de funciones}{137}{subsection.9.25.2}%
+\contentsline {subsubsection}{\numberline {9.25.2.1}sensor\_task\_get\_data()}{137}{subsubsection.9.25.2.1}%
+\contentsline {subsubsection}{\numberline {9.25.2.2}sensor\_task\_init()}{138}{subsubsection.9.25.2.2}%
+\contentsline {subsubsection}{\numberline {9.25.2.3}sensor\_task\_update\_now()}{139}{subsubsection.9.25.2.3}%
+\contentsline {subsubsection}{\numberline {9.25.2.4}sensor\_update\_task()}{139}{subsubsection.9.25.2.4}%
+\contentsline {subsection}{\numberline {9.25.3}Documentación de variables}{140}{subsection.9.25.3}%
+\contentsline {subsubsection}{\numberline {9.25.3.1}adc\_handle}{140}{subsubsection.9.25.3.1}%
+\contentsline {subsubsection}{\numberline {9.25.3.2}sensor\_mutex}{140}{subsubsection.9.25.3.2}%
+\contentsline {subsubsection}{\numberline {9.25.3.3}shared\_sensor\_data}{141}{subsubsection.9.25.3.3}%
+\contentsline {subsubsection}{\numberline {9.25.3.4}TAG}{141}{subsubsection.9.25.3.4}%
+\contentsline {section}{\numberline {9.26}sensor\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}task.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{141}{section.9.26}%
+\contentsline {section}{\numberline {9.27}Referencia del archivo sensor\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}task.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{142}{section.9.27}%
+\contentsline {subsection}{\numberline {9.27.1}Descripción detallada}{143}{subsection.9.27.1}%
+\contentsline {subsection}{\numberline {9.27.2}Documentación de funciones}{143}{subsection.9.27.2}%
+\contentsline {subsubsection}{\numberline {9.27.2.1}sensor\_task\_get\_data()}{143}{subsubsection.9.27.2.1}%
+\contentsline {subsubsection}{\numberline {9.27.2.2}sensor\_task\_init()}{145}{subsubsection.9.27.2.2}%
+\contentsline {subsubsection}{\numberline {9.27.2.3}sensor\_task\_update\_now()}{146}{subsubsection.9.27.2.3}%
+\contentsline {section}{\numberline {9.28}sensor\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}task.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{147}{section.9.28}%
+\contentsline {section}{\numberline {9.29}Referencia del archivo webpage/app.js}{147}{section.9.29}%
+\contentsline {section}{\numberline {9.30}app.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}js}{147}{section.9.30}%
+\contentsline {section}{\numberline {9.31}Referencia del archivo webpage/index.html}{155}{section.9.31}%
+\contentsline {section}{\numberline {9.32}index.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}html}{155}{section.9.32}%
+\contentsline {section}{\numberline {9.33}Referencia del archivo wifi\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}app.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{159}{section.9.33}%
+\contentsline {subsection}{\numberline {9.33.1}Descripción detallada}{161}{subsection.9.33.1}%
+\contentsline {subsection}{\numberline {9.33.2}Documentación de funciones}{162}{subsection.9.33.2}%
+\contentsline {subsubsection}{\numberline {9.33.2.1}check\_sta\_connection\_state()}{162}{subsubsection.9.33.2.1}%
+\contentsline {subsubsection}{\numberline {9.33.2.2}compare\_hour\_day\_structs()}{162}{subsubsection.9.33.2.2}%
+\contentsline {subsubsection}{\numberline {9.33.2.3}connect\_to\_wifi()}{163}{subsubsection.9.33.2.3}%
+\contentsline {subsubsection}{\numberline {9.33.2.4}get\_state\_time\_was\_synchronized()}{163}{subsubsection.9.33.2.4}%
+\contentsline {subsubsection}{\numberline {9.33.2.5}init\_obtain\_time()}{163}{subsubsection.9.33.2.5}%
+\contentsline {subsubsection}{\numberline {9.33.2.6}initialize\_registers()}{164}{subsubsection.9.33.2.6}%
+\contentsline {subsubsection}{\numberline {9.33.2.7}load\_wifi\_credentials()}{164}{subsubsection.9.33.2.7}%
+\contentsline {subsubsection}{\numberline {9.33.2.8}nvs\_credentials\_exist()}{165}{subsubsection.9.33.2.8}%
+\contentsline {subsubsection}{\numberline {9.33.2.9}obtain\_time()}{165}{subsubsection.9.33.2.9}%
+\contentsline {subsubsection}{\numberline {9.33.2.10}read\_reg\_data()}{165}{subsubsection.9.33.2.10}%
+\contentsline {subsubsection}{\numberline {9.33.2.11}save\_reg\_data()}{166}{subsubsection.9.33.2.11}%
+\contentsline {subsubsection}{\numberline {9.33.2.12}save\_wifi\_credentials()}{166}{subsubsection.9.33.2.12}%
+\contentsline {subsubsection}{\numberline {9.33.2.13}task\_compare\_hour\_to\_execute\_action()}{167}{subsubsection.9.33.2.13}%
+\contentsline {subsubsection}{\numberline {9.33.2.14}update\_register()}{168}{subsubsection.9.33.2.14}%
+\contentsline {subsubsection}{\numberline {9.33.2.15}wifi\_app\_connect\_sta()}{168}{subsubsection.9.33.2.15}%
+\contentsline {subsubsection}{\numberline {9.33.2.16}wifi\_app\_default\_wifi\_init()}{168}{subsubsection.9.33.2.16}%
+\contentsline {subsubsection}{\numberline {9.33.2.17}wifi\_app\_event\_handler()}{169}{subsubsection.9.33.2.17}%
+\contentsline {subsubsection}{\numberline {9.33.2.18}wifi\_app\_event\_handler\_init()}{169}{subsubsection.9.33.2.18}%
+\contentsline {subsubsection}{\numberline {9.33.2.19}wifi\_app\_get\_wifi\_config()}{170}{subsubsection.9.33.2.19}%
+\contentsline {subsubsection}{\numberline {9.33.2.20}wifi\_app\_send\_message()}{170}{subsubsection.9.33.2.20}%
+\contentsline {subsubsection}{\numberline {9.33.2.21}wifi\_app\_soft\_ap\_config()}{171}{subsubsection.9.33.2.21}%
+\contentsline {subsubsection}{\numberline {9.33.2.22}wifi\_app\_start()}{172}{subsubsection.9.33.2.22}%
+\contentsline {subsubsection}{\numberline {9.33.2.23}wifi\_app\_task()}{173}{subsubsection.9.33.2.23}%
+\contentsline {subsection}{\numberline {9.33.3}Documentación de variables}{174}{subsection.9.33.3}%
+\contentsline {subsubsection}{\numberline {9.33.3.1}esp\_netif\_ap}{174}{subsubsection.9.33.3.1}%
+\contentsline {subsubsection}{\numberline {9.33.3.2}esp\_netif\_sta}{174}{subsubsection.9.33.3.2}%
+\contentsline {subsubsection}{\numberline {9.33.3.3}g\_retry\_number}{174}{subsubsection.9.33.3.3}%
+\contentsline {subsubsection}{\numberline {9.33.3.4}mySemaphore}{174}{subsubsection.9.33.3.4}%
+\contentsline {subsubsection}{\numberline {9.33.3.5}register\_readings\_from\_flash}{175}{subsubsection.9.33.3.5}%
+\contentsline {subsubsection}{\numberline {9.33.3.6}s\_led\_state}{175}{subsubsection.9.33.3.6}%
+\contentsline {subsubsection}{\numberline {9.33.3.7}TAG}{175}{subsubsection.9.33.3.7}%
+\contentsline {subsubsection}{\numberline {9.33.3.8}time\_was\_synchronized}{175}{subsubsection.9.33.3.8}%
+\contentsline {subsubsection}{\numberline {9.33.3.9}wifi\_app\_queue\_handle}{175}{subsubsection.9.33.3.9}%
+\contentsline {subsubsection}{\numberline {9.33.3.10}wifi\_config}{176}{subsubsection.9.33.3.10}%
+\contentsline {section}{\numberline {9.34}wifi\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}app.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{176}{section.9.34}%
+\contentsline {section}{\numberline {9.35}Referencia del archivo wifi\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}app.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{186}{section.9.35}%
+\contentsline {subsection}{\numberline {9.35.1}Descripción detallada}{189}{subsection.9.35.1}%
+\contentsline {subsection}{\numberline {9.35.2}Documentación de «define»}{189}{subsection.9.35.2}%
+\contentsline {subsubsection}{\numberline {9.35.2.1}NUM\_REGISTERS\_AV}{189}{subsubsection.9.35.2.1}%
+\contentsline {subsection}{\numberline {9.35.3}Documentación de «typedef»}{189}{subsection.9.35.3}%
+\contentsline {subsubsection}{\numberline {9.35.3.1}register\_saved\_e}{189}{subsubsection.9.35.3.1}%
+\contentsline {subsubsection}{\numberline {9.35.3.2}wifi\_app\_message\_e}{190}{subsubsection.9.35.3.2}%
+\contentsline {subsubsection}{\numberline {9.35.3.3}wifi\_app\_queue\_message\_t}{190}{subsubsection.9.35.3.3}%
+\contentsline {subsubsection}{\numberline {9.35.3.4}wifi\_connected\_event\_callback\_t}{190}{subsubsection.9.35.3.4}%
+\contentsline {subsection}{\numberline {9.35.4}Documentación de enumeraciones}{190}{subsection.9.35.4}%
+\contentsline {subsubsection}{\numberline {9.35.4.1}wifi\_app\_message}{190}{subsubsection.9.35.4.1}%
+\contentsline {subsection}{\numberline {9.35.5}Documentación de funciones}{190}{subsection.9.35.5}%
+\contentsline {subsubsection}{\numberline {9.35.5.1}check\_sta\_connection\_state()}{190}{subsubsection.9.35.5.1}%
+\contentsline {subsubsection}{\numberline {9.35.5.2}connect\_to\_wifi()}{191}{subsubsection.9.35.5.2}%
+\contentsline {subsubsection}{\numberline {9.35.5.3}get\_state\_time\_was\_synchronized()}{191}{subsubsection.9.35.5.3}%
+\contentsline {subsubsection}{\numberline {9.35.5.4}init\_obtain\_time()}{192}{subsubsection.9.35.5.4}%
+\contentsline {subsubsection}{\numberline {9.35.5.5}initialize\_registers()}{192}{subsubsection.9.35.5.5}%
+\contentsline {subsubsection}{\numberline {9.35.5.6}load\_wifi\_credentials()}{192}{subsubsection.9.35.5.6}%
+\contentsline {subsubsection}{\numberline {9.35.5.7}obtain\_time()}{193}{subsubsection.9.35.5.7}%
+\contentsline {subsubsection}{\numberline {9.35.5.8}read\_reg\_data()}{193}{subsubsection.9.35.5.8}%
+\contentsline {subsubsection}{\numberline {9.35.5.9}save\_reg\_data()}{194}{subsubsection.9.35.5.9}%
+\contentsline {subsubsection}{\numberline {9.35.5.10}save\_wifi\_credentials()}{194}{subsubsection.9.35.5.10}%
+\contentsline {subsubsection}{\numberline {9.35.5.11}task\_compare\_hour\_to\_execute\_action()}{195}{subsubsection.9.35.5.11}%
+\contentsline {subsubsection}{\numberline {9.35.5.12}update\_register()}{197}{subsubsection.9.35.5.12}%
+\contentsline {subsubsection}{\numberline {9.35.5.13}wifi\_app\_call\_callback()}{197}{subsubsection.9.35.5.13}%
+\contentsline {subsubsection}{\numberline {9.35.5.14}wifi\_app\_connect\_sta()}{197}{subsubsection.9.35.5.14}%
+\contentsline {subsubsection}{\numberline {9.35.5.15}wifi\_app\_get\_rssi()}{198}{subsubsection.9.35.5.15}%
+\contentsline {subsubsection}{\numberline {9.35.5.16}wifi\_app\_get\_wifi\_config()}{198}{subsubsection.9.35.5.16}%
+\contentsline {subsubsection}{\numberline {9.35.5.17}wifi\_app\_send\_message()}{198}{subsubsection.9.35.5.17}%
+\contentsline {subsubsection}{\numberline {9.35.5.18}wifi\_app\_set\_callback()}{199}{subsubsection.9.35.5.18}%
+\contentsline {subsubsection}{\numberline {9.35.5.19}wifi\_app\_start()}{199}{subsubsection.9.35.5.19}%
+\contentsline {subsection}{\numberline {9.35.6}Documentación de variables}{200}{subsection.9.35.6}%
+\contentsline {subsubsection}{\numberline {9.35.6.1}esp\_netif\_ap}{200}{subsubsection.9.35.6.1}%
+\contentsline {subsubsection}{\numberline {9.35.6.2}esp\_netif\_sta}{200}{subsubsection.9.35.6.2}%
+\contentsline {section}{\numberline {9.36}wifi\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}app.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{201}{section.9.36}%
+\contentsline {section}{\numberline {9.37}Referencia del archivo C\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}:/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Users/lgamb/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Documents/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Uni/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}RTOS/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Repositorio/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}RTOS\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Repo\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Limpio/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Proyecto\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}final\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}TITI/cuna/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}README.md}{202}{section.9.37}%

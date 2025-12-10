@@ -1,0 +1,1361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Referencia del archivo wifi_app.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('wifi__app_8c.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo wifi_app.c</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Aplicación WiFi con soporte AP/STA dual, reconexión automática y SNTP.  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &quot;freertos/FreeRTOS.h&quot;</code><br />
+<code>#include &quot;freertos/event_groups.h&quot;</code><br />
+<code>#include &quot;freertos/task.h&quot;</code><br />
+<code>#include &quot;freertos/semphr.h&quot;</code><br />
+<code>#include &quot;esp_err.h&quot;</code><br />
+<code>#include &quot;esp_log.h&quot;</code><br />
+<code>#include &quot;esp_wifi.h&quot;</code><br />
+<code>#include &quot;lwip/netdb.h&quot;</code><br />
+<code>#include &quot;nvs.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="http__server_8h_source.html">http_server.h</a>&quot;</code><br />
+<code>#include &quot;rgb_led.h&quot;</code><br />
+<code>#include &quot;tasks_common.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="wifi__app_8h_source.html">wifi_app.h</a>&quot;</code><br />
+<code>#include &quot;esp_sntp.h&quot;</code><br />
+</div>
+<p><a href="wifi__app_8c_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:aa25117999d3c679ce2ec34f66a4da463" id="r_aa25117999d3c679ce2ec34f66a4da463"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa25117999d3c679ce2ec34f66a4da463">init_obtain_time</a> (void)</td></tr>
+<tr class="memdesc:aa25117999d3c679ce2ec34f66a4da463"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializa el estado de sincronización de tiempo.  <br /></td></tr>
+<tr class="memitem:af889cf6e5d320085772f871cf468ffb1" id="r_af889cf6e5d320085772f871cf468ffb1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af889cf6e5d320085772f871cf468ffb1">get_state_time_was_synchronized</a> (void)</td></tr>
+<tr class="memdesc:af889cf6e5d320085772f871cf468ffb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtiene el estado de sincronización de tiempo.  <br /></td></tr>
+<tr class="memitem:ab1c7cd65f7d2ab1a577cd0179c779ee6" id="r_ab1c7cd65f7d2ab1a577cd0179c779ee6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1c7cd65f7d2ab1a577cd0179c779ee6">obtain_time</a> (void)</td></tr>
+<tr class="memdesc:ab1c7cd65f7d2ab1a577cd0179c779ee6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sincroniza el reloj del sistema con servidor SNTP.  <br /></td></tr>
+<tr class="memitem:a1eb1e37bd21abc738271e8c1a8a876f8" id="r_a1eb1e37bd21abc738271e8c1a8a876f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1eb1e37bd21abc738271e8c1a8a876f8">save_wifi_credentials</a> (const char *ssid, const char *password)</td></tr>
+<tr class="memdesc:a1eb1e37bd21abc738271e8c1a8a876f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guarda credenciales WiFi en NVS flash.  <br /></td></tr>
+<tr class="memitem:a50523acbf0040d1e4b4424231185fcb6" id="r_a50523acbf0040d1e4b4424231185fcb6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50523acbf0040d1e4b4424231185fcb6">save_reg_data</a> (uint8_t register_num, char *str)</td></tr>
+<tr class="memdesc:a50523acbf0040d1e4b4424231185fcb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guarda datos de registro en NVS (función legacy).  <br /></td></tr>
+<tr class="memitem:ad0657d784ea25871bdc65ab1a0d10b5a" id="r_ad0657d784ea25871bdc65ab1a0d10b5a"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0657d784ea25871bdc65ab1a0d10b5a">read_reg_data</a> (char *str_to_save, uint8_t register_num)</td></tr>
+<tr class="memdesc:ad0657d784ea25871bdc65ab1a0d10b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Leer datos de registro desde NVS.  <br /></td></tr>
+<tr class="memitem:a101f4f6f2c139e1ac4d4619328f768d9" id="r_a101f4f6f2c139e1ac4d4619328f768d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a101f4f6f2c139e1ac4d4619328f768d9">update_register</a> (int reg_to_update)</td></tr>
+<tr class="memdesc:a101f4f6f2c139e1ac4d4619328f768d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actualizar registro específico.  <br /></td></tr>
+<tr class="memitem:a1d00e8eaad99ca85a63b4329a60b4f39" id="r_a1d00e8eaad99ca85a63b4329a60b4f39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d00e8eaad99ca85a63b4329a60b4f39">initialize_registers</a> (void)</td></tr>
+<tr class="memdesc:a1d00e8eaad99ca85a63b4329a60b4f39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializar sistema de registros programados.  <br /></td></tr>
+<tr class="memitem:af9612dd1f9a3dccde879268af5c87db5" id="r_af9612dd1f9a3dccde879268af5c87db5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9612dd1f9a3dccde879268af5c87db5">load_wifi_credentials</a> (char *ssid, char *password)</td></tr>
+<tr class="memdesc:af9612dd1f9a3dccde879268af5c87db5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Carga credenciales WiFi desde NVS.  <br /></td></tr>
+<tr class="memitem:a8403b06ff93f8eb3f9423025f4d2b47f" id="r_a8403b06ff93f8eb3f9423025f4d2b47f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8403b06ff93f8eb3f9423025f4d2b47f">nvs_credentials_exist</a> ()</td></tr>
+<tr class="memitem:a8a91d7a19b16ddaf60425245284defd7" id="r_a8a91d7a19b16ddaf60425245284defd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a91d7a19b16ddaf60425245284defd7">connect_to_wifi</a> (void)</td></tr>
+<tr class="memdesc:a8a91d7a19b16ddaf60425245284defd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conectar a WiFi usando credenciales guardadas.  <br /></td></tr>
+<tr class="memitem:ac29bf6013014643966e099049b102dfd" id="r_ac29bf6013014643966e099049b102dfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac29bf6013014643966e099049b102dfd">check_sta_connection_state</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:ac29bf6013014643966e099049b102dfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea que monitorea conexión WiFi STA y reintenta.  <br /></td></tr>
+<tr class="memitem:a31d7d784886518fd20af32169c4e3a0f" id="r_a31d7d784886518fd20af32169c4e3a0f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a31d7d784886518fd20af32169c4e3a0f">wifi_app_event_handler</a> (void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</td></tr>
+<tr class="memdesc:a31d7d784886518fd20af32169c4e3a0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event handler principal para eventos WiFi y IP.  <br /></td></tr>
+<tr class="memitem:af53bbe1387beb5bf6a70512334c312cd" id="r_af53bbe1387beb5bf6a70512334c312cd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af53bbe1387beb5bf6a70512334c312cd">wifi_app_event_handler_init</a> (void)</td></tr>
+<tr class="memdesc:af53bbe1387beb5bf6a70512334c312cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the WiFi application event handler for WiFi and IP events.  <br /></td></tr>
+<tr class="memitem:aa53fe9c09869a295fba50cd44e44ace5" id="r_aa53fe9c09869a295fba50cd44e44ace5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa53fe9c09869a295fba50cd44e44ace5">wifi_app_default_wifi_init</a> (void)</td></tr>
+<tr class="memdesc:aa53fe9c09869a295fba50cd44e44ace5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the TCP stack and default WiFi configuration.  <br /></td></tr>
+<tr class="memitem:a469de29ba090e3ad8dcc2866665b67a9" id="r_a469de29ba090e3ad8dcc2866665b67a9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a469de29ba090e3ad8dcc2866665b67a9">wifi_app_soft_ap_config</a> (void)</td></tr>
+<tr class="memdesc:a469de29ba090e3ad8dcc2866665b67a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configura el Access Point (SoftAP).  <br /></td></tr>
+<tr class="memitem:a68f13dd71722bd75ad3dfbe7a709fa99" id="r_a68f13dd71722bd75ad3dfbe7a709fa99"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68f13dd71722bd75ad3dfbe7a709fa99">wifi_app_connect_sta</a> (void)</td></tr>
+<tr class="memdesc:a68f13dd71722bd75ad3dfbe7a709fa99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conecta el ESP32 en modo Station a un AP externo.  <br /></td></tr>
+<tr class="memitem:a767d80a57af268276da3f7c9daa9f52d" id="r_a767d80a57af268276da3f7c9daa9f52d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a767d80a57af268276da3f7c9daa9f52d">wifi_app_task</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:a767d80a57af268276da3f7c9daa9f52d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea principal de la aplicación WiFi.  <br /></td></tr>
+<tr class="memitem:aec924a59c0eede746e90c5c04e682fc3" id="r_aec924a59c0eede746e90c5c04e682fc3"><td class="memItemLeft" align="right" valign="top">BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec924a59c0eede746e90c5c04e682fc3">wifi_app_send_message</a> (<a class="el" href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">wifi_app_message_e</a> msgID)</td></tr>
+<tr class="memdesc:aec924a59c0eede746e90c5c04e682fc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enviar mensaje a la cola de la tarea WiFi.  <br /></td></tr>
+<tr class="memitem:acd6606606de84f405065531c1889432a" id="r_acd6606606de84f405065531c1889432a"><td class="memItemLeft" align="right" valign="top">wifi_config_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd6606606de84f405065531c1889432a">wifi_app_get_wifi_config</a> (void)</td></tr>
+<tr class="memdesc:acd6606606de84f405065531c1889432a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtiene puntero a configuración WiFi STA.  <br /></td></tr>
+<tr class="memitem:a395a811c01493c2233310bb2e7810ae4" id="r_a395a811c01493c2233310bb2e7810ae4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a395a811c01493c2233310bb2e7810ae4">compare_hour_day_structs</a> (struct tm timeinfo, <a class="el" href="structregister__saved__e.html">register_saved_e</a> aux_reg)</td></tr>
+<tr class="memitem:acb668c2a5fc2215e71e0688d577f4085" id="r_acb668c2a5fc2215e71e0688d577f4085"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb668c2a5fc2215e71e0688d577f4085">task_compare_hour_to_execute_action</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:acb668c2a5fc2215e71e0688d577f4085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea que ejecuta registros programados basados en hora SNTP.  <br /></td></tr>
+<tr class="memitem:ac2af98a9df667dec7b75c10a5717f09d" id="r_ac2af98a9df667dec7b75c10a5717f09d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2af98a9df667dec7b75c10a5717f09d">wifi_app_start</a> (void)</td></tr>
+<tr class="memdesc:ac2af98a9df667dec7b75c10a5717f09d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializa y arranca la aplicación WiFi completa.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a1bcdde0bdfcf0a2da9335e0cfdc2c605" id="r_a1bcdde0bdfcf0a2da9335e0cfdc2c605"><td class="memItemLeft" align="right" valign="top">static const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1bcdde0bdfcf0a2da9335e0cfdc2c605">TAG</a> [] = &quot;wifi_app&quot;</td></tr>
+<tr class="memdesc:a1bcdde0bdfcf0a2da9335e0cfdc2c605"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tag para logging ESP-IDF.  <br /></td></tr>
+<tr class="memitem:a60141cb87529d746e2996e6c453a6987" id="r_a60141cb87529d746e2996e6c453a6987"><td class="memItemLeft" align="right" valign="top">SemaphoreHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60141cb87529d746e2996e6c453a6987">mySemaphore</a></td></tr>
+<tr class="memdesc:a60141cb87529d746e2996e6c453a6987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Semáforo para sincronización entre tareas.  <br /></td></tr>
+<tr class="memitem:ab283cfcada79e336143183f37625b96e" id="r_ab283cfcada79e336143183f37625b96e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structregister__saved__e.html">register_saved_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab283cfcada79e336143183f37625b96e">register_readings_from_flash</a> [10]</td></tr>
+<tr class="memdesc:ab283cfcada79e336143183f37625b96e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array de registros guardados desde flash (legacy).  <br /></td></tr>
+<tr class="memitem:a7b70c7849c256ece4a9ff6f21eeac798" id="r_a7b70c7849c256ece4a9ff6f21eeac798"><td class="memItemLeft" align="right" valign="top">wifi_config_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b70c7849c256ece4a9ff6f21eeac798">wifi_config</a> = NULL</td></tr>
+<tr class="memdesc:a7b70c7849c256ece4a9ff6f21eeac798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuración WiFi actual (NULL si no inicializado).  <br /></td></tr>
+<tr class="memitem:aceaccd44afe61d89f3fc64e9a94d4a11" id="r_aceaccd44afe61d89f3fc64e9a94d4a11"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aceaccd44afe61d89f3fc64e9a94d4a11">g_retry_number</a></td></tr>
+<tr class="memdesc:aceaccd44afe61d89f3fc64e9a94d4a11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contador de reintentos de conexión WiFi.  <br /></td></tr>
+<tr class="memitem:a87cd42abf4f4a6f8bdb3f6b54adf0330" id="r_a87cd42abf4f4a6f8bdb3f6b54adf0330"><td class="memItemLeft" align="right" valign="top">static QueueHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87cd42abf4f4a6f8bdb3f6b54adf0330">wifi_app_queue_handle</a></td></tr>
+<tr class="memdesc:a87cd42abf4f4a6f8bdb3f6b54adf0330"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cola para mensajes de la aplicación WiFi.  <br /></td></tr>
+<tr class="memitem:a9d201c9b3c512f5569c685bd04488cbe" id="r_a9d201c9b3c512f5569c685bd04488cbe"><td class="memItemLeft" align="right" valign="top">esp_netif_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d201c9b3c512f5569c685bd04488cbe">esp_netif_sta</a> = NULL</td></tr>
+<tr class="memdesc:a9d201c9b3c512f5569c685bd04488cbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interfaz de red para modo Station.  <br /></td></tr>
+<tr class="memitem:a9d04dd561f9f32dd175245abb38a868a" id="r_a9d04dd561f9f32dd175245abb38a868a"><td class="memItemLeft" align="right" valign="top">esp_netif_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d04dd561f9f32dd175245abb38a868a">esp_netif_ap</a> = NULL</td></tr>
+<tr class="memdesc:a9d04dd561f9f32dd175245abb38a868a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interfaz de red para modo Access Point.  <br /></td></tr>
+<tr class="memitem:a66a7b07c5944b70efda936dc264ce7a3" id="r_a66a7b07c5944b70efda936dc264ce7a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66a7b07c5944b70efda936dc264ce7a3">time_was_synchronized</a></td></tr>
+<tr class="memdesc:a66a7b07c5944b70efda936dc264ce7a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag que indica si el tiempo fue sincronizado vía SNTP.  <br /></td></tr>
+<tr class="memitem:a4ed953b2ba4513f63e76d1f65192ef1c" id="r_a4ed953b2ba4513f63e76d1f65192ef1c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ed953b2ba4513f63e76d1f65192ef1c">s_led_state</a></td></tr>
+<tr class="memdesc:a4ed953b2ba4513f63e76d1f65192ef1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estado del LED RGB (externo).  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Aplicación WiFi con soporte AP/STA dual, reconexión automática y SNTP. </p>
+<dl class="section author"><dt>Autor</dt><dd>Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya </dd></dl>
+<dl class="section date"><dt>Fecha</dt><dd>2025</dd></dl>
+<p>Este módulo implementa la gestión completa de WiFi para el ESP32:</p>
+<p><b>Modos de operación:</b></p><ol type="1">
+<li><b>Access Point (AP):</b> Para configuración inicial<ul>
+<li>SSID: Configurable</li>
+<li>Usuario puede conectarse para configurar credenciales</li>
+</ul>
+</li>
+<li><b>Station (STA):</b> Conexión a red WiFi existente<ul>
+<li>Credenciales almacenadas en NVS</li>
+<li>Reconexión automática tras desconexión</li>
+<li>Máximo de reintentos configurable</li>
+</ul>
+</li>
+<li><b>Dual AP+STA:</b> Permite configuración mientras mantiene conexión</li>
+</ol>
+<p><b>Características:</b></p><ul>
+<li>Sincronización de tiempo mediante SNTP (pool.ntp.org)</li>
+<li>Persistencia de credenciales en NVS flash</li>
+<li>Event handlers para WiFi (connect, disconnect, got IP)</li>
+<li>Cola de mensajes para comunicación entre tareas</li>
+<li>LED RGB indicador de estado</li>
+<li>Notificación al HTTP server de cambios de estado</li>
+</ul>
+<p><b>Arquitectura RTOS:</b> </p><div class="fragment"><div class="line">[WiFi Event Handler] ---&gt; [wifi_app_queue] ---&gt; [<a class="code hl_function" href="#a767d80a57af268276da3f7c9daa9f52d">wifi_app_task</a>]</div>
+<div class="line">      |                                               |</div>
+<div class="line">      v                                               v</div>
+<div class="line">IP_EVENT_STA_GOT_IP ---------------------&gt; <a class="code hl_function" href="http__server_8h.html#aa40c7544f908043547e60dcba8a41963">http_server_monitor_send_message</a>()</div>
+<div class="line">      |                                               |</div>
+<div class="line">      v                                               v</div>
+<div class="line"><a class="code hl_function" href="wifi__app_8h.html#ab1c7cd65f7d2ab1a577cd0179c779ee6">obtain_time</a>() -&gt; SNTP sync                    LED color update</div>
+<div class="ttc" id="ahttp__server_8h_html_aa40c7544f908043547e60dcba8a41963"><div class="ttname"><a href="http__server_8h.html#aa40c7544f908043547e60dcba8a41963">http_server_monitor_send_message</a></div><div class="ttdeci">BaseType_t http_server_monitor_send_message(http_server_message_e msgID)</div><div class="ttdoc">Enviar mensaje a la cola del monitor HTTP.</div><div class="ttdef"><b>Definition</b> <a href="http__server_8c_source.html#l01423">http_server.c:1423</a></div></div>
+<div class="ttc" id="awifi__app_8c_html_a767d80a57af268276da3f7c9daa9f52d"><div class="ttname"><a href="#a767d80a57af268276da3f7c9daa9f52d">wifi_app_task</a></div><div class="ttdeci">static void wifi_app_task(void *pvParameters)</div><div class="ttdoc">Tarea principal de la aplicación WiFi.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00862">wifi_app.c:862</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_ab1c7cd65f7d2ab1a577cd0179c779ee6"><div class="ttname"><a href="wifi__app_8h.html#ab1c7cd65f7d2ab1a577cd0179c779ee6">obtain_time</a></div><div class="ttdeci">static void obtain_time(void)</div><div class="ttdoc">Obtener hora desde servidor SNTP.</div></div>
+</div><!-- fragment --><dl class="section see"><dt>Ver también</dt><dd><a class="el" href="wifi__app_8h.html" title="Gestión completa de WiFi AP/STA con reconexión automática y persistencia.">wifi_app.h</a> Para la API pública </dd>
+<dd>
+<a class="el" href="http__server_8c.html" title="Servidor HTTP con REST API para control del sistema.">http_server.c</a> Para integración con servidor web </dd></dl>
+
+<p class="definition">Definición en el archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones</h2>
+<a id="ac29bf6013014643966e099049b102dfd" name="ac29bf6013014643966e099049b102dfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac29bf6013014643966e099049b102dfd">&#9670;&#160;</a></span>check_sta_connection_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void check_sta_connection_state </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>pvParameters</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tarea que monitorea conexión WiFi STA y reintenta. </p>
+<p>Tarea que verifica estado de conexión STA.</p>
+<p>Cada 30 segundos verifica si está conectado a AP. Si pierde conexión, intenta reconectar automáticamente.</p>
+<p><b>Funcionalidad:</b></p><ul>
+<li>Llama esp_wifi_sta_get_ap_info() cada 30s</li>
+<li>Si falla (ESP_ERR_WIFI_NOT_CONNECT), intenta conectar</li>
+<li>Registra RSSI si está conectado</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pvParameters</td><td>Parámetro de tarea (no usado)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Tarea infinita creada en <a class="el" href="wifi__app_8h.html#ac2af98a9df667dec7b75c10a5717f09d" title="Iniciar tarea RTOS de WiFi.">wifi_app_start()</a> </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00611">611</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00569">connect_to_wifi()</a>, <a class="el" href="wifi__app_8c_source.html#l00124">get_state_time_was_synchronized()</a>, <a class="el" href="wifi__app_8c_source.html#l00548">nvs_credentials_exist()</a>, <a class="el" href="wifi__app_8c_source.html#l00149">obtain_time()</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="a395a811c01493c2233310bb2e7810ae4" name="a395a811c01493c2233310bb2e7810ae4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a395a811c01493c2233310bb2e7810ae4">&#9670;&#160;</a></span>compare_hour_day_structs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool compare_hour_day_structs </td>
+          <td>(</td>
+          <td class="paramtype">struct tm</td>          <td class="paramname"><span class="paramname"><em>timeinfo</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structregister__saved__e.html">register_saved_e</a></td>          <td class="paramname"><span class="paramname"><em>aux_reg</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00967">967</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00201">toogle_led()</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l01058">task_compare_hour_to_execute_action()</a>.</p>
+
+</div>
+</div>
+<a id="a8a91d7a19b16ddaf60425245284defd7" name="a8a91d7a19b16ddaf60425245284defd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a91d7a19b16ddaf60425245284defd7">&#9670;&#160;</a></span>connect_to_wifi()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void connect_to_wifi </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Conectar a WiFi usando credenciales guardadas. </p>
+<p>Lee credenciales de NVS e intenta conexión STA </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00569">569</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00508">load_wifi_credentials()</a>, <a class="el" href="wifi__app_8c_source.html#l00073">mySemaphore</a>, <a class="el" href="http__server_8c_source.html#l00117">TAG</a>, <a class="el" href="wifi__app_8c_source.html#l00836">wifi_app_connect_sta()</a>, <a class="el" href="wifi__app_8c_source.html#l00962">wifi_app_get_wifi_config()</a> y <a class="el" href="wifi__app_8c_source.html#l00086">wifi_config</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00611">check_sta_connection_state()</a> y <a class="el" href="http__server_8c_source.html#l00791">http_server_wifi_connect_json_handler()</a>.</p>
+
+</div>
+</div>
+<a id="af889cf6e5d320085772f871cf468ffb1" name="af889cf6e5d320085772f871cf468ffb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af889cf6e5d320085772f871cf468ffb1">&#9670;&#160;</a></span>get_state_time_was_synchronized()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool get_state_time_was_synchronized </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Obtiene el estado de sincronización de tiempo. </p>
+<p>Verificar si la hora ya fue sincronizada.</p>
+<dl class="section return"><dt>Devuelve</dt><dd>bool </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">true</td><td>Tiempo sincronizado correctamente con SNTP </td></tr>
+    <tr><td class="paramname">false</td><td>Aún no sincronizado o fallo </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00124">124</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00101">time_was_synchronized</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00611">check_sta_connection_state()</a> y <a class="el" href="wifi__app_8c_source.html#l01058">task_compare_hour_to_execute_action()</a>.</p>
+
+</div>
+</div>
+<a id="aa25117999d3c679ce2ec34f66a4da463" name="aa25117999d3c679ce2ec34f66a4da463"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa25117999d3c679ce2ec34f66a4da463">&#9670;&#160;</a></span>init_obtain_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void init_obtain_time </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inicializa el estado de sincronización de tiempo. </p>
+<p>Inicializar sincronización de hora SNTP.</p>
+<p>Marca el tiempo como NO sincronizado. Llamar antes de intentar sincronizar con SNTP. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00113">113</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00101">time_was_synchronized</a>.</p>
+
+</div>
+</div>
+<a id="a1d00e8eaad99ca85a63b4329a60b4f39" name="a1d00e8eaad99ca85a63b4329a60b4f39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d00e8eaad99ca85a63b4329a60b4f39">&#9670;&#160;</a></span>initialize_registers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void initialize_registers </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inicializar sistema de registros programados. </p>
+<p>Carga registros desde NVS al arranque </p>
+<p>&lt; Número máximo de registros programados</p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00431">431</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8h_source.html#l00051">NUM_REGISTERS_AV</a>, <a class="el" href="wifi__app_8c_source.html#l00279">read_reg_data()</a> y <a class="el" href="wifi__app_8c_source.html#l00076">register_readings_from_flash</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="af9612dd1f9a3dccde879268af5c87db5" name="af9612dd1f9a3dccde879268af5c87db5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9612dd1f9a3dccde879268af5c87db5">&#9670;&#160;</a></span>load_wifi_credentials()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void load_wifi_credentials </td>
+          <td>(</td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>ssid</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>password</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Carga credenciales WiFi desde NVS. </p>
+<p>Cargar credenciales WiFi desde NVS.</p>
+<p>Lee SSID y password almacenados previamente en NVS.</p>
+<p><b>Namespace NVS:</b> "storage" <b>Keys:</b></p><ul>
+<li>"wifi_ssid": SSID de la red</li>
+<li>"wifi_password": Contraseña</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">ssid</td><td>Buffer donde se copia el SSID (mínimo 33 bytes) </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">password</td><td>Buffer donde se copia el password (mínimo 65 bytes)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Llama ESP_ERROR_CHECK - programa panic si no existen credenciales </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>Validar existencia con <a class="el" href="#a8403b06ff93f8eb3f9423025f4d2b47f">nvs_credentials_exist()</a> antes de llamar </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00508">508</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00569">connect_to_wifi()</a>.</p>
+
+</div>
+</div>
+<a id="a8403b06ff93f8eb3f9423025f4d2b47f" name="a8403b06ff93f8eb3f9423025f4d2b47f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8403b06ff93f8eb3f9423025f4d2b47f">&#9670;&#160;</a></span>nvs_credentials_exist()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool nvs_credentials_exist </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00548">548</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00611">check_sta_connection_state()</a>.</p>
+
+</div>
+</div>
+<a id="ab1c7cd65f7d2ab1a577cd0179c779ee6" name="ab1c7cd65f7d2ab1a577cd0179c779ee6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1c7cd65f7d2ab1a577cd0179c779ee6">&#9670;&#160;</a></span>obtain_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void obtain_time </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sincroniza el reloj del sistema con servidor SNTP. </p>
+<p>Configura y ejecuta sincronización de tiempo mediante SNTP (Simple Network Time Protocol).</p>
+<p><b>Proceso:</b></p><ol type="1">
+<li>Configura zona horaria EST5EDT (Eastern Time con DST)</li>
+<li>Detiene SNTP si ya está corriendo</li>
+<li>Configura servidor NTP (0.co.pool.ntp.org)</li>
+<li>Espera hasta 20 segundos (10 reintentos x 2s) por sincronización</li>
+<li>Valida que tm_year &gt; 2016</li>
+</ol>
+<p><b>Zona horaria:</b></p><ul>
+<li>EST5EDT: Eastern Standard Time (-5h UTC)</li>
+<li>M3.2.0/2: DST inicia 2do domingo de marzo a las 2am</li>
+<li>M11.1.0: DST termina 1er domingo de noviembre</li>
+</ul>
+<dl class="section note"><dt>Nota</dt><dd>Requiere conexión WiFi activa </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>Bloquea hasta 20 segundos esperando sincronización </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00149">149</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00117">TAG</a> y <a class="el" href="wifi__app_8c_source.html#l00101">time_was_synchronized</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00611">check_sta_connection_state()</a>.</p>
+
+</div>
+</div>
+<a id="ad0657d784ea25871bdc65ab1a0d10b5a" name="ad0657d784ea25871bdc65ab1a0d10b5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0657d784ea25871bdc65ab1a0d10b5a">&#9670;&#160;</a></span>read_reg_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t read_reg_data </td>
+          <td>(</td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>str_to_save</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>register_num</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Leer datos de registro desde NVS. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">str_to_save</td><td>Buffer donde se escribirá el registro (JSON) </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">register_num</td><td>Número de registro (1-10) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>ESP_OK si se leyó correctamente </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00279">279</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00431">initialize_registers()</a> y <a class="el" href="wifi__app_8c_source.html#l00387">update_register()</a>.</p>
+
+</div>
+</div>
+<a id="a50523acbf0040d1e4b4424231185fcb6" name="a50523acbf0040d1e4b4424231185fcb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50523acbf0040d1e4b4424231185fcb6">&#9670;&#160;</a></span>save_reg_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void save_reg_data </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>register_num</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>str</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Guarda datos de registro en NVS (función legacy). </p>
+<p>Guardar registro en NVS.</p>
+<p>Función antigua para guardar registros (1-10). <b>DEPRECADA:</b> Usar <a class="el" href="registers_8c.html" title="Implementación del sistema de programación de eventos (scheduler).">registers.c</a> (save_register_to_nvs) en su lugar.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">register_num</td><td>Número de registro (1-10) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">str</td><td>Datos del registro como string</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Obsoleto</a></b></dt><dd>Usar API moderna en <a class="el" href="registers_8c.html" title="Implementación del sistema de programación de eventos (scheduler).">registers.c</a> </dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Solo para compatibilidad con código antiguo </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00230">230</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+</div>
+</div>
+<a id="a1eb1e37bd21abc738271e8c1a8a876f8" name="a1eb1e37bd21abc738271e8c1a8a876f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1eb1e37bd21abc738271e8c1a8a876f8">&#9670;&#160;</a></span>save_wifi_credentials()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void save_wifi_credentials </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>ssid</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>password</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Guarda credenciales WiFi en NVS flash. </p>
+<p>Guardar credenciales WiFi en NVS.</p>
+<p>Almacena SSID y contraseña en memoria no volátil. Sobrevive a reinicios del ESP32.</p>
+<p><b>Claves NVS:</b></p><ul>
+<li>"wifi_ssid": Nombre de la red WiFi</li>
+<li>"wifi_password": Contraseña</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ssid</td><td>SSID de la red WiFi (máx 32 caracteres) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">password</td><td>Contraseña (máx 64 caracteres)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Atención</dt><dd>ESP_ERROR_CHECK causa panic si falla NVS </dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Namespace "storage" debe existir </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00208">208</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="http__server_8c_source.html#l00791">http_server_wifi_connect_json_handler()</a>.</p>
+
+</div>
+</div>
+<a id="acb668c2a5fc2215e71e0688d577f4085" name="acb668c2a5fc2215e71e0688d577f4085"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb668c2a5fc2215e71e0688d577f4085">&#9670;&#160;</a></span>task_compare_hour_to_execute_action()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task_compare_hour_to_execute_action </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>pvParameters</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tarea que ejecuta registros programados basados en hora SNTP. </p>
+<p>Tarea que compara hora actual con registros programados.</p>
+<p>Espera a que SNTP sincronice, luego cada 60s compara hora actual con registros programados. Si coincide, ejecuta acción (ventilador).</p>
+<p><b>Proceso:</b></p><ol type="1">
+<li>Espera a <a class="el" href="wifi__app_8h.html#af889cf6e5d320085772f871cf468ffb1" title="Verificar si la hora ya fue sincronizada.">get_state_time_was_synchronized()</a> == true</li>
+<li>Cada 60s obtiene hora con time() y localtime_r()</li>
+<li>Itera registros y compara con <a class="el" href="#a395a811c01493c2233310bb2e7810ae4">compare_hour_day_structs()</a></li>
+<li>Si coincide, ejecuta acción del registro</li>
+</ol>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pvParameters</td><td>Parámetro de tarea (no usado)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Tarea infinita, stack 4096 bytes, prioridad 5 </dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="#a395a811c01493c2233310bb2e7810ae4">compare_hour_day_structs()</a> Comparación hora/día </dd></dl>
+<p>&lt; Número máximo de registros programados</p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l01058">1058</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00967">compare_hour_day_structs()</a>, <a class="el" href="wifi__app_8c_source.html#l00124">get_state_time_was_synchronized()</a>, <a class="el" href="wifi__app_8h_source.html#l00051">NUM_REGISTERS_AV</a>, <a class="el" href="wifi__app_8c_source.html#l00076">register_readings_from_flash</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l01115">wifi_app_start()</a>.</p>
+
+</div>
+</div>
+<a id="a101f4f6f2c139e1ac4d4619328f768d9" name="a101f4f6f2c139e1ac4d4619328f768d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a101f4f6f2c139e1ac4d4619328f768d9">&#9670;&#160;</a></span>update_register()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void update_register </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>reg_to_update</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Actualizar registro específico. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">reg_to_update</td><td>Número de registro a actualizar (1-10) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00387">387</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00279">read_reg_data()</a>, <a class="el" href="wifi__app_8c_source.html#l00076">register_readings_from_flash</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+</div>
+</div>
+<a id="a68f13dd71722bd75ad3dfbe7a709fa99" name="a68f13dd71722bd75ad3dfbe7a709fa99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68f13dd71722bd75ad3dfbe7a709fa99">&#9670;&#160;</a></span>wifi_app_connect_sta()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wifi_app_connect_sta </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Conecta el ESP32 en modo Station a un AP externo. </p>
+<p>Utiliza las credenciales de <a class="el" href="#acd6606606de84f405065531c1889432a" title="Obtiene puntero a configuración WiFi STA.">wifi_app_get_wifi_config()</a>. Si la conexión falla, wifi_app_event_handler reintenta.</p>
+<dl class="section note"><dt>Nota</dt><dd>Llama esp_wifi_set_config() y esp_wifi_connect() </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00836">836</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00962">wifi_app_get_wifi_config()</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00569">connect_to_wifi()</a> y <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="aa53fe9c09869a295fba50cd44e44ace5" name="aa53fe9c09869a295fba50cd44e44ace5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa53fe9c09869a295fba50cd44e44ace5">&#9670;&#160;</a></span>wifi_app_default_wifi_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wifi_app_default_wifi_init </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes the TCP stack and default WiFi configuration. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00758">758</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00098">esp_netif_ap</a> y <a class="el" href="wifi__app_8c_source.html#l00095">esp_netif_sta</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="a31d7d784886518fd20af32169c4e3a0f" name="a31d7d784886518fd20af32169c4e3a0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31d7d784886518fd20af32169c4e3a0f">&#9670;&#160;</a></span>wifi_app_event_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wifi_app_event_handler </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>arg</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">esp_event_base_t</td>          <td class="paramname"><span class="paramname"><em>event_base</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t</td>          <td class="paramname"><span class="paramname"><em>event_id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>event_data</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Event handler principal para eventos WiFi y IP. </p>
+<p>Procesa todos los eventos WiFi del ESP32:</p>
+<p><b>Eventos WiFi:</b></p><ul>
+<li>WIFI_EVENT_AP_STACONNECTED: Cliente conectado al AP</li>
+<li>WIFI_EVENT_AP_STADISCONNECTED: Cliente desconectado del AP</li>
+<li>WIFI_EVENT_STA_START: Station iniciado → intenta conectar</li>
+<li>WIFI_EVENT_STA_CONNECTED: Conectado a AP externo</li>
+<li>WIFI_EVENT_STA_DISCONNECTED: Desconectado → reintenta</li>
+</ul>
+<p><b>Eventos IP:</b></p><ul>
+<li>IP_EVENT_STA_GOT_IP: IP asignada → notifica HTTP server, inicia SNTP</li>
+</ul>
+<p><b>Reconexión automática:</b> Máximo WIFI_RETRY_ATTEMPTS reintentos antes de fallar.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg</td><td>Parámetro de usuario (no usado) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">event_base</td><td>Base del evento (WIFI_EVENT o IP_EVENT) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">event_id</td><td>ID específico del evento </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">event_data</td><td>Datos del evento (IP, MAC, etc) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00676">676</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00117">TAG</a>, <a class="el" href="wifi__app_8h_source.html#l00069">WIFI_APP_MSG_STA_CONNECTED_GOT_IP</a> y <a class="el" href="wifi__app_8c_source.html#l00948">wifi_app_send_message()</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00743">wifi_app_event_handler_init()</a>.</p>
+
+</div>
+</div>
+<a id="af53bbe1387beb5bf6a70512334c312cd" name="af53bbe1387beb5bf6a70512334c312cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af53bbe1387beb5bf6a70512334c312cd">&#9670;&#160;</a></span>wifi_app_event_handler_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wifi_app_event_handler_init </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initializes the WiFi application event handler for WiFi and IP events. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00743">743</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00676">wifi_app_event_handler()</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="acd6606606de84f405065531c1889432a" name="acd6606606de84f405065531c1889432a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd6606606de84f405065531c1889432a">&#9670;&#160;</a></span>wifi_app_get_wifi_config()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">wifi_config_t * wifi_app_get_wifi_config </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Obtiene puntero a configuración WiFi STA. </p>
+<p>Obtener configuración actual de WiFi.</p>
+<dl class="section return"><dt>Devuelve</dt><dd>wifi_config_t* Puntero a wifi_config global</dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Contiene SSID y password cargados de NVS </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00962">962</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00086">wifi_config</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00569">connect_to_wifi()</a>, <a class="el" href="http__server_8c_source.html#l00791">http_server_wifi_connect_json_handler()</a> y <a class="el" href="wifi__app_8c_source.html#l00836">wifi_app_connect_sta()</a>.</p>
+
+</div>
+</div>
+<a id="aec924a59c0eede746e90c5c04e682fc3" name="aec924a59c0eede746e90c5c04e682fc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec924a59c0eede746e90c5c04e682fc3">&#9670;&#160;</a></span>wifi_app_send_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">BaseType_t wifi_app_send_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">wifi_app_message_e</a></td>          <td class="paramname"><span class="paramname"><em>msgID</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enviar mensaje a la cola de la tarea WiFi. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msgID</td><td>ID del mensaje desde <a class="el" href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">wifi_app_message_e</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>pdTRUE si se envió correctamente, pdFALSE si la cola está llena </dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Thread-safe, puede llamarse desde cualquier tarea </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00948">948</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00092">wifi_app_queue_handle</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00676">wifi_app_event_handler()</a> y <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="a469de29ba090e3ad8dcc2866665b67a9" name="a469de29ba090e3ad8dcc2866665b67a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a469de29ba090e3ad8dcc2866665b67a9">&#9670;&#160;</a></span>wifi_app_soft_ap_config()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wifi_app_soft_ap_config </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Configura el Access Point (SoftAP). </p>
+<p>Establece los parámetros del AP:</p>
+<p><b>Configuración AP:</b></p><ul>
+<li>SSID: WIFI_AP_SSID (definido en <a class="el" href="wifi__app_8h.html" title="Gestión completa de WiFi AP/STA con reconexión automática y persistencia.">wifi_app.h</a>)</li>
+<li>Password: WIFI_AP_PASSWORD</li>
+<li>Canal: WIFI_AP_CHANNEL</li>
+<li>SSID oculto: No</li>
+<li>Máx conexiones: WIFI_AP_MAX_CONNECTIONS</li>
+<li>Tipo auth: WPA/WPA2</li>
+</ul>
+<p><b>IP estática:</b></p><ul>
+<li>IP: 192.168.0.1</li>
+<li>Gateway: 192.168.0.1</li>
+<li>Netmask: 255.255.255.0</li>
+</ul>
+<dl class="section note"><dt>Nota</dt><dd>Llama esp_netif_dhcps_stop() y esp_netif_dhcps_start() </dd></dl>
+<p>&lt; Nombre de la red AP</p>
+<p>&lt; Nombre de la red AP</p>
+<p>&lt; Contraseña del AP (mínimo 8 caracteres)</p>
+<p>&lt; Canal WiFi del AP (1-13)</p>
+<p>&lt; 0=visible, 1=oculto</p>
+<p>&lt; Máximo de clientes simultáneos</p>
+<p>&lt; Intervalo beacon en ms (recomendado 100ms)</p>
+<blockquote class="doxtable">
+<p>must call this first </p>
+</blockquote>
+<p>&lt; IP del AP</p>
+<blockquote class="doxtable">
+<p>Assign access point's static IP, GW, and netmask </p>
+</blockquote>
+<p>&lt; Gateway del AP (igual que IP)</p>
+<p>&lt; Máscara de subred</p>
+<blockquote class="doxtable">
+<p>Statically configure the network interface </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>Start the AP DHCP server (for connecting stations e.g. your mobile device) </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>Setting the mode as Access Point / Station Mode </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>Set our configuration </p>
+</blockquote>
+<p>&lt; Ancho de banda 20 MHz</p>
+<blockquote class="doxtable">
+<p>Our default bandwidth 20 MHz </p>
+</blockquote>
+<p>&lt; Sin ahorro de energía</p>
+<blockquote class="doxtable">
+<p>Power save set to "NONE" </p>
+</blockquote>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00792">792</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00098">esp_netif_ap</a>, <a class="el" href="wifi__app_8h_source.html#l00044">WIFI_AP_BANDWIDTH</a>, <a class="el" href="wifi__app_8h_source.html#l00040">WIFI_AP_BEACON_INTERVAL</a>, <a class="el" href="wifi__app_8h_source.html#l00037">WIFI_AP_CHANNEL</a>, <a class="el" href="wifi__app_8h_source.html#l00042">WIFI_AP_GATEWAY</a>, <a class="el" href="wifi__app_8h_source.html#l00041">WIFI_AP_IP</a>, <a class="el" href="wifi__app_8h_source.html#l00039">WIFI_AP_MAX_CONNECTIONS</a>, <a class="el" href="wifi__app_8h_source.html#l00043">WIFI_AP_NETMASK</a>, <a class="el" href="wifi__app_8h_source.html#l00036">WIFI_AP_PASSWORD</a>, <a class="el" href="wifi__app_8h_source.html#l00035">WIFI_AP_SSID</a>, <a class="el" href="wifi__app_8h_source.html#l00038">WIFI_AP_SSID_HIDDEN</a> y <a class="el" href="wifi__app_8h_source.html#l00045">WIFI_STA_POWER_SAVE</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="ac2af98a9df667dec7b75c10a5717f09d" name="ac2af98a9df667dec7b75c10a5717f09d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2af98a9df667dec7b75c10a5717f09d">&#9670;&#160;</a></span>wifi_app_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wifi_app_start </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inicializa y arranca la aplicación WiFi completa. </p>
+<p>Iniciar tarea RTOS de WiFi.</p>
+<p>Punto de entrada principal para WiFi. Secuencia:</p><ol type="1">
+<li>Inicializa netif TCP/IP</li>
+<li>Configura event handlers WiFi</li>
+<li>Inicializa WiFi con config por defecto</li>
+<li>Configura Access Point</li>
+<li>Crea cola de mensajes</li>
+<li>Crea tarea wifi_app_task</li>
+<li>Crea tarea check_sta_connection_state (reconexión)</li>
+</ol>
+<dl class="section note"><dt>Nota</dt><dd>Llamar una sola vez durante inicialización del sistema </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>Requiere NVS inicializado previamente</dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="#a767d80a57af268276da3f7c9daa9f52d" title="Tarea principal de la aplicación WiFi.">wifi_app_task()</a> Tarea principal creada </dd>
+<dd>
+<a class="el" href="wifi__app_8h.html#ac29bf6013014643966e099049b102dfd" title="Tarea que verifica estado de conexión STA.">check_sta_connection_state()</a> Tarea de reconexión </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l01115">1115</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00073">mySemaphore</a>, <a class="el" href="http__server_8c_source.html#l00117">TAG</a>, <a class="el" href="wifi__app_8c_source.html#l01058">task_compare_hour_to_execute_action()</a>, <a class="el" href="wifi__app_8c_source.html#l00092">wifi_app_queue_handle</a>, <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a> y <a class="el" href="wifi__app_8c_source.html#l00086">wifi_config</a>.</p>
+
+</div>
+</div>
+<a id="a767d80a57af268276da3f7c9daa9f52d" name="a767d80a57af268276da3f7c9daa9f52d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a767d80a57af268276da3f7c9daa9f52d">&#9670;&#160;</a></span>wifi_app_task()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void wifi_app_task </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>pvParameters</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tarea principal de la aplicación WiFi. </p>
+<p>Tarea RTOS que procesa mensajes de la cola wifi_app_queue_handle.</p>
+<p><b>Mensajes soportados:</b></p><ul>
+<li>WIFI_APP_MSG_START_HTTP_SERVER: Inicia servidor HTTP</li>
+<li>WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER: Intenta conexión STA</li>
+<li>WIFI_APP_MSG_STA_CONNECTED_GOT_IP: IP obtenida exitosamente</li>
+</ul>
+<p><b>Parámetros tarea:</b></p><ul>
+<li>Stack: WIFI_APP_TASK_STACK_SIZE</li>
+<li>Prioridad: WIFI_APP_TASK_PRIORITY</li>
+<li>Core: WIFI_APP_TASK_CORE_ID</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pvParameters</td><td>Parámetro de tarea (no usado)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Tarea infinita que nunca termina </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00862">862</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="wifi__app_8c_source.html#l00611">check_sta_connection_state()</a>, <a class="el" href="wifi__app_8c_source.html#l00089">g_retry_number</a>, <a class="el" href="http__server_8h_source.html#l00069">HTTP_MSG_WIFI_CONNECT_FAIL</a>, <a class="el" href="http__server_8h_source.html#l00067">HTTP_MSG_WIFI_CONNECT_INIT</a>, <a class="el" href="http__server_8h_source.html#l00068">HTTP_MSG_WIFI_CONNECT_SUCCESS</a>, <a class="el" href="http__server_8c_source.html#l01423">http_server_monitor_send_message()</a>, <a class="el" href="http__server_8c_source.html#l01375">http_server_start()</a>, <a class="el" href="wifi__app_8c_source.html#l00431">initialize_registers()</a>, <a class="el" href="http__server_8c_source.html#l00117">TAG</a>, <a class="el" href="wifi__app_8c_source.html#l00836">wifi_app_connect_sta()</a>, <a class="el" href="wifi__app_8h_source.html#l00073">WIFI_APP_CONNECT_TO_STA</a>, <a class="el" href="wifi__app_8c_source.html#l00758">wifi_app_default_wifi_init()</a>, <a class="el" href="wifi__app_8c_source.html#l00743">wifi_app_event_handler_init()</a>, <a class="el" href="wifi__app_8h_source.html#l00068">WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER</a>, <a class="el" href="wifi__app_8h_source.html#l00069">WIFI_APP_MSG_STA_CONNECTED_GOT_IP</a>, <a class="el" href="wifi__app_8h_source.html#l00072">WIFI_APP_MSG_STA_DISCONNECTED</a>, <a class="el" href="wifi__app_8h_source.html#l00067">WIFI_APP_MSG_START_HTTP_SERVER</a>, <a class="el" href="wifi__app_8c_source.html#l00092">wifi_app_queue_handle</a>, <a class="el" href="wifi__app_8c_source.html#l00948">wifi_app_send_message()</a> y <a class="el" href="wifi__app_8c_source.html#l00792">wifi_app_soft_ap_config()</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l01115">wifi_app_start()</a>.</p>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Documentación de variables</h2>
+<a id="a9d04dd561f9f32dd175245abb38a868a" name="a9d04dd561f9f32dd175245abb38a868a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d04dd561f9f32dd175245abb38a868a">&#9670;&#160;</a></span>esp_netif_ap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_netif_t* esp_netif_ap = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Interfaz de red para modo Access Point. </p>
+<p>Handle de interfaz de red Access Point. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00098">98</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00758">wifi_app_default_wifi_init()</a> y <a class="el" href="wifi__app_8c_source.html#l00792">wifi_app_soft_ap_config()</a>.</p>
+
+</div>
+</div>
+<a id="a9d201c9b3c512f5569c685bd04488cbe" name="a9d201c9b3c512f5569c685bd04488cbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d201c9b3c512f5569c685bd04488cbe">&#9670;&#160;</a></span>esp_netif_sta</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_netif_t* esp_netif_sta = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Interfaz de red para modo Station. </p>
+<p>Handle de interfaz de red Station. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00095">95</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00758">wifi_app_default_wifi_init()</a>.</p>
+
+</div>
+</div>
+<a id="aceaccd44afe61d89f3fc64e9a94d4a11" name="aceaccd44afe61d89f3fc64e9a94d4a11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceaccd44afe61d89f3fc64e9a94d4a11">&#9670;&#160;</a></span>g_retry_number</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int g_retry_number</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Contador de reintentos de conexión WiFi. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00089">89</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="a60141cb87529d746e2996e6c453a6987" name="a60141cb87529d746e2996e6c453a6987"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60141cb87529d746e2996e6c453a6987">&#9670;&#160;</a></span>mySemaphore</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SemaphoreHandle_t mySemaphore</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Semáforo para sincronización entre tareas. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00073">73</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00569">connect_to_wifi()</a> y <a class="el" href="wifi__app_8c_source.html#l01115">wifi_app_start()</a>.</p>
+
+</div>
+</div>
+<a id="ab283cfcada79e336143183f37625b96e" name="ab283cfcada79e336143183f37625b96e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab283cfcada79e336143183f37625b96e">&#9670;&#160;</a></span>register_readings_from_flash</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structregister__saved__e.html">register_saved_e</a> register_readings_from_flash[10]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Array de registros guardados desde flash (legacy). </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00076">76</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00431">initialize_registers()</a>, <a class="el" href="wifi__app_8c_source.html#l01058">task_compare_hour_to_execute_action()</a> y <a class="el" href="wifi__app_8c_source.html#l00387">update_register()</a>.</p>
+
+</div>
+</div>
+<a id="a4ed953b2ba4513f63e76d1f65192ef1c" name="a4ed953b2ba4513f63e76d1f65192ef1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ed953b2ba4513f63e76d1f65192ef1c">&#9670;&#160;</a></span>s_led_state</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t s_led_state</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Estado del LED RGB (externo). </p>
+<p>Estado del LED RGB (externo). </p>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8c_source.html#l00192">192</a> del archivo <a class="el" href="http__server_8c_source.html">http_server.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="http__server_8c_source.html#l00201">toogle_led()</a>.</p>
+
+</div>
+</div>
+<a id="a1bcdde0bdfcf0a2da9335e0cfdc2c605" name="a1bcdde0bdfcf0a2da9335e0cfdc2c605"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bcdde0bdfcf0a2da9335e0cfdc2c605">&#9670;&#160;</a></span>TAG</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char TAG[] = &quot;wifi_app&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tag para logging ESP-IDF. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00070">70</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+</div>
+</div>
+<a id="a66a7b07c5944b70efda936dc264ce7a3" name="a66a7b07c5944b70efda936dc264ce7a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66a7b07c5944b70efda936dc264ce7a3">&#9670;&#160;</a></span>time_was_synchronized</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool time_was_synchronized</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag que indica si el tiempo fue sincronizado vía SNTP. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00101">101</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00124">get_state_time_was_synchronized()</a>, <a class="el" href="wifi__app_8c_source.html#l00113">init_obtain_time()</a> y <a class="el" href="wifi__app_8c_source.html#l00149">obtain_time()</a>.</p>
+
+</div>
+</div>
+<a id="a87cd42abf4f4a6f8bdb3f6b54adf0330" name="a87cd42abf4f4a6f8bdb3f6b54adf0330"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87cd42abf4f4a6f8bdb3f6b54adf0330">&#9670;&#160;</a></span>wifi_app_queue_handle</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QueueHandle_t wifi_app_queue_handle</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Cola para mensajes de la aplicación WiFi. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00092">92</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00948">wifi_app_send_message()</a>, <a class="el" href="wifi__app_8c_source.html#l01115">wifi_app_start()</a> y <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="a7b70c7849c256ece4a9ff6f21eeac798" name="a7b70c7849c256ece4a9ff6f21eeac798"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b70c7849c256ece4a9ff6f21eeac798">&#9670;&#160;</a></span>wifi_config</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">wifi_config_t* wifi_config = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Configuración WiFi actual (NULL si no inicializado). </p>
+<p>Almacena SSID y contraseña para modo Station. Asignado dinámicamente durante inicialización. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="wifi__app_8c_source.html#l00086">86</a> del archivo <a class="el" href="wifi__app_8c_source.html">wifi_app.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00569">connect_to_wifi()</a>, <a class="el" href="http__server_8c_source.html#l00791">http_server_wifi_connect_json_handler()</a>, <a class="el" href="wifi__app_8c_source.html#l00962">wifi_app_get_wifi_config()</a> y <a class="el" href="wifi__app_8c_source.html#l01115">wifi_app_start()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="wifi__app_8c.html">wifi_app.c</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

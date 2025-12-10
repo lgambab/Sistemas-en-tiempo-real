@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Archivo de código fuente fan_control.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('fan__control_8c_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">fan_control.c</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="fan__control_8c.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#include &quot;<a class="code" href="fan__control_8h.html">fan_control.h</a>&quot;</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#include &quot;<a class="code" href="fan__driver_8h.html">fan_driver.h</a>&quot;</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#include &quot;esp_adc/adc_oneshot.h&quot;</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#include &quot;<a class="code" href="ntc__driver_8h.html">ntc_driver.h</a>&quot;</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#include &quot;<a class="code" href="pir__driver_8h.html">pir_driver.h</a>&quot;</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">extern</span> adc_oneshot_unit_handle_t <a class="code hl_variable" href="http__server_8c.html#a9d32fbbbd38b5977b829e778d1f2eab6">s_ntc_adc_handle</a>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">   74</a></span><span class="keyword">static</span> <a class="code hl_enumeration" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cb">fan_mode_t</a> <a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a> = <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc">FAN_MODE_MANUAL</a>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">   77</a></span><span class="keyword">static</span> uint8_t    <a class="code hl_variable" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a> = 0;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">   90</a></span><span class="keyword">static</span> uint8_t    <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="fan__control_8c.html#a467bf28438d9df5e52781cf33cc0fd24">   99</a></span><span class="keyword">static</span> <span class="keywordtype">bool</span>       <a class="code hl_variable" href="fan__control_8c.html#a467bf28438d9df5e52781cf33cc0fd24">s_reg_active</a>   = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="foldopen" id="foldopen00103" data-start="{" data-end="}">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="fan__control_8c.html#a9b8f1759fa5b56cea3fb434f0bad16dd">  103</a></span><span class="keyword">static</span> uint8_t <a class="code hl_function" href="fan__control_8c.html#a9b8f1759fa5b56cea3fb434f0bad16dd">compute_auto_speed</a>(<span class="keywordtype">float</span> temp_c)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>{</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment">/*</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment">        Reglas:</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">        - &lt; 25°C =&gt; 0%</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment">        - 25–30°C =&gt; proporcional</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="comment">        - &gt; 30°C =&gt; 100%</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="comment">    */</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordflow">if</span> (temp_c &lt; 25.0f) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">if</span> (temp_c &gt;= 30.0f) {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordflow">return</span> 100;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">// Mapeo lineal 25 → 0%   30 → 100%</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordtype">float</span> scale = (temp_c - 25.0f) / 5.0f;  <span class="comment">// 0 a 1</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> (uint8_t)(scale * 100.0f);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}</div>
+</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span></div>
+<div class="foldopen" id="foldopen00146" data-start="{" data-end="}">
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="fan__control_8h.html#a50dd23e7bf63c1ba17d8d81770e03186">  146</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="fan__control_8c.html#a50dd23e7bf63c1ba17d8d81770e03186">fan_control_init</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>{</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <a class="code hl_function" href="fan__driver_8h.html#a648b7e106efd21e3948d16df84409906">fan_init</a>();</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a> = <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc">FAN_MODE_MANUAL</a>;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <a class="code hl_variable" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a> = 0;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <a class="code hl_variable" href="fan__control_8c.html#a467bf28438d9df5e52781cf33cc0fd24">s_reg_active</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>}</div>
+</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span></div>
+<div class="foldopen" id="foldopen00184" data-start="{" data-end="}">
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno"><a class="line" href="fan__control_8h.html#ad70079e6a01813020cce4bb17aa7db48">  184</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="fan__control_8c.html#ad70079e6a01813020cce4bb17aa7db48">fan_control_set_mode</a>(<a class="code hl_enumeration" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cb">fan_mode_t</a> mode)</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>{</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a> = mode;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordflow">switch</span> (<a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a>) {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc">FAN_MODE_MANUAL</a>:</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="comment">// usa directamente la velocidad del slider</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = <a class="code hl_variable" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a>;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <a class="code hl_function" href="fan__driver_8h.html#a6637062d7800066c51c87da1198c2ce9">fan_set_speed_percent</a>(<a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a>);</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c">FAN_MODE_AUTO</a>: {</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="comment">// Al cambiar a AUTO, aplicamos una primera vez lógica NTC+PIR</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="http__server_8c.html#a9d32fbbbd38b5977b829e778d1f2eab6">s_ntc_adc_handle</a> == NULL) {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        }</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordtype">float</span> temp_c = <a class="code hl_function" href="ntc__driver_8h.html#ad95666f05070d139a7b670e924e5b1be">leer_temperatura_celsius</a>(<a class="code hl_variable" href="http__server_8c.html#a9d32fbbbd38b5977b829e778d1f2eab6">s_ntc_adc_handle</a>);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordflow">if</span> (temp_c &lt; -100.0f) { <span class="comment">// error NTC</span></div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        }</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keywordtype">bool</span> motion = <a class="code hl_function" href="pir__driver_8h.html#a81ffd3f243f99fd46341ee96793e6310">pir_is_motion_active</a>();</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keywordflow">if</span> (!motion) {</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        }</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        uint8_t spd = <a class="code hl_function" href="fan__control_8c.html#a9b8f1759fa5b56cea3fb434f0bad16dd">compute_auto_speed</a>(temp_c);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = spd;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <a class="code hl_function" href="fan__driver_8h.html#a6637062d7800066c51c87da1198c2ce9">fan_set_speed_percent</a>(<a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a>);</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    }</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418">FAN_MODE_REGISTERS</a>:</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="fan__control_8c.html#a467bf28438d9df5e52781cf33cc0fd24">s_reg_active</a>) {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = <a class="code hl_variable" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a>;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            <a class="code hl_function" href="fan__driver_8h.html#a6637062d7800066c51c87da1198c2ce9">fan_set_speed_percent</a>(<a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a>);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        }</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    }</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>}</div>
+</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span></div>
+<div class="foldopen" id="foldopen00244" data-start="{" data-end="}">
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno"><a class="line" href="fan__control_8h.html#aa08b3a03f8ea8e144f8ec933c5204e45">  244</a></span><a class="code hl_enumeration" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cb">fan_mode_t</a> <a class="code hl_function" href="fan__control_8c.html#aa08b3a03f8ea8e144f8ec933c5204e45">fan_control_get_mode</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>{</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a>;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>}</div>
+</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span></div>
+<div class="foldopen" id="foldopen00266" data-start="{" data-end="}">
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="fan__control_8h.html#a86862beca4b5da7bd5bdb3a9973f88f6">  266</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="fan__control_8c.html#a86862beca4b5da7bd5bdb3a9973f88f6">fan_control_set_manual_speed</a>(uint8_t percent)</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>{</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keywordflow">if</span> (percent &gt; 100) {</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        percent = 100;</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    }</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <a class="code hl_variable" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a> = percent;</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a> == <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc">FAN_MODE_MANUAL</a>) {</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = <a class="code hl_variable" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a>;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <a class="code hl_function" href="fan__driver_8h.html#a6637062d7800066c51c87da1198c2ce9">fan_set_speed_percent</a>(<a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a>);</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    }</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>}</div>
+</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span></div>
+<div class="foldopen" id="foldopen00292" data-start="{" data-end="}">
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno"><a class="line" href="fan__control_8h.html#a11f10e096c3158f9adb5d3930fab3b25">  292</a></span>uint8_t <a class="code hl_function" href="fan__control_8c.html#a11f10e096c3158f9adb5d3930fab3b25">fan_control_get_speed</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>{</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a>;  <span class="comment">// Devolver velocidad REAL del PWM, no del slider</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>}</div>
+</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span></div>
+<div class="foldopen" id="foldopen00318" data-start="{" data-end="}">
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno"><a class="line" href="fan__control_8h.html#a4d1476e55b973e30892503e7f955ef71">  318</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="fan__control_8c.html#a4d1476e55b973e30892503e7f955ef71">fan_control_on_register_tick</a>(<span class="keywordtype">bool</span> any_match_now)</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>{</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    <a class="code hl_variable" href="fan__control_8c.html#a467bf28438d9df5e52781cf33cc0fd24">s_reg_active</a> = any_match_now;</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <span class="comment">// Solo tiene efecto en modo REGISTROS</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a> != <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418">FAN_MODE_REGISTERS</a>) {</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    }</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span> </div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="fan__control_8c.html#a467bf28438d9df5e52781cf33cc0fd24">s_reg_active</a>) {</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        <span class="comment">// Aquí decides a qué velocidad se enciende cuando un registro coincide.</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="comment">// Yo uso la velocidad del slider (s_manual_speed).</span></div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = <a class="code hl_variable" href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a>;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        <a class="code hl_function" href="fan__driver_8h.html#a6637062d7800066c51c87da1198c2ce9">fan_set_speed_percent</a>(<a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a>);</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        <span class="comment">// Ningún registro activo → ventilador apagado</span></div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    }</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>}</div>
+</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span></div>
+<div class="foldopen" id="foldopen00367" data-start="{" data-end="}">
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno"><a class="line" href="fan__control_8h.html#a35e59d87579aeab44fae1a8dd1a53872">  367</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="fan__control_8c.html#a35e59d87579aeab44fae1a8dd1a53872">fan_control_update</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>{</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a> != <a class="code hl_enumvalue" href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c">FAN_MODE_AUTO</a>) {</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    }</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="http__server_8c.html#a9d32fbbbd38b5977b829e778d1f2eab6">s_ntc_adc_handle</a> == NULL) {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    }</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="keywordtype">float</span> temp_c = <a class="code hl_function" href="ntc__driver_8h.html#ad95666f05070d139a7b670e924e5b1be">leer_temperatura_celsius</a>(<a class="code hl_variable" href="http__server_8c.html#a9d32fbbbd38b5977b829e778d1f2eab6">s_ntc_adc_handle</a>);</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keywordflow">if</span> (temp_c &lt; -100.0f) { <span class="comment">// error NTC</span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    }</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keywordtype">bool</span> motion = <a class="code hl_function" href="pir__driver_8h.html#a81ffd3f243f99fd46341ee96793e6310">pir_is_motion_active</a>();</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="keywordflow">if</span> (!motion) {</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = 0;</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        <a class="code hl_function" href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a>();</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    }</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span> </div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    uint8_t auto_speed = <a class="code hl_function" href="fan__control_8c.html#a9b8f1759fa5b56cea3fb434f0bad16dd">compute_auto_speed</a>(temp_c);</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a> = auto_speed;</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <a class="code hl_function" href="fan__driver_8h.html#a6637062d7800066c51c87da1198c2ce9">fan_set_speed_percent</a>(<a class="code hl_variable" href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a>);</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>}</div>
+</div>
+<div class="ttc" id="afan__control_8c_html_a11f10e096c3158f9adb5d3930fab3b25"><div class="ttname"><a href="fan__control_8c.html#a11f10e096c3158f9adb5d3930fab3b25">fan_control_get_speed</a></div><div class="ttdeci">uint8_t fan_control_get_speed(void)</div><div class="ttdoc">Obtiene la velocidad REAL del ventilador PWM.</div><div class="ttdef"><b>Definition</b> <a href="#l00292">fan_control.c:292</a></div></div>
+<div class="ttc" id="afan__control_8c_html_a218b51aa1f08e6d629c6d70d42f13ae6"><div class="ttname"><a href="fan__control_8c.html#a218b51aa1f08e6d629c6d70d42f13ae6">s_manual_speed</a></div><div class="ttdeci">static uint8_t s_manual_speed</div><div class="ttdoc">Velocidad configurada por usuario en slider (0-100%).</div><div class="ttdef"><b>Definition</b> <a href="#l00077">fan_control.c:77</a></div></div>
+<div class="ttc" id="afan__control_8c_html_a35e59d87579aeab44fae1a8dd1a53872"><div class="ttname"><a href="fan__control_8c.html#a35e59d87579aeab44fae1a8dd1a53872">fan_control_update</a></div><div class="ttdeci">void fan_control_update(void)</div><div class="ttdoc">Actualiza velocidad del ventilador en modo AUTO.</div><div class="ttdef"><b>Definition</b> <a href="#l00367">fan_control.c:367</a></div></div>
+<div class="ttc" id="afan__control_8c_html_a467bf28438d9df5e52781cf33cc0fd24"><div class="ttname"><a href="fan__control_8c.html#a467bf28438d9df5e52781cf33cc0fd24">s_reg_active</a></div><div class="ttdeci">static bool s_reg_active</div><div class="ttdoc">Flag que indica si hay algún registro programado activo.</div><div class="ttdef"><b>Definition</b> <a href="#l00099">fan_control.c:99</a></div></div>
+<div class="ttc" id="afan__control_8c_html_a4d1476e55b973e30892503e7f955ef71"><div class="ttname"><a href="fan__control_8c.html#a4d1476e55b973e30892503e7f955ef71">fan_control_on_register_tick</a></div><div class="ttdeci">void fan_control_on_register_tick(bool any_match_now)</div><div class="ttdoc">Callback desde scheduler de registros programados.</div><div class="ttdef"><b>Definition</b> <a href="#l00318">fan_control.c:318</a></div></div>
+<div class="ttc" id="afan__control_8c_html_a50dd23e7bf63c1ba17d8d81770e03186"><div class="ttname"><a href="fan__control_8c.html#a50dd23e7bf63c1ba17d8d81770e03186">fan_control_init</a></div><div class="ttdeci">void fan_control_init(void)</div><div class="ttdoc">Inicializa el subsistema de control del ventilador.</div><div class="ttdef"><b>Definition</b> <a href="#l00146">fan_control.c:146</a></div></div>
+<div class="ttc" id="afan__control_8c_html_a86862beca4b5da7bd5bdb3a9973f88f6"><div class="ttname"><a href="fan__control_8c.html#a86862beca4b5da7bd5bdb3a9973f88f6">fan_control_set_manual_speed</a></div><div class="ttdeci">void fan_control_set_manual_speed(uint8_t percent)</div><div class="ttdoc">Establece la velocidad del slider (usado en MANUAL y REGISTERS).</div><div class="ttdef"><b>Definition</b> <a href="#l00266">fan_control.c:266</a></div></div>
+<div class="ttc" id="afan__control_8c_html_a9b8f1759fa5b56cea3fb434f0bad16dd"><div class="ttname"><a href="fan__control_8c.html#a9b8f1759fa5b56cea3fb434f0bad16dd">compute_auto_speed</a></div><div class="ttdeci">static uint8_t compute_auto_speed(float temp_c)</div><div class="ttdef"><b>Definition</b> <a href="#l00103">fan_control.c:103</a></div></div>
+<div class="ttc" id="afan__control_8c_html_aa08b3a03f8ea8e144f8ec933c5204e45"><div class="ttname"><a href="fan__control_8c.html#aa08b3a03f8ea8e144f8ec933c5204e45">fan_control_get_mode</a></div><div class="ttdeci">fan_mode_t fan_control_get_mode(void)</div><div class="ttdoc">Obtiene el modo de operación actual.</div><div class="ttdef"><b>Definition</b> <a href="#l00244">fan_control.c:244</a></div></div>
+<div class="ttc" id="afan__control_8c_html_abb1293ba189348243de8cf43fa87befe"><div class="ttname"><a href="fan__control_8c.html#abb1293ba189348243de8cf43fa87befe">s_current_speed</a></div><div class="ttdeci">static uint8_t s_current_speed</div><div class="ttdoc">Velocidad REAL actual del ventilador PWM (0-100%).</div><div class="ttdef"><b>Definition</b> <a href="#l00090">fan_control.c:90</a></div></div>
+<div class="ttc" id="afan__control_8c_html_ad34a59e72dd57c8ec0e073918128c855"><div class="ttname"><a href="fan__control_8c.html#ad34a59e72dd57c8ec0e073918128c855">s_mode</a></div><div class="ttdeci">static fan_mode_t s_mode</div><div class="ttdoc">Modo de operación actual del ventilador.</div><div class="ttdef"><b>Definition</b> <a href="#l00074">fan_control.c:74</a></div></div>
+<div class="ttc" id="afan__control_8c_html_ad70079e6a01813020cce4bb17aa7db48"><div class="ttname"><a href="fan__control_8c.html#ad70079e6a01813020cce4bb17aa7db48">fan_control_set_mode</a></div><div class="ttdeci">void fan_control_set_mode(fan_mode_t mode)</div><div class="ttdoc">Cambia el modo de operación del ventilador.</div><div class="ttdef"><b>Definition</b> <a href="#l00184">fan_control.c:184</a></div></div>
+<div class="ttc" id="afan__control_8h_html"><div class="ttname"><a href="fan__control_8h.html">fan_control.h</a></div><div class="ttdoc">Control automático del ventilador con múltiples modos de operación.</div></div>
+<div class="ttc" id="afan__control_8h_html_ad55164305e4bf1becf684ba008d967cb"><div class="ttname"><a href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cb">fan_mode_t</a></div><div class="ttdeci">fan_mode_t</div><div class="ttdoc">Modos de operación del ventilador.</div><div class="ttdef"><b>Definition</b> <a href="fan__control_8h_source.html#l00026">fan_control.h:26</a></div></div>
+<div class="ttc" id="afan__control_8h_html_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418"><div class="ttname"><a href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418">FAN_MODE_REGISTERS</a></div><div class="ttdeci">@ FAN_MODE_REGISTERS</div><div class="ttdoc">Control programado por registros horarios.</div><div class="ttdef"><b>Definition</b> <a href="fan__control_8h_source.html#l00029">fan_control.h:29</a></div></div>
+<div class="ttc" id="afan__control_8h_html_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc"><div class="ttname"><a href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc">FAN_MODE_MANUAL</a></div><div class="ttdeci">@ FAN_MODE_MANUAL</div><div class="ttdoc">Control manual mediante slider web.</div><div class="ttdef"><b>Definition</b> <a href="fan__control_8h_source.html#l00027">fan_control.h:27</a></div></div>
+<div class="ttc" id="afan__control_8h_html_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c"><div class="ttname"><a href="fan__control_8h.html#ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c">FAN_MODE_AUTO</a></div><div class="ttdeci">@ FAN_MODE_AUTO</div><div class="ttdoc">Control automático por temperatura NTC.</div><div class="ttdef"><b>Definition</b> <a href="fan__control_8h_source.html#l00028">fan_control.h:28</a></div></div>
+<div class="ttc" id="afan__driver_8h_html"><div class="ttname"><a href="fan__driver_8h.html">fan_driver.h</a></div></div>
+<div class="ttc" id="afan__driver_8h_html_a46cfc38d5476fe8170f5fdcf79e7fc26"><div class="ttname"><a href="fan__driver_8h.html#a46cfc38d5476fe8170f5fdcf79e7fc26">fan_off</a></div><div class="ttdeci">void fan_off(void)</div><div class="ttdef"><b>Definition</b> <a href="fan__driver_8c_source.html#l00043">fan_driver.c:43</a></div></div>
+<div class="ttc" id="afan__driver_8h_html_a648b7e106efd21e3948d16df84409906"><div class="ttname"><a href="fan__driver_8h.html#a648b7e106efd21e3948d16df84409906">fan_init</a></div><div class="ttdeci">void fan_init(void)</div><div class="ttdef"><b>Definition</b> <a href="fan__driver_8c_source.html#l00006">fan_driver.c:6</a></div></div>
+<div class="ttc" id="afan__driver_8h_html_a6637062d7800066c51c87da1198c2ce9"><div class="ttname"><a href="fan__driver_8h.html#a6637062d7800066c51c87da1198c2ce9">fan_set_speed_percent</a></div><div class="ttdeci">void fan_set_speed_percent(uint8_t percent)</div><div class="ttdef"><b>Definition</b> <a href="fan__driver_8c_source.html#l00033">fan_driver.c:33</a></div></div>
+<div class="ttc" id="ahttp__server_8c_html_a9d32fbbbd38b5977b829e778d1f2eab6"><div class="ttname"><a href="http__server_8c.html#a9d32fbbbd38b5977b829e778d1f2eab6">s_ntc_adc_handle</a></div><div class="ttdeci">adc_oneshot_unit_handle_t s_ntc_adc_handle</div><div class="ttdoc">Handle del ADC para sensor NTC (compartido globalmente).</div><div class="ttdef"><b>Definition</b> <a href="http__server_8c_source.html#l00128">http_server.c:128</a></div></div>
+<div class="ttc" id="antc__driver_8h_html"><div class="ttname"><a href="ntc__driver_8h.html">ntc_driver.h</a></div><div class="ttdoc">Driver para sensor de temperatura NTC (Negative Temperature Coefficient).</div></div>
+<div class="ttc" id="antc__driver_8h_html_ad95666f05070d139a7b670e924e5b1be"><div class="ttname"><a href="ntc__driver_8h.html#ad95666f05070d139a7b670e924e5b1be">leer_temperatura_celsius</a></div><div class="ttdeci">float leer_temperatura_celsius(adc_oneshot_unit_handle_t manejador_adc)</div><div class="ttdoc">Lee la temperatura actual del sensor NTC en grados Celsius.</div><div class="ttdef"><b>Definition</b> <a href="ntc__driver_8c_source.html#l00122">ntc_driver.c:122</a></div></div>
+<div class="ttc" id="apir__driver_8h_html"><div class="ttname"><a href="pir__driver_8h.html">pir_driver.h</a></div><div class="ttdoc">Driver para sensor PIR (Passive Infrared) de detección de movimiento.</div></div>
+<div class="ttc" id="apir__driver_8h_html_a81ffd3f243f99fd46341ee96793e6310"><div class="ttname"><a href="pir__driver_8h.html#a81ffd3f243f99fd46341ee96793e6310">pir_is_motion_active</a></div><div class="ttdeci">bool pir_is_motion_active(void)</div><div class="ttdoc">Lee el estado actual del sensor PIR (polling).</div><div class="ttdef"><b>Definition</b> <a href="pir__driver_8c_source.html#l00146">pir_driver.c:146</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="fan__control_8c.html">fan_control.c</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

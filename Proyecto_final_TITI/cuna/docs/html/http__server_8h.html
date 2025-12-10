@@ -1,0 +1,492 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Referencia del archivo http_server.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('http__server_8h.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo http_server.h</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Servidor HTTP con endpoints REST para control del sistema.  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &quot;freertos/FreeRTOS.h&quot;</code><br />
+<code>#include &quot;esp_event.h&quot;</code><br />
+<code>#include &quot;esp_adc/adc_oneshot.h&quot;</code><br />
+</div>
+<p><a href="http__server_8h_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Estructuras de datos</h2></td></tr>
+<tr class="memitem:http_5Fserver_5Fqueue_5Fmessage" id="r_http_5Fserver_5Fqueue_5Fmessage"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhttp__server__queue__message.html">http_server_queue_message</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+defines</h2></td></tr>
+<tr class="memitem:ga1f24de40c4d1df080062b6bca4cc751e" id="r_ga1f24de40c4d1df080062b6bca4cc751e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___o_t_a___status.html#ga1f24de40c4d1df080062b6bca4cc751e">OTA_UPDATE_PENDING</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:ga1f24de40c4d1df080062b6bca4cc751e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actualización OTA pendiente.  <br /></td></tr>
+<tr class="memitem:ga2fcbd52f78a2a3e1e7418d74fb6de497" id="r_ga2fcbd52f78a2a3e1e7418d74fb6de497"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___o_t_a___status.html#ga2fcbd52f78a2a3e1e7418d74fb6de497">OTA_UPDATE_SUCCESSFUL</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:ga2fcbd52f78a2a3e1e7418d74fb6de497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actualización OTA exitosa.  <br /></td></tr>
+<tr class="memitem:ga784a011b84e58faf7e84d7e4950a5231" id="r_ga784a011b84e58faf7e84d7e4950a5231"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___o_t_a___status.html#ga784a011b84e58faf7e84d7e4950a5231">OTA_UPDATE_FAILED</a>&#160;&#160;&#160;-1</td></tr>
+<tr class="memdesc:ga784a011b84e58faf7e84d7e4950a5231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Actualización OTA fallida.  <br /></td></tr>
+<tr class="memitem:ab795a48e4796e4b0fca47a1341469d12" id="r_ab795a48e4796e4b0fca47a1341469d12"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab795a48e4796e4b0fca47a1341469d12">BLINK_GPIO</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memdesc:ab795a48e4796e4b0fca47a1341469d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">GPIO del LED de estado.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+typedefs</h2></td></tr>
+<tr class="memitem:a94c46a0f2f039fae2e174938731cf5dc" id="r_a94c46a0f2f039fae2e174938731cf5dc"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="#a954842a930e3ec08480037f7fb7d79bc">http_server_wifi_connect_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94c46a0f2f039fae2e174938731cf5dc">http_server_wifi_connect_status_e</a></td></tr>
+<tr class="memitem:af3e42acc0daaaa0e7992f1be99d28e08" id="r_af3e42acc0daaaa0e7992f1be99d28e08"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0">http_server_message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a></td></tr>
+<tr class="memitem:a28311d98817ae6c596066d8bb49a56f7" id="r_a28311d98817ae6c596066d8bb49a56f7"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structhttp__server__queue__message.html">http_server_queue_message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28311d98817ae6c596066d8bb49a56f7">http_server_queue_message_t</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumeraciones</h2></td></tr>
+<tr class="memitem:a954842a930e3ec08480037f7fb7d79bc" id="r_a954842a930e3ec08480037f7fb7d79bc"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a954842a930e3ec08480037f7fb7d79bc">http_server_wifi_connect_status</a> { <a class="el" href="#a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a> = 0
+, <a class="el" href="#a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d">HTTP_WIFI_STATUS_CONNECTING</a>
+, <a class="el" href="#a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f">HTTP_WIFI_STATUS_CONNECT_FAILED</a>
+, <a class="el" href="#a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305">HTTP_WIFI_STATUS_CONNECT_SUCCESS</a>
+ }</td></tr>
+<tr class="memitem:ab3e4b4d49519c9ebb9989dd6d6a680b0" id="r_ab3e4b4d49519c9ebb9989dd6d6a680b0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0">http_server_message</a> { <br />
+&#160;&#160;<a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d">HTTP_MSG_WIFI_CONNECT_INIT</a> = 0
+, <a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789">HTTP_MSG_WIFI_CONNECT_SUCCESS</a>
+, <a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5">HTTP_MSG_WIFI_CONNECT_FAIL</a>
+, <a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526">HTTP_MSG_OTA_UPDATE_SUCCESSFUL</a>
+, <br />
+&#160;&#160;<a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4">HTTP_MSG_OTA_UPDATE_FAILED</a>
+<br />
+ }</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:aa40c7544f908043547e60dcba8a41963" id="r_aa40c7544f908043547e60dcba8a41963"><td class="memItemLeft" align="right" valign="top">BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa40c7544f908043547e60dcba8a41963">http_server_monitor_send_message</a> (<a class="el" href="#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a> msgID)</td></tr>
+<tr class="memdesc:aa40c7544f908043547e60dcba8a41963"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enviar mensaje a la cola del monitor HTTP.  <br /></td></tr>
+<tr class="memitem:ae5fb127f629ed9aecaba445bd1512221" id="r_ae5fb127f629ed9aecaba445bd1512221"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5fb127f629ed9aecaba445bd1512221">http_server_start</a> (void)</td></tr>
+<tr class="memdesc:ae5fb127f629ed9aecaba445bd1512221"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iniciar servidor HTTP y tareas relacionadas.  <br /></td></tr>
+<tr class="memitem:afffb5f05a179c9702078a824048dab36" id="r_afffb5f05a179c9702078a824048dab36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afffb5f05a179c9702078a824048dab36">http_server_stop</a> (void)</td></tr>
+<tr class="memdesc:afffb5f05a179c9702078a824048dab36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detener servidor HTTP y liberar recursos.  <br /></td></tr>
+<tr class="memitem:aa252e797e5e0e5945501a429bba37f1c" id="r_aa252e797e5e0e5945501a429bba37f1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa252e797e5e0e5945501a429bba37f1c">http_server_fw_update_reset_callback</a> (void *arg)</td></tr>
+<tr class="memdesc:aa252e797e5e0e5945501a429bba37f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback de timer para reinicio tras OTA exitoso.  <br /></td></tr>
+<tr class="memitem:a0d7dc83276db640fb3589828dae229e9" id="r_a0d7dc83276db640fb3589828dae229e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d7dc83276db640fb3589828dae229e9">toogle_led</a> (void)</td></tr>
+<tr class="memdesc:a0d7dc83276db640fb3589828dae229e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alternar LED de estado.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Servidor HTTP con endpoints REST para control del sistema. </p>
+<dl class="section author"><dt>Autor</dt><dd>Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya </dd></dl>
+<dl class="section date"><dt>Fecha</dt><dd>2025 </dd></dl>
+<dl class="section version"><dt>Versión</dt><dd>1.0.0</dd></dl>
+<p>Servidor HTTP embebido que proporciona:</p><ul>
+<li><b>Interfaz Web Completa</b>: HTML/CSS/JS para control del sistema</li>
+<li><b>Endpoints REST</b>: Control de ventilador, registros, sensores</li>
+<li><b>OTA Updates</b>: Actualización de firmware vía HTTP</li>
+<li><b>Monitoreo de Estado</b>: Cola de mensajes para eventos WiFi y sistema</li>
+<li><b>Archivos Embebidos</b>: <a class="el" href="index_8html.html">index.html</a>, <a class="el" href="app_8js.html">app.js</a>, app.css, jQuery, favicon</li>
+</ul>
+<p><b>Principales Endpoints:</b></p><ul>
+<li>GET / → Página web principal</li>
+<li>GET /dhtSensor.json → Leer temperatura y PIR</li>
+<li>POST /fanSettings.json → Configurar ventilador</li>
+<li>POST /regchange.json → Modificar registro programado</li>
+<li>GET /api/register → API de registros (ver <a class="el" href="registers_8h.html" title="API REST para gestión de registros programados con persistencia NVS.">registers.h</a>)</li>
+<li>POST /OTAupdate → Actualización OTA de firmware</li>
+</ul>
+<p>El servidor se inicializa automáticamente cuando WiFi se conecta y mantiene una tarea monitor que procesa mensajes de estado del sistema.</p>
+<p>Universidad Nacional de Colombia - Curso RTOS </p>
+
+<p class="definition">Definición en el archivo <a class="el" href="http__server_8h_source.html">http_server.h</a>.</p>
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Documentación de «define»</h2>
+<a id="ab795a48e4796e4b0fca47a1341469d12" name="ab795a48e4796e4b0fca47a1341469d12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab795a48e4796e4b0fca47a1341469d12">&#9670;&#160;</a></span>BLINK_GPIO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINK_GPIO&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>GPIO del LED de estado. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8h_source.html#l00043">43</a> del archivo <a class="el" href="http__server_8h_source.html">http_server.h</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="http__server_8c_source.html#l00201">toogle_led()</a>.</p>
+
+</div>
+</div>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Documentación de «typedef»</h2>
+<a id="af3e42acc0daaaa0e7992f1be99d28e08" name="af3e42acc0daaaa0e7992f1be99d28e08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3e42acc0daaaa0e7992f1be99d28e08">&#9670;&#160;</a></span>http_server_message_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef enum <a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0">http_server_message</a> <a class="el" href="#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a28311d98817ae6c596066d8bb49a56f7" name="a28311d98817ae6c596066d8bb49a56f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28311d98817ae6c596066d8bb49a56f7">&#9670;&#160;</a></span>http_server_queue_message_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structhttp__server__queue__message.html">http_server_queue_message</a> http_server_queue_message_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a94c46a0f2f039fae2e174938731cf5dc" name="a94c46a0f2f039fae2e174938731cf5dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94c46a0f2f039fae2e174938731cf5dc">&#9670;&#160;</a></span>http_server_wifi_connect_status_e</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef enum <a class="el" href="#a954842a930e3ec08480037f7fb7d79bc">http_server_wifi_connect_status</a> <a class="el" href="#a94c46a0f2f039fae2e174938731cf5dc">http_server_wifi_connect_status_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Documentación de enumeraciones</h2>
+<a id="ab3e4b4d49519c9ebb9989dd6d6a680b0" name="ab3e4b4d49519c9ebb9989dd6d6a680b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3e4b4d49519c9ebb9989dd6d6a680b0">&#9670;&#160;</a></span>http_server_message</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#ab3e4b4d49519c9ebb9989dd6d6a680b0">http_server_message</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Valores de enumeraciones</th></tr><tr><td class="fieldname"><a id="ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d" name="ab3e4b4d49519c9ebb9989dd6d6a680b0a6683770071439f5c2edc610e9be7a18d"></a>HTTP_MSG_WIFI_CONNECT_INIT&#160;</td><td class="fielddoc"><p>Iniciar conexión WiFi. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789" name="ab3e4b4d49519c9ebb9989dd6d6a680b0ae65772f69b39a1ae9d7ba8ba62d57789"></a>HTTP_MSG_WIFI_CONNECT_SUCCESS&#160;</td><td class="fielddoc"><p>WiFi conectado exitosamente. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5" name="ab3e4b4d49519c9ebb9989dd6d6a680b0a1c99241b8db8a6e76dd11915a112bda5"></a>HTTP_MSG_WIFI_CONNECT_FAIL&#160;</td><td class="fielddoc"><p>Error al conectar WiFi. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526" name="ab3e4b4d49519c9ebb9989dd6d6a680b0a40d206d99b7e2eca63c1ea6377a9f526"></a>HTTP_MSG_OTA_UPDATE_SUCCESSFUL&#160;</td><td class="fielddoc"><p>Actualización OTA completada. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4" name="ab3e4b4d49519c9ebb9989dd6d6a680b0a687e8a2a8763c464f223009319f6adf4"></a>HTTP_MSG_OTA_UPDATE_FAILED&#160;</td><td class="fielddoc"><p>Actualización OTA falló </p>
+</td></tr>
+</table>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8h_source.html#l00065">65</a> del archivo <a class="el" href="http__server_8h_source.html">http_server.h</a>.</p>
+
+</div>
+</div>
+<a id="a954842a930e3ec08480037f7fb7d79bc" name="a954842a930e3ec08480037f7fb7d79bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a954842a930e3ec08480037f7fb7d79bc">&#9670;&#160;</a></span>http_server_wifi_connect_status</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a954842a930e3ec08480037f7fb7d79bc">http_server_wifi_connect_status</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Valores de enumeraciones</th></tr><tr><td class="fieldname"><a id="a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2" name="a954842a930e3ec08480037f7fb7d79bcac157bdf0b85a40d2619cbc8bc1ae5fe2"></a>NONE&#160;</td><td class="fielddoc"><p>Estado inicial, sin conexión. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d" name="a954842a930e3ec08480037f7fb7d79bca7db818758fa38c89a9ac74f86305077d"></a>HTTP_WIFI_STATUS_CONNECTING&#160;</td><td class="fielddoc"><p>Intentando conectar a WiFi. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f" name="a954842a930e3ec08480037f7fb7d79bca9a21b5463a70ab694bfd67de936cdd7f"></a>HTTP_WIFI_STATUS_CONNECT_FAILED&#160;</td><td class="fielddoc"><p>Conexión WiFi falló </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305" name="a954842a930e3ec08480037f7fb7d79bcae58c5f8d2b61169ced2b2c90981dd305"></a>HTTP_WIFI_STATUS_CONNECT_SUCCESS&#160;</td><td class="fielddoc"><p>Conexión WiFi exitosa. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8h_source.html#l00049">49</a> del archivo <a class="el" href="http__server_8h_source.html">http_server.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones</h2>
+<a id="aa252e797e5e0e5945501a429bba37f1c" name="aa252e797e5e0e5945501a429bba37f1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa252e797e5e0e5945501a429bba37f1c">&#9670;&#160;</a></span>http_server_fw_update_reset_callback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void http_server_fw_update_reset_callback </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>arg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Callback de timer para reinicio tras OTA exitoso. </p>
+<p>Se ejecuta 8 segundos después de una actualización OTA exitosa, dando tiempo a que el navegador reciba la respuesta HTTP antes de reiniciar.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arg</td><td>Argumento del timer (sin usar)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Llama a esp_restart() para aplicar nuevo firmware </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8c_source.html#l01430">1430</a> del archivo <a class="el" href="http__server_8c_source.html">http_server.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+</div>
+</div>
+<a id="aa40c7544f908043547e60dcba8a41963" name="aa40c7544f908043547e60dcba8a41963"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa40c7544f908043547e60dcba8a41963">&#9670;&#160;</a></span>http_server_monitor_send_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">BaseType_t http_server_monitor_send_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a></td>          <td class="paramname"><span class="paramname"><em>msgID</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enviar mensaje a la cola del monitor HTTP. </p>
+<p>Permite comunicación thread-safe entre módulos del sistema y el servidor HTTP. Los mensajes se procesan en orden FIFO por la tarea http_server_monitor.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msgID</td><td>ID del mensaje desde <a class="el" href="#af3e42acc0daaaa0e7992f1be99d28e08">http_server_message_e</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>pdTRUE si el mensaje se envió correctamente </dd>
+<dd>
+pdFALSE si la cola está llena (espera indefinida activada)</dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Esta función usa portMAX_DELAY, bloqueará hasta que haya espacio en la cola </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8c_source.html#l01423">1423</a> del archivo <a class="el" href="http__server_8c_source.html">http_server.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00143">http_server_monitor_queue_handle</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="http__server_8c_source.html#l00655">http_server_OTA_update_handler()</a> y <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="ae5fb127f629ed9aecaba445bd1512221" name="ae5fb127f629ed9aecaba445bd1512221"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5fb127f629ed9aecaba445bd1512221">&#9670;&#160;</a></span>http_server_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void http_server_start </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Iniciar servidor HTTP y tareas relacionadas. </p>
+<p>Crea el servidor HTTP en el puerto 80, registra todos los handlers de endpoints REST, inicializa sensores (NTC, PIR) y crea las tareas:</p><ul>
+<li>http_server_monitor: Procesa mensajes de estado</li>
+<li>fan_task: Actualiza control del ventilador cada 1s</li>
+</ul>
+<dl class="section note"><dt>Nota</dt><dd>Solo se ejecuta si el servidor no está ya iniciado </dd>
+<dd>
+Debe llamarse después de que WiFi esté configurado</dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="#afffb5f05a179c9702078a824048dab36" title="Detener servidor HTTP y liberar recursos.">http_server_stop()</a> para detener el servidor</dd></dl>
+<p>Iniciar servidor HTTP y tareas relacionadas.</p>
+<p>Secuencia de inicialización completa:</p><ol type="1">
+<li>Configura periféricos (ADC, NTC, PIR, sensor_task)</li>
+<li>Inicializa control del ventilador</li>
+<li>Crea cola de mensajes http_server_monitor</li>
+<li>Crea tarea http_server_monitor</li>
+<li>Configura y arranca servidor HTTP</li>
+<li>Crea fan_task para modo AUTO</li>
+</ol>
+<dl class="section note"><dt>Nota</dt><dd>Llamar después de que WiFi obtenga IP </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>Debe llamarse solo una vez</dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="http__server_8c.html#a144f3a03b04b7f1669cd84e63a4d03cc" title="Configura e inicia el servidor HTTP con todos los endpoints.">http_server_configure()</a> Configuración del servidor </dd>
+<dd>
+<a class="el" href="http__server_8c.html#a81d987e42a660d479981eefd99e51d6f" title="Tarea RTOS que actualiza el ventilador en modo AUTO.">fan_task()</a> Tarea de actualización automática </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8c_source.html#l01375">1375</a> del archivo <a class="el" href="http__server_8c_source.html">http_server.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="fan__control_8c_source.html#l00146">fan_control_init()</a>, <a class="el" href="http__server_8c_source.html#l01345">fan_task()</a>, <a class="el" href="http__server_8c_source.html#l01086">http_server_configure()</a>, <a class="el" href="http__server_8c_source.html#l00137">http_server_handle</a>, <a class="el" href="http__server_8c_source.html#l00402">sensors_init()</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00862">wifi_app_task()</a>.</p>
+
+</div>
+</div>
+<a id="afffb5f05a179c9702078a824048dab36" name="afffb5f05a179c9702078a824048dab36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afffb5f05a179c9702078a824048dab36">&#9670;&#160;</a></span>http_server_stop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void http_server_stop </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Detener servidor HTTP y liberar recursos. </p>
+<p>Detiene el servidor HTTP y elimina la tarea monitor asociada. Usado típicamente al cambiar configuración WiFi o antes de reiniciar.</p>
+<p>Detener servidor HTTP y liberar recursos.</p>
+<p>Secuencia de parada:</p><ol type="1">
+<li>Detiene servidor HTTP con httpd_stop()</li>
+<li>Elimina tarea http_server_monitor</li>
+<li>Libera cola http_server_monitor_queue_handle</li>
+</ol>
+<dl class="section note"><dt>Nota</dt><dd>Solo ejecuta si http_server_handle != NULL </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>No detiene fan_task ni sensor_task </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8c_source.html#l01404">1404</a> del archivo <a class="el" href="http__server_8c_source.html">http_server.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8c_source.html#l00137">http_server_handle</a>, <a class="el" href="http__server_8c_source.html#l00117">TAG</a> y <a class="el" href="http__server_8c_source.html#l00140">task_http_server_monitor</a>.</p>
+
+</div>
+</div>
+<a id="a0d7dc83276db640fb3589828dae229e9" name="a0d7dc83276db640fb3589828dae229e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d7dc83276db640fb3589828dae229e9">&#9670;&#160;</a></span>toogle_led()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void toogle_led </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Alternar LED de estado. </p>
+<p>Cambia el estado del LED en BLINK_GPIO. Usado para indicadores visuales durante operaciones del sistema.</p>
+<p>Alternar LED de estado.</p>
+<p>Toggle simple del GPIO definido como BLINK_GPIO. Usado para debug visual del sistema. </p>
+<p>&lt; GPIO del LED de estado</p>
+
+<p class="definition">Definición en la línea <a class="el" href="http__server_8c_source.html#l00201">201</a> del archivo <a class="el" href="http__server_8c_source.html">http_server.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="http__server_8h_source.html#l00043">BLINK_GPIO</a> y <a class="el" href="http__server_8c_source.html#l00192">s_led_state</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="wifi__app_8c_source.html#l00967">compare_hour_day_structs()</a> y <a class="el" href="http__server_8c_source.html#l00359">http_server_toogle_led_handler()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="http__server_8h.html">http_server.h</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

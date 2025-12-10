@@ -1,0 +1,113 @@
+\doxysection{Referencia de la estructura sensor\+\_\+data\+\_\+t}
+\hypertarget{structsensor__data__t}{}\label{structsensor__data__t}\index{sensor\_data\_t@{sensor\_data\_t}}
+
+
+Estructura con datos de sensores protegida por mutex.  
+
+
+
+
+{\ttfamily \#include $<$sensor\+\_\+task.\+h$>$}
+
+\doxysubsubsection*{Campos de datos}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{structsensor__data__t_ae6d8659a177684bdb6d870f73cd7c4c2}{temperature\+\_\+celsius}}
+\begin{DoxyCompactList}\small\item\em Temperatura en grados Celsius del sensor NTC. \end{DoxyCompactList}\item 
+struct tm \mbox{\hyperlink{structsensor__data__t_ae6f5a976aa302e3c9158ccb10e063d42}{time\+\_\+info}}
+\begin{DoxyCompactList}\small\item\em Información de tiempo del sistema (SNTP). \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{structsensor__data__t_ac74240336d16e1ba85135f860dc1b052}{time\+\_\+valid}}
+\begin{DoxyCompactList}\small\item\em true si la hora está sincronizada por SNTP \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{structsensor__data__t_ac6fe246d5f2706739461241580629d32}{temperature\+\_\+valid}}
+\begin{DoxyCompactList}\small\item\em true si la lectura de temperatura es válida \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Estructura con datos de sensores protegida por mutex. 
+
+Contiene las últimas lecturas válidas de temperatura, hora del sistema y flags de validez para cada dato. 
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8h_source_l00029}{29}} del archivo \mbox{\hyperlink{sensor__task_8h_source}{sensor\+\_\+task.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{structsensor__data__t_doc-variable-members}
+\doxysubsection{Documentación de campos}
+\Hypertarget{structsensor__data__t_ae6d8659a177684bdb6d870f73cd7c4c2}\index{sensor\_data\_t@{sensor\_data\_t}!temperature\_celsius@{temperature\_celsius}}
+\index{temperature\_celsius@{temperature\_celsius}!sensor\_data\_t@{sensor\_data\_t}}
+\doxysubsubsection{\texorpdfstring{temperature\_celsius}{temperature\_celsius}}
+{\footnotesize\ttfamily \label{structsensor__data__t_ae6d8659a177684bdb6d870f73cd7c4c2} 
+float sensor\+\_\+data\+\_\+t\+::temperature\+\_\+celsius}
+
+
+
+Temperatura en grados Celsius del sensor NTC. 
+
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8h_source_l00030}{30}} del archivo \mbox{\hyperlink{sensor__task_8h_source}{sensor\+\_\+task.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+
+\Hypertarget{structsensor__data__t_ac6fe246d5f2706739461241580629d32}\index{sensor\_data\_t@{sensor\_data\_t}!temperature\_valid@{temperature\_valid}}
+\index{temperature\_valid@{temperature\_valid}!sensor\_data\_t@{sensor\_data\_t}}
+\doxysubsubsection{\texorpdfstring{temperature\_valid}{temperature\_valid}}
+{\footnotesize\ttfamily \label{structsensor__data__t_ac6fe246d5f2706739461241580629d32} 
+bool sensor\+\_\+data\+\_\+t\+::temperature\+\_\+valid}
+
+
+
+true si la lectura de temperatura es válida 
+
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8h_source_l00033}{33}} del archivo \mbox{\hyperlink{sensor__task_8h_source}{sensor\+\_\+task.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+
+\Hypertarget{structsensor__data__t_ae6f5a976aa302e3c9158ccb10e063d42}\index{sensor\_data\_t@{sensor\_data\_t}!time\_info@{time\_info}}
+\index{time\_info@{time\_info}!sensor\_data\_t@{sensor\_data\_t}}
+\doxysubsubsection{\texorpdfstring{time\_info}{time\_info}}
+{\footnotesize\ttfamily \label{structsensor__data__t_ae6f5a976aa302e3c9158ccb10e063d42} 
+struct tm sensor\+\_\+data\+\_\+t\+::time\+\_\+info}
+
+
+
+Información de tiempo del sistema (SNTP). 
+
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8h_source_l00031}{31}} del archivo \mbox{\hyperlink{sensor__task_8h_source}{sensor\+\_\+task.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+
+\Hypertarget{structsensor__data__t_ac74240336d16e1ba85135f860dc1b052}\index{sensor\_data\_t@{sensor\_data\_t}!time\_valid@{time\_valid}}
+\index{time\_valid@{time\_valid}!sensor\_data\_t@{sensor\_data\_t}}
+\doxysubsubsection{\texorpdfstring{time\_valid}{time\_valid}}
+{\footnotesize\ttfamily \label{structsensor__data__t_ac74240336d16e1ba85135f860dc1b052} 
+bool sensor\+\_\+data\+\_\+t\+::time\+\_\+valid}
+
+
+
+true si la hora está sincronizada por SNTP 
+
+
+
+Definición en la línea \mbox{\hyperlink{sensor__task_8h_source_l00032}{32}} del archivo \mbox{\hyperlink{sensor__task_8h_source}{sensor\+\_\+task.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{sensor__task_8c_source_l00118}{sensor\+\_\+update\+\_\+task()}}.
+
+
+
+La documentación de esta estructura está generada del siguiente archivo\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{sensor__task_8h}{sensor\+\_\+task.\+h}}\end{DoxyCompactItemize}

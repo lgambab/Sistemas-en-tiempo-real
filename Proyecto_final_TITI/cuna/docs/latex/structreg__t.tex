@@ -1,0 +1,113 @@
+\doxysection{Referencia de la estructura reg\+\_\+t}
+\hypertarget{structreg__t}{}\label{structreg__t}\index{reg\_t@{reg\_t}}
+
+
+Estructura de un registro programado.  
+
+
+
+
+{\ttfamily \#include $<$registers.\+h$>$}
+
+\doxysubsubsection*{Campos de datos}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}{hour}}
+\begin{DoxyCompactList}\small\item\em Hora de ejecución (0-\/23). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{structreg__t_a56b1597b39ecd909069388499dea1cfe}{minute}}
+\begin{DoxyCompactList}\small\item\em Minuto de ejecución (0-\/59). \end{DoxyCompactList}\item 
+char \mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}} \mbox{[}7\mbox{]}\mbox{[}12\mbox{]}
+\begin{DoxyCompactList}\small\item\em Array de días\+: "{}\+Lunes"{}, "{}\+Martes"{}, etc. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\+\_\+count}}
+\begin{DoxyCompactList}\small\item\em Cantidad de días válidos en el array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Estructura de un registro programado. 
+
+Define una acción programada con hora, minuto y días de la semana. 
+
+Definición en la línea \mbox{\hyperlink{registers_8h_source_l00036}{36}} del archivo \mbox{\hyperlink{registers_8h_source}{registers.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{structreg__t_doc-variable-members}
+\doxysubsection{Documentación de campos}
+\Hypertarget{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}\index{reg\_t@{reg\_t}!day\_count@{day\_count}}
+\index{day\_count@{day\_count}!reg\_t@{reg\_t}}
+\doxysubsubsection{\texorpdfstring{day\_count}{day\_count}}
+{\footnotesize\ttfamily \label{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3} 
+int reg\+\_\+t\+::day\+\_\+count}
+
+
+
+Cantidad de días válidos en el array. 
+
+
+
+Definición en la línea \mbox{\hyperlink{registers_8h_source_l00040}{40}} del archivo \mbox{\hyperlink{registers_8h_source}{registers.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00371}{api\+\_\+post\+\_\+register()}}, \mbox{\hyperlink{registers_8c_source_l00265}{load\+\_\+register\+\_\+struct\+\_\+from\+\_\+nvs()}}, \mbox{\hyperlink{registers_8c_source_l00338}{register\+\_\+is\+\_\+active\+\_\+now()}} y \mbox{\hyperlink{registers_8c_source_l00137}{save\+\_\+register\+\_\+to\+\_\+nvs()}}.
+
+\Hypertarget{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}\index{reg\_t@{reg\_t}!days@{days}}
+\index{days@{days}!reg\_t@{reg\_t}}
+\doxysubsubsection{\texorpdfstring{days}{days}}
+{\footnotesize\ttfamily \label{structreg__t_a8ba86753a2ddc546dde8701cd52418d3} 
+char reg\+\_\+t\+::days\mbox{[}7\mbox{]}\mbox{[}12\mbox{]}}
+
+
+
+Array de días\+: "{}\+Lunes"{}, "{}\+Martes"{}, etc. 
+
+
+
+Definición en la línea \mbox{\hyperlink{registers_8h_source_l00039}{39}} del archivo \mbox{\hyperlink{registers_8h_source}{registers.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00371}{api\+\_\+post\+\_\+register()}}, \mbox{\hyperlink{registers_8c_source_l00265}{load\+\_\+register\+\_\+struct\+\_\+from\+\_\+nvs()}}, \mbox{\hyperlink{registers_8c_source_l00338}{register\+\_\+is\+\_\+active\+\_\+now()}} y \mbox{\hyperlink{registers_8c_source_l00137}{save\+\_\+register\+\_\+to\+\_\+nvs()}}.
+
+\Hypertarget{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}\index{reg\_t@{reg\_t}!hour@{hour}}
+\index{hour@{hour}!reg\_t@{reg\_t}}
+\doxysubsubsection{\texorpdfstring{hour}{hour}}
+{\footnotesize\ttfamily \label{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae} 
+int reg\+\_\+t\+::hour}
+
+
+
+Hora de ejecución (0-\/23). 
+
+
+
+Definición en la línea \mbox{\hyperlink{registers_8h_source_l00037}{37}} del archivo \mbox{\hyperlink{registers_8h_source}{registers.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00371}{api\+\_\+post\+\_\+register()}}, \mbox{\hyperlink{registers_8c_source_l00265}{load\+\_\+register\+\_\+struct\+\_\+from\+\_\+nvs()}}, \mbox{\hyperlink{registers_8c_source_l00338}{register\+\_\+is\+\_\+active\+\_\+now()}} y \mbox{\hyperlink{registers_8c_source_l00137}{save\+\_\+register\+\_\+to\+\_\+nvs()}}.
+
+\Hypertarget{structreg__t_a56b1597b39ecd909069388499dea1cfe}\index{reg\_t@{reg\_t}!minute@{minute}}
+\index{minute@{minute}!reg\_t@{reg\_t}}
+\doxysubsubsection{\texorpdfstring{minute}{minute}}
+{\footnotesize\ttfamily \label{structreg__t_a56b1597b39ecd909069388499dea1cfe} 
+int reg\+\_\+t\+::minute}
+
+
+
+Minuto de ejecución (0-\/59). 
+
+
+
+Definición en la línea \mbox{\hyperlink{registers_8h_source_l00038}{38}} del archivo \mbox{\hyperlink{registers_8h_source}{registers.\+h}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00371}{api\+\_\+post\+\_\+register()}}, \mbox{\hyperlink{registers_8c_source_l00265}{load\+\_\+register\+\_\+struct\+\_\+from\+\_\+nvs()}}, \mbox{\hyperlink{registers_8c_source_l00338}{register\+\_\+is\+\_\+active\+\_\+now()}} y \mbox{\hyperlink{registers_8c_source_l00137}{save\+\_\+register\+\_\+to\+\_\+nvs()}}.
+
+
+
+La documentación de esta estructura está generada del siguiente archivo\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{registers_8h}{registers.\+h}}\end{DoxyCompactItemize}

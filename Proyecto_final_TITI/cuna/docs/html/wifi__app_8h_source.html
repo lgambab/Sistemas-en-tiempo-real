@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Archivo de código fuente wifi_app.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('wifi__app_8h_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">wifi_app.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="wifi__app_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#ifndef MAIN_WIFI_APP_H_</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#define MAIN_WIFI_APP_H_</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;esp_netif.h&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;esp_wifi_types.h&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;freertos/FreeRTOS.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">// Callback typedef</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a1e6520a64db9bed8110e12b1dcf22445">   30</a></span><span class="keyword">typedef</span> void (*<a class="code hl_typedef" href="wifi__app_8h.html#a1e6520a64db9bed8110e12b1dcf22445">wifi_connected_event_callback_t</a>)(void);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga8e19d13af09f7ed0afad391730f1e3e7">   35</a></span><span class="preprocessor">#define WIFI_AP_SSID                &quot;Mi_esp&quot;            </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#gac80c92af8bf29cfe0442a28b6a7ec5a3">   36</a></span><span class="preprocessor">#define WIFI_AP_PASSWORD            &quot;12345678&quot;          </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#gac0a1dba58f0e6d7f07d3050fa0291dd0">   37</a></span><span class="preprocessor">#define WIFI_AP_CHANNEL             1                   </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga02f4226bd6b0e2adad29fddd345a0918">   38</a></span><span class="preprocessor">#define WIFI_AP_SSID_HIDDEN         0                   </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#gab689d29cda2d350ce6652141df530fd0">   39</a></span><span class="preprocessor">#define WIFI_AP_MAX_CONNECTIONS     5                   </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga532527c416f545aaa0b3adf4185ed3f4">   40</a></span><span class="preprocessor">#define WIFI_AP_BEACON_INTERVAL     100                 </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga067a8d9ec14859ad6237320d2cec686a">   41</a></span><span class="preprocessor">#define WIFI_AP_IP                  &quot;192.168.0.1&quot;       </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga2782b50f9a156696a1708c61823aa3a3">   42</a></span><span class="preprocessor">#define WIFI_AP_GATEWAY             &quot;192.168.0.1&quot;       </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#gaf48472f62a4bab9896e181b25d439f34">   43</a></span><span class="preprocessor">#define WIFI_AP_NETMASK             &quot;255.255.255.0&quot;     </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga7581843f542963f235dd70d339f106f5">   44</a></span><span class="preprocessor">#define WIFI_AP_BANDWIDTH           WIFI_BW_HT20        </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga08b834aec05f183ace828469af10b817">   45</a></span><span class="preprocessor">#define WIFI_STA_POWER_SAVE         WIFI_PS_NONE        </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga1a3e371dfda6b729e6c7a890cf94f6ca">   46</a></span><span class="preprocessor">#define MAX_SSID_LENGTH             32                  </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga7f264fafe78080f8ea68715854b9bc24">   47</a></span><span class="preprocessor">#define MAX_PASSWORD_LENGTH         64                  </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="group___wi_fi___config.html#ga72a2cf74d03d2705748164a8202c8f48">   48</a></span><span class="preprocessor">#define MAX_CONNECTION_RETRIES      5                   </span><span class="preprocessor"></span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a5b6bbc36d5b71c9bebeb124a6216a3d4">   51</a></span><span class="preprocessor">#define NUM_REGISTERS_AV            10                  </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">extern</span> esp_netif_t* <a class="code hl_variable" href="wifi__app_8h.html#a9d201c9b3c512f5569c685bd04488cbe">esp_netif_sta</a>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">extern</span> esp_netif_t* <a class="code hl_variable" href="wifi__app_8h.html#a9d04dd561f9f32dd175245abb38a868a">esp_netif_ap</a>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="};">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7">   65</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code hl_enumeration" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7">wifi_app_message</a></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>{</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26">   67</a></span>    <a class="code hl_enumvalue" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26">WIFI_APP_MSG_START_HTTP_SERVER</a> = 0,         </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd">   68</a></span>    <a class="code hl_enumvalue" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd">WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER</a>,       </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081">   69</a></span>    <a class="code hl_enumvalue" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081">WIFI_APP_MSG_STA_CONNECTED_GOT_IP</a>,              </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19">   70</a></span>    <a class="code hl_enumvalue" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19">WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT</a>, </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f">   71</a></span>    <a class="code hl_enumvalue" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f">WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS</a>,            </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8">   72</a></span>    <a class="code hl_enumvalue" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8">WIFI_APP_MSG_STA_DISCONNECTED</a>,                  </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e">   73</a></span>    <a class="code hl_enumvalue" href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e">WIFI_APP_CONNECT_TO_STA</a>,                        </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">   74</a></span>} <a class="code hl_typedef" href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">wifi_app_message_e</a>;</div>
+</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
+<div class="foldopen" id="foldopen00080" data-start="{" data-end="};">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="structwifi__app__queue__message.html">   80</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structwifi__app__queue__message.html">wifi_app_queue_message</a></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>{</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="structwifi__app__queue__message.html#aa1f98d162abc86ed12edebaec160b5c0">   82</a></span>    <a class="code hl_typedef" href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">wifi_app_message_e</a> <a class="code hl_variable" href="structwifi__app__queue__message.html#aa1f98d162abc86ed12edebaec160b5c0">msgID</a>;   </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a92e7931e4ccac09641270ca66333c912">   83</a></span>} <a class="code hl_struct" href="structwifi__app__queue__message__t.html">wifi_app_queue_message_t</a>;</div>
+</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
+<div class="foldopen" id="foldopen00091" data-start="{" data-end="};">
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="structregister__saved.html">   91</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structregister__saved.html">register_saved</a></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>{</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="structregister__saved.html#abdbc23e328dea4dd37d4c389b2def6e4">   93</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#abdbc23e328dea4dd37d4c389b2def6e4">hour</a>;       </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="structregister__saved.html#a0f2d950acbdab39a19ad92558a261d9a">   94</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#a0f2d950acbdab39a19ad92558a261d9a">min</a>;        </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="structregister__saved.html#a8da4642b8bffdc289b47d0c04e1c2240">   95</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#a8da4642b8bffdc289b47d0c04e1c2240">monday</a>;     </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="structregister__saved.html#a6babfd97543ca509632364d0f046f151">   96</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#a6babfd97543ca509632364d0f046f151">tuesday</a>;    </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="structregister__saved.html#aeb4ecc5382fb5842c04b686658f8b5d2">   97</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#aeb4ecc5382fb5842c04b686658f8b5d2">wednesday</a>;  </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="structregister__saved.html#a4b5e5f63fc1575132579238f34b8a39e">   98</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#a4b5e5f63fc1575132579238f34b8a39e">thursday</a>;   </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="structregister__saved.html#aaa849983d598a5dd50eb2e89a1cf7b1e">   99</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#aaa849983d598a5dd50eb2e89a1cf7b1e">friday</a>;     </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="structregister__saved.html#a91d0a802df082b80b0bca3fc075e4c7c">  100</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#a91d0a802df082b80b0bca3fc075e4c7c">sunday</a>;     </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="structregister__saved.html#adfbbf086998927415d7099d94995f879">  101</a></span>    uint8_t <a class="code hl_variable" href="structregister__saved.html#adfbbf086998927415d7099d94995f879">saturday</a>;   </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a8ca04b228d2e75b497bad06dd88566af">  102</a></span>} <a class="code hl_struct" href="structregister__saved__e.html">register_saved_e</a>;</div>
+</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#ab1c7cd65f7d2ab1a577cd0179c779ee6">  109</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#ab1c7cd65f7d2ab1a577cd0179c779ee6">obtain_time</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#a8a91d7a19b16ddaf60425245284defd7">connect_to_wifi</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#a1d00e8eaad99ca85a63b4329a60b4f39">initialize_registers</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>esp_err_t <a class="code hl_function" href="wifi__app_8h.html#ad0657d784ea25871bdc65ab1a0d10b5a">read_reg_data</a>(<span class="keywordtype">char</span> *str_to_save, uint8_t register_num);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#aa25117999d3c679ce2ec34f66a4da463">init_obtain_time</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="keywordtype">bool</span> <a class="code hl_function" href="wifi__app_8h.html#af889cf6e5d320085772f871cf468ffb1">get_state_time_was_synchronized</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#a56633849de02c2abb38c9f47ef6fee1f">save_reg_data</a>(uint8_t <span class="keyword">register</span>, <span class="keywordtype">char</span> *str);</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#a1eb1e37bd21abc738271e8c1a8a876f8">save_wifi_credentials</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *ssid, <span class="keyword">const</span> <span class="keywordtype">char</span> *password);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#af9612dd1f9a3dccde879268af5c87db5">load_wifi_credentials</a>(<span class="keywordtype">char</span> *ssid, <span class="keywordtype">char</span> *password);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a68f13dd71722bd75ad3dfbe7a709fa99">  169</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#a68f13dd71722bd75ad3dfbe7a709fa99">wifi_app_connect_sta</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#ac29bf6013014643966e099049b102dfd">check_sta_connection_state</a>(<span class="keywordtype">void</span> *pvParameters);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#acb668c2a5fc2215e71e0688d577f4085">task_compare_hour_to_execute_action</a>(<span class="keywordtype">void</span> *pvParameters);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#a101f4f6f2c139e1ac4d4619328f768d9">update_register</a>(<span class="keywordtype">int</span> reg_to_update);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>BaseType_t <a class="code hl_function" href="wifi__app_8h.html#aec924a59c0eede746e90c5c04e682fc3">wifi_app_send_message</a>(<a class="code hl_typedef" href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">wifi_app_message_e</a> msgID);</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#ac2af98a9df667dec7b75c10a5717f09d">wifi_app_start</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>wifi_config_t* <a class="code hl_function" href="wifi__app_8h.html#acd6606606de84f405065531c1889432a">wifi_app_get_wifi_config</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span></div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#af79551f710f287fae05080e0b8e4de3b">  216</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#af79551f710f287fae05080e0b8e4de3b">wifi_app_set_callback</a>(<a class="code hl_typedef" href="wifi__app_8h.html#a1e6520a64db9bed8110e12b1dcf22445">wifi_connected_event_callback_t</a> cb);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a8da3123ee9e699631055034de29f9bb5">  222</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="wifi__app_8h.html#a8da3123ee9e699631055034de29f9bb5">wifi_app_call_callback</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno"><a class="line" href="wifi__app_8h.html#a5d07d8b446d099d9791b275a1635a33b">  229</a></span>int8_t <a class="code hl_function" href="wifi__app_8h.html#a5d07d8b446d099d9791b275a1635a33b">wifi_app_get_rssi</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="preprocessor">#endif </span><span class="comment">/* MAIN_WIFI_APP_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="ttc" id="astructregister__saved__e_html"><div class="ttname"><a href="structregister__saved__e.html">register_saved_e</a></div><div class="ttdoc">Estructura de registro programado guardado en NVS.</div></div>
+<div class="ttc" id="astructregister__saved_html"><div class="ttname"><a href="structregister__saved.html">register_saved</a></div><div class="ttdef"><b>Definition</b> <a href="#l00091">wifi_app.h:92</a></div></div>
+<div class="ttc" id="astructregister__saved_html_a0f2d950acbdab39a19ad92558a261d9a"><div class="ttname"><a href="structregister__saved.html#a0f2d950acbdab39a19ad92558a261d9a">register_saved::min</a></div><div class="ttdeci">uint8_t min</div><div class="ttdoc">Minuto de ejecución (0-59).</div><div class="ttdef"><b>Definition</b> <a href="#l00094">wifi_app.h:94</a></div></div>
+<div class="ttc" id="astructregister__saved_html_a4b5e5f63fc1575132579238f34b8a39e"><div class="ttname"><a href="structregister__saved.html#a4b5e5f63fc1575132579238f34b8a39e">register_saved::thursday</a></div><div class="ttdeci">uint8_t thursday</div><div class="ttdoc">1=activo el jueves, 0=inactivo</div><div class="ttdef"><b>Definition</b> <a href="#l00098">wifi_app.h:98</a></div></div>
+<div class="ttc" id="astructregister__saved_html_a6babfd97543ca509632364d0f046f151"><div class="ttname"><a href="structregister__saved.html#a6babfd97543ca509632364d0f046f151">register_saved::tuesday</a></div><div class="ttdeci">uint8_t tuesday</div><div class="ttdoc">1=activo el martes, 0=inactivo</div><div class="ttdef"><b>Definition</b> <a href="#l00096">wifi_app.h:96</a></div></div>
+<div class="ttc" id="astructregister__saved_html_a8da4642b8bffdc289b47d0c04e1c2240"><div class="ttname"><a href="structregister__saved.html#a8da4642b8bffdc289b47d0c04e1c2240">register_saved::monday</a></div><div class="ttdeci">uint8_t monday</div><div class="ttdoc">1=activo el lunes, 0=inactivo</div><div class="ttdef"><b>Definition</b> <a href="#l00095">wifi_app.h:95</a></div></div>
+<div class="ttc" id="astructregister__saved_html_a91d0a802df082b80b0bca3fc075e4c7c"><div class="ttname"><a href="structregister__saved.html#a91d0a802df082b80b0bca3fc075e4c7c">register_saved::sunday</a></div><div class="ttdeci">uint8_t sunday</div><div class="ttdoc">1=activo el domingo, 0=inactivo</div><div class="ttdef"><b>Definition</b> <a href="#l00100">wifi_app.h:100</a></div></div>
+<div class="ttc" id="astructregister__saved_html_aaa849983d598a5dd50eb2e89a1cf7b1e"><div class="ttname"><a href="structregister__saved.html#aaa849983d598a5dd50eb2e89a1cf7b1e">register_saved::friday</a></div><div class="ttdeci">uint8_t friday</div><div class="ttdoc">1=activo el viernes, 0=inactivo</div><div class="ttdef"><b>Definition</b> <a href="#l00099">wifi_app.h:99</a></div></div>
+<div class="ttc" id="astructregister__saved_html_abdbc23e328dea4dd37d4c389b2def6e4"><div class="ttname"><a href="structregister__saved.html#abdbc23e328dea4dd37d4c389b2def6e4">register_saved::hour</a></div><div class="ttdeci">uint8_t hour</div><div class="ttdoc">Hora de ejecución (0-23).</div><div class="ttdef"><b>Definition</b> <a href="#l00093">wifi_app.h:93</a></div></div>
+<div class="ttc" id="astructregister__saved_html_adfbbf086998927415d7099d94995f879"><div class="ttname"><a href="structregister__saved.html#adfbbf086998927415d7099d94995f879">register_saved::saturday</a></div><div class="ttdeci">uint8_t saturday</div><div class="ttdoc">1=activo el sábado, 0=inactivo</div><div class="ttdef"><b>Definition</b> <a href="#l00101">wifi_app.h:101</a></div></div>
+<div class="ttc" id="astructregister__saved_html_aeb4ecc5382fb5842c04b686658f8b5d2"><div class="ttname"><a href="structregister__saved.html#aeb4ecc5382fb5842c04b686658f8b5d2">register_saved::wednesday</a></div><div class="ttdeci">uint8_t wednesday</div><div class="ttdoc">1=activo el miércoles, 0=inactivo</div><div class="ttdef"><b>Definition</b> <a href="#l00097">wifi_app.h:97</a></div></div>
+<div class="ttc" id="astructwifi__app__queue__message__t_html"><div class="ttname"><a href="structwifi__app__queue__message__t.html">wifi_app_queue_message_t</a></div><div class="ttdoc">Estructura de mensajes para la cola WiFi.</div></div>
+<div class="ttc" id="astructwifi__app__queue__message_html"><div class="ttname"><a href="structwifi__app__queue__message.html">wifi_app_queue_message</a></div><div class="ttdef"><b>Definition</b> <a href="#l00080">wifi_app.h:81</a></div></div>
+<div class="ttc" id="astructwifi__app__queue__message_html_aa1f98d162abc86ed12edebaec160b5c0"><div class="ttname"><a href="structwifi__app__queue__message.html#aa1f98d162abc86ed12edebaec160b5c0">wifi_app_queue_message::msgID</a></div><div class="ttdeci">wifi_app_message_e msgID</div><div class="ttdoc">ID del mensaje a procesar.</div><div class="ttdef"><b>Definition</b> <a href="#l00082">wifi_app.h:82</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a101f4f6f2c139e1ac4d4619328f768d9"><div class="ttname"><a href="wifi__app_8h.html#a101f4f6f2c139e1ac4d4619328f768d9">update_register</a></div><div class="ttdeci">void update_register(int reg_to_update)</div><div class="ttdoc">Actualizar registro específico.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00387">wifi_app.c:387</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a1d00e8eaad99ca85a63b4329a60b4f39"><div class="ttname"><a href="wifi__app_8h.html#a1d00e8eaad99ca85a63b4329a60b4f39">initialize_registers</a></div><div class="ttdeci">void initialize_registers(void)</div><div class="ttdoc">Inicializar sistema de registros programados.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00431">wifi_app.c:431</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a1e6520a64db9bed8110e12b1dcf22445"><div class="ttname"><a href="wifi__app_8h.html#a1e6520a64db9bed8110e12b1dcf22445">wifi_connected_event_callback_t</a></div><div class="ttdeci">void(* wifi_connected_event_callback_t)(void)</div><div class="ttdef"><b>Definition</b> <a href="#l00030">wifi_app.h:30</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a1eb1e37bd21abc738271e8c1a8a876f8"><div class="ttname"><a href="wifi__app_8h.html#a1eb1e37bd21abc738271e8c1a8a876f8">save_wifi_credentials</a></div><div class="ttdeci">void save_wifi_credentials(const char *ssid, const char *password)</div><div class="ttdoc">Guardar credenciales WiFi en NVS.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00208">wifi_app.c:208</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7">wifi_app_message</a></div><div class="ttdeci">wifi_app_message</div><div class="ttdef"><b>Definition</b> <a href="#l00065">wifi_app.h:66</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a38ac3e11cfd6d77804b5a7e598fcd49f">WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS</a></div><div class="ttdeci">@ WIFI_APP_MSG_LOAD_SAVED_CREDENTIALS</div><div class="ttdoc">Cargar credenciales guardadas en NVS.</div><div class="ttdef"><b>Definition</b> <a href="#l00071">wifi_app.h:71</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a45be0600630362fb344882db9cc0353e">WIFI_APP_CONNECT_TO_STA</a></div><div class="ttdeci">@ WIFI_APP_CONNECT_TO_STA</div><div class="ttdoc">Comando para conectar a STA.</div><div class="ttdef"><b>Definition</b> <a href="#l00073">wifi_app.h:73</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a86ada2efdd425975deb84ecb1b141cd8">WIFI_APP_MSG_STA_DISCONNECTED</a></div><div class="ttdeci">@ WIFI_APP_MSG_STA_DISCONNECTED</div><div class="ttdoc">STA desconectado (evento del sistema).</div><div class="ttdef"><b>Definition</b> <a href="#l00072">wifi_app.h:72</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7a8dac849f05167f434ec0f3db42c5c9cd">WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER</a></div><div class="ttdeci">@ WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER</div><div class="ttdoc">Usuario solicitó conexión desde web.</div><div class="ttdef"><b>Definition</b> <a href="#l00068">wifi_app.h:68</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ac03152b4bce35e1885ff7b9056daab19">WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT</a></div><div class="ttdeci">@ WIFI_APP_MSG_USER_REQUESTED_STA_DISCONNECT</div><div class="ttdoc">Usuario solicitó desconexión desde web.</div><div class="ttdef"><b>Definition</b> <a href="#l00070">wifi_app.h:70</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ada9c13e3050d5020be3a68b55f5e8a26">WIFI_APP_MSG_START_HTTP_SERVER</a></div><div class="ttdeci">@ WIFI_APP_MSG_START_HTTP_SERVER</div><div class="ttdoc">Iniciar servidor HTTP tras conexión WiFi.</div><div class="ttdef"><b>Definition</b> <a href="#l00067">wifi_app.h:67</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081"><div class="ttname"><a href="wifi__app_8h.html#a26ad8237f08c6c5ab891262cc7e175a7ae8be5b888e354341593928e682bbd081">WIFI_APP_MSG_STA_CONNECTED_GOT_IP</a></div><div class="ttdeci">@ WIFI_APP_MSG_STA_CONNECTED_GOT_IP</div><div class="ttdoc">STA conectado y obtuvo IP por DHCP.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">wifi_app.h:69</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a56633849de02c2abb38c9f47ef6fee1f"><div class="ttname"><a href="wifi__app_8h.html#a56633849de02c2abb38c9f47ef6fee1f">save_reg_data</a></div><div class="ttdeci">void save_reg_data(uint8_t register, char *str)</div><div class="ttdoc">Guardar registro en NVS.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00230">wifi_app.c:230</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a5d07d8b446d099d9791b275a1635a33b"><div class="ttname"><a href="wifi__app_8h.html#a5d07d8b446d099d9791b275a1635a33b">wifi_app_get_rssi</a></div><div class="ttdeci">int8_t wifi_app_get_rssi(void)</div><div class="ttdoc">Obtener intensidad de señal WiFi (RSSI).</div></div>
+<div class="ttc" id="awifi__app_8h_html_a61d307eba4836dd61d2630d4bc513c08"><div class="ttname"><a href="wifi__app_8h.html#a61d307eba4836dd61d2630d4bc513c08">wifi_app_message_e</a></div><div class="ttdeci">enum wifi_app_message wifi_app_message_e</div></div>
+<div class="ttc" id="awifi__app_8h_html_a68f13dd71722bd75ad3dfbe7a709fa99"><div class="ttname"><a href="wifi__app_8h.html#a68f13dd71722bd75ad3dfbe7a709fa99">wifi_app_connect_sta</a></div><div class="ttdeci">static void wifi_app_connect_sta(void)</div><div class="ttdoc">Conectar ESP32 a red WiFi como Station.</div></div>
+<div class="ttc" id="awifi__app_8h_html_a8a91d7a19b16ddaf60425245284defd7"><div class="ttname"><a href="wifi__app_8h.html#a8a91d7a19b16ddaf60425245284defd7">connect_to_wifi</a></div><div class="ttdeci">void connect_to_wifi(void)</div><div class="ttdoc">Conectar a WiFi usando credenciales guardadas.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00569">wifi_app.c:569</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a8da3123ee9e699631055034de29f9bb5"><div class="ttname"><a href="wifi__app_8h.html#a8da3123ee9e699631055034de29f9bb5">wifi_app_call_callback</a></div><div class="ttdeci">void wifi_app_call_callback(void)</div><div class="ttdoc">Ejecutar callback registrado.</div></div>
+<div class="ttc" id="awifi__app_8h_html_a9d04dd561f9f32dd175245abb38a868a"><div class="ttname"><a href="wifi__app_8h.html#a9d04dd561f9f32dd175245abb38a868a">esp_netif_ap</a></div><div class="ttdeci">esp_netif_t * esp_netif_ap</div><div class="ttdoc">Handle de interfaz de red Access Point.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00098">wifi_app.c:98</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_a9d201c9b3c512f5569c685bd04488cbe"><div class="ttname"><a href="wifi__app_8h.html#a9d201c9b3c512f5569c685bd04488cbe">esp_netif_sta</a></div><div class="ttdeci">esp_netif_t * esp_netif_sta</div><div class="ttdoc">Handle de interfaz de red Station.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00095">wifi_app.c:95</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_aa25117999d3c679ce2ec34f66a4da463"><div class="ttname"><a href="wifi__app_8h.html#aa25117999d3c679ce2ec34f66a4da463">init_obtain_time</a></div><div class="ttdeci">void init_obtain_time(void)</div><div class="ttdoc">Inicializar sincronización de hora SNTP.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00113">wifi_app.c:113</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_ab1c7cd65f7d2ab1a577cd0179c779ee6"><div class="ttname"><a href="wifi__app_8h.html#ab1c7cd65f7d2ab1a577cd0179c779ee6">obtain_time</a></div><div class="ttdeci">static void obtain_time(void)</div><div class="ttdoc">Obtener hora desde servidor SNTP.</div></div>
+<div class="ttc" id="awifi__app_8h_html_ac29bf6013014643966e099049b102dfd"><div class="ttname"><a href="wifi__app_8h.html#ac29bf6013014643966e099049b102dfd">check_sta_connection_state</a></div><div class="ttdeci">void check_sta_connection_state(void *pvParameters)</div><div class="ttdoc">Tarea que verifica estado de conexión STA.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00611">wifi_app.c:611</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_ac2af98a9df667dec7b75c10a5717f09d"><div class="ttname"><a href="wifi__app_8h.html#ac2af98a9df667dec7b75c10a5717f09d">wifi_app_start</a></div><div class="ttdeci">void wifi_app_start(void)</div><div class="ttdoc">Iniciar tarea RTOS de WiFi.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l01115">wifi_app.c:1115</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_acb668c2a5fc2215e71e0688d577f4085"><div class="ttname"><a href="wifi__app_8h.html#acb668c2a5fc2215e71e0688d577f4085">task_compare_hour_to_execute_action</a></div><div class="ttdeci">void task_compare_hour_to_execute_action(void *pvParameters)</div><div class="ttdoc">Tarea que compara hora actual con registros programados.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l01058">wifi_app.c:1058</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_acd6606606de84f405065531c1889432a"><div class="ttname"><a href="wifi__app_8h.html#acd6606606de84f405065531c1889432a">wifi_app_get_wifi_config</a></div><div class="ttdeci">wifi_config_t * wifi_app_get_wifi_config(void)</div><div class="ttdoc">Obtener configuración actual de WiFi.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00962">wifi_app.c:962</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_ad0657d784ea25871bdc65ab1a0d10b5a"><div class="ttname"><a href="wifi__app_8h.html#ad0657d784ea25871bdc65ab1a0d10b5a">read_reg_data</a></div><div class="ttdeci">esp_err_t read_reg_data(char *str_to_save, uint8_t register_num)</div><div class="ttdoc">Leer datos de registro desde NVS.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00279">wifi_app.c:279</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_aec924a59c0eede746e90c5c04e682fc3"><div class="ttname"><a href="wifi__app_8h.html#aec924a59c0eede746e90c5c04e682fc3">wifi_app_send_message</a></div><div class="ttdeci">BaseType_t wifi_app_send_message(wifi_app_message_e msgID)</div><div class="ttdoc">Enviar mensaje a la cola de la tarea WiFi.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00948">wifi_app.c:948</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_af79551f710f287fae05080e0b8e4de3b"><div class="ttname"><a href="wifi__app_8h.html#af79551f710f287fae05080e0b8e4de3b">wifi_app_set_callback</a></div><div class="ttdeci">void wifi_app_set_callback(wifi_connected_event_callback_t cb)</div><div class="ttdoc">Registrar callback para evento de conexión exitosa.</div></div>
+<div class="ttc" id="awifi__app_8h_html_af889cf6e5d320085772f871cf468ffb1"><div class="ttname"><a href="wifi__app_8h.html#af889cf6e5d320085772f871cf468ffb1">get_state_time_was_synchronized</a></div><div class="ttdeci">bool get_state_time_was_synchronized(void)</div><div class="ttdoc">Verificar si la hora ya fue sincronizada.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00124">wifi_app.c:124</a></div></div>
+<div class="ttc" id="awifi__app_8h_html_af9612dd1f9a3dccde879268af5c87db5"><div class="ttname"><a href="wifi__app_8h.html#af9612dd1f9a3dccde879268af5c87db5">load_wifi_credentials</a></div><div class="ttdeci">void load_wifi_credentials(char *ssid, char *password)</div><div class="ttdoc">Cargar credenciales WiFi desde NVS.</div><div class="ttdef"><b>Definition</b> <a href="wifi__app_8c_source.html#l00508">wifi_app.c:508</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="wifi__app_8h.html">wifi_app.h</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

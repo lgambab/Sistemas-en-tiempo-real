@@ -1,0 +1,429 @@
+\doxysection{Referencia del archivo registers.\+h}
+\hypertarget{registers_8h}{}\label{registers_8h}\index{registers.h@{registers.h}}
+
+
+API REST para gestión de registros programados con persistencia NVS.  
+
+
+{\ttfamily \#include "{}esp\+\_\+err.\+h"{}}\newline
+{\ttfamily \#include "{}esp\+\_\+http\+\_\+server.\+h"{}}\newline
+\doxysubsubsection*{Estructuras de datos}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structreg__t}{reg\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Estructura de un registro programado. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{registers_8h_aa2c353c6e3271404cdf45ce4601951c7}{init\+\_\+nvs}} ()
+\begin{DoxyCompactList}\small\item\em Inicializar sistema NVS para almacenamiento persistente. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{registers_8h_adba5009ca1c63694a9f24bcbc260515e}{save\+\_\+register\+\_\+to\+\_\+nvs}} (int id, \mbox{\hyperlink{structreg__t}{reg\+\_\+t}} \texorpdfstring{$\ast$}{*}reg)
+\begin{DoxyCompactList}\small\item\em Guardar registro en NVS con formato JSON. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{registers_8h_aebc3357edd2c8b27aba176cfbf2a7260}{load\+\_\+register\+\_\+from\+\_\+nvs}} (int id, char \texorpdfstring{$\ast$}{*}buffer, size\+\_\+t buffer\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Cargar registro desde NVS. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{registers_8h_a96fc67199ae4e05f5cb25a0b8020573f}{delete\+\_\+register\+\_\+from\+\_\+nvs}} (int id)
+\begin{DoxyCompactList}\small\item\em Eliminar registro de NVS. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{registers_8h_a244791f69474ab6fe14dc90c4cf067f3}{api\+\_\+post\+\_\+register}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler HTTP POST para crear/actualizar registro. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{registers_8h_a17cd923ac85d45dc491784a52e765e7b}{api\+\_\+get\+\_\+registers}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler HTTP GET para listar todos los registros. \end{DoxyCompactList}\item 
+esp\+\_\+err\+\_\+t \mbox{\hyperlink{registers_8h_aa5b423dbf986bcd5719586d9a2af9765}{api\+\_\+delete\+\_\+register}} (httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}req)
+\begin{DoxyCompactList}\small\item\em Handler HTTP DELETE para eliminar registro. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{registers_8h_a02b94c84eabd1b5cc88c675a6c75b12f}{register\+\_\+registers\+\_\+endpoints}} (httpd\+\_\+handle\+\_\+t server)
+\begin{DoxyCompactList}\small\item\em Registrar todos los endpoints REST en el servidor HTTP. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+API REST para gestión de registros programados con persistencia NVS. 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Versión}
+1.\+0.\+0
+\end{DoxyVersion}
+Sistema completo de registros programados que permite\+:
+\begin{DoxyItemize}
+\item Crear, leer y eliminar registros mediante endpoints HTTP REST
+\item Almacenar registros en NVS (Non-\/\+Volatile Storage) con formato JSON
+\item Comparar hora actual con registros para activar automáticamente el ventilador
+\item Sincronización mediante SNTP para precisión horaria
+\end{DoxyItemize}
+
+Cada registro define una hora, minuto y días de la semana para ejecutar una acción (ej\+: encender ventilador). Los registros se almacenan en NVS con claves "{}reg01"{} hasta "{}reg10"{} y persisten tras reinicios.
+
+{\bfseries{Endpoints HTTP\+:}}
+\begin{DoxyItemize}
+\item POST /api/register -\/ Crear/actualizar registro
+\item GET /api/register -\/ Listar todos los registros
+\item DELETE /api/register?id=X -\/ Eliminar registro
+\end{DoxyItemize}
+
+Universidad Nacional de Colombia -\/ Curso RTOS 
+
+Definición en el archivo \mbox{\hyperlink{registers_8h_source}{registers.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{registers_8h_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{registers_8h_aa5b423dbf986bcd5719586d9a2af9765}\index{registers.h@{registers.h}!api\_delete\_register@{api\_delete\_register}}
+\index{api\_delete\_register@{api\_delete\_register}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{api\_delete\_register()}{api\_delete\_register()}}
+{\footnotesize\ttfamily \label{registers_8h_aa5b423dbf986bcd5719586d9a2af9765} 
+esp\+\_\+err\+\_\+t api\+\_\+delete\+\_\+register (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})}
+
+
+
+Handler HTTP DELETE para eliminar registro. 
+
+Endpoint\+: DELETE /api/register?id=5
+
+
+\begin{DoxyParams}{Parámetros}
+{\em req} & Request HTTP del servidor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+ESP\+\_\+\+OK si se eliminó correctamente 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00508}{508}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{registers_8c_source_l00229}{delete\+\_\+register\+\_\+from\+\_\+nvs()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00592}{register\+\_\+registers\+\_\+endpoints()}}.
+
+\Hypertarget{registers_8h_a17cd923ac85d45dc491784a52e765e7b}\index{registers.h@{registers.h}!api\_get\_registers@{api\_get\_registers}}
+\index{api\_get\_registers@{api\_get\_registers}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{api\_get\_registers()}{api\_get\_registers()}}
+{\footnotesize\ttfamily \label{registers_8h_a17cd923ac85d45dc491784a52e765e7b} 
+esp\+\_\+err\+\_\+t api\+\_\+get\+\_\+registers (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})}
+
+
+
+Handler HTTP GET para listar todos los registros. 
+
+Endpoint\+: GET /api/register Response JSON\+: \mbox{[}\{"{}id"{}\+:1,"{}hour"{}\+:14,"{}minute"{}\+:30,"{}days"{}\+:\mbox{[}...\mbox{]}\}\mbox{]}
+
+
+\begin{DoxyParams}{Parámetros}
+{\em req} & Request HTTP del servidor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+ESP\+\_\+\+OK si se procesó correctamente 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00451}{451}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{registers_8c_source_l00192}{load\+\_\+register\+\_\+from\+\_\+nvs()}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00592}{register\+\_\+registers\+\_\+endpoints()}}.
+
+\Hypertarget{registers_8h_a244791f69474ab6fe14dc90c4cf067f3}\index{registers.h@{registers.h}!api\_post\_register@{api\_post\_register}}
+\index{api\_post\_register@{api\_post\_register}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{api\_post\_register()}{api\_post\_register()}}
+{\footnotesize\ttfamily \label{registers_8h_a244791f69474ab6fe14dc90c4cf067f3} 
+esp\+\_\+err\+\_\+t api\+\_\+post\+\_\+register (\begin{DoxyParamCaption}\item[{httpd\+\_\+req\+\_\+t \texorpdfstring{$\ast$}{*}}]{req}{}\end{DoxyParamCaption})}
+
+
+
+Handler HTTP POST para crear/actualizar registro. 
+
+Endpoint\+: POST /api/register Body JSON\+: \{"{}id"{}\+:1, "{}hour"{}\+:14, "{}minute"{}\+:30, "{}days"{}\+:\mbox{[}"{}\+Lunes"{},"{}\+Viernes"{}\mbox{]}\}
+
+
+\begin{DoxyParams}{Parámetros}
+{\em req} & Request HTTP del servidor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+ESP\+\_\+\+OK si se procesó correctamente 
+\end{DoxyReturn}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00371}{371}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{registers_8h_source_l00040}{reg\+\_\+t\+::day\+\_\+count}}, \mbox{\hyperlink{registers_8h_source_l00039}{reg\+\_\+t\+::days}}, \mbox{\hyperlink{registers_8h_source_l00037}{reg\+\_\+t\+::hour}}, \mbox{\hyperlink{registers_8h_source_l00038}{reg\+\_\+t\+::minute}}, \mbox{\hyperlink{registers_8c_source_l00137}{save\+\_\+register\+\_\+to\+\_\+nvs()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00592}{register\+\_\+registers\+\_\+endpoints()}}.
+
+\Hypertarget{registers_8h_a96fc67199ae4e05f5cb25a0b8020573f}\index{registers.h@{registers.h}!delete\_register\_from\_nvs@{delete\_register\_from\_nvs}}
+\index{delete\_register\_from\_nvs@{delete\_register\_from\_nvs}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{delete\_register\_from\_nvs()}{delete\_register\_from\_nvs()}}
+{\footnotesize\ttfamily \label{registers_8h_a96fc67199ae4e05f5cb25a0b8020573f} 
+void delete\+\_\+register\+\_\+from\+\_\+nvs (\begin{DoxyParamCaption}\item[{int}]{id}{}\end{DoxyParamCaption})}
+
+
+
+Eliminar registro de NVS. 
+
+Borra permanentemente el registro con el ID especificado de la memoria no volátil.
+
+
+\begin{DoxyParams}{Parámetros}
+{\em id} & Identificador del registro a eliminar (1-\/10)\\
+\hline
+\end{DoxyParams}
+Eliminar registro de NVS.
+
+Borra la clave "{}reg\+\_\+$<$id$>$"{} del namespace "{}storage"{}.
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em id} & ID del registro a eliminar (1-\/10)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+No retorna error si el registro no existía (nvs\+\_\+erase\+\_\+key silencioso) 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+Requiere nvs\+\_\+commit() para persistir (ya incluido) 
+\end{DoxyWarning}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00229}{229}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00508}{api\+\_\+delete\+\_\+register()}} y \mbox{\hyperlink{http__server_8c_source_l00991}{http\+\_\+server\+\_\+register\+\_\+erase\+\_\+handler()}}.
+
+\Hypertarget{registers_8h_aa2c353c6e3271404cdf45ce4601951c7}\index{registers.h@{registers.h}!init\_nvs@{init\_nvs}}
+\index{init\_nvs@{init\_nvs}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{init\_nvs()}{init\_nvs()}}
+{\footnotesize\ttfamily \label{registers_8h_aa2c353c6e3271404cdf45ce4601951c7} 
+void init\+\_\+nvs (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Inicializar sistema NVS para almacenamiento persistente. 
+
+Debe llamarse una vez durante el arranque del sistema antes de usar cualquier función de registros.
+
+\begin{DoxyNote}{Nota}
+Inicializa la partición NVS requerida para guardar registros
+\end{DoxyNote}
+Inicializar sistema NVS para almacenamiento persistente.
+
+Inicializa la partición NVS en flash para almacenamiento persistente. Si la partición está corrupta o es versión antigua, la borra y reinicializa.
+
+{\bfseries{Manejo de errores\+:}}
+\begin{DoxyItemize}
+\item ESP\+\_\+\+ERR\+\_\+\+NVS\+\_\+\+NO\+\_\+\+FREE\+\_\+\+PAGES\+: Partición llena → borra y reinicia
+\item ESP\+\_\+\+ERR\+\_\+\+NVS\+\_\+\+NEW\+\_\+\+VERSION\+\_\+\+FOUND\+: Versión incompatible → borra y reinicia
+\item Otros errores\+: ESP\+\_\+\+ERROR\+\_\+\+CHECK causa panic
+\end{DoxyItemize}
+
+\begin{DoxyWarning}{Atención}
+Llamar antes de cualquier operación NVS 
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Seguro llamar múltiples veces (NVS ignora reinicializaciones) 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00100}{100}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+\Hypertarget{registers_8h_aebc3357edd2c8b27aba176cfbf2a7260}\index{registers.h@{registers.h}!load\_register\_from\_nvs@{load\_register\_from\_nvs}}
+\index{load\_register\_from\_nvs@{load\_register\_from\_nvs}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{load\_register\_from\_nvs()}{load\_register\_from\_nvs()}}
+{\footnotesize\ttfamily \label{registers_8h_aebc3357edd2c8b27aba176cfbf2a7260} 
+esp\+\_\+err\+\_\+t load\+\_\+register\+\_\+from\+\_\+nvs (\begin{DoxyParamCaption}\item[{int}]{id}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{buffer}{, }\item[{size\+\_\+t}]{buffer\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+Cargar registro desde NVS. 
+
+Lee el registro con el ID especificado desde NVS y lo retorna como string JSON en el buffer proporcionado.
+
+
+\begin{DoxyParams}[1]{Parámetros}
+ & {\em id} & Identificador del registro (1-\/10) \\
+\hline
+\mbox{\texttt{out}}  & {\em buffer} & Buffer donde se escribirá el JSON \\
+\hline
+ & {\em buffer\+\_\+len} & Tamaño del buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+ESP\+\_\+\+OK si el registro existe y se cargó 
+
+ESP\+\_\+\+ERR\+\_\+\+NOT\+\_\+\+FOUND si no existe registro con ese ID 
+
+ESP\+\_\+\+ERR\+\_\+\+INVALID\+\_\+\+SIZE si el buffer es muy pequeño
+\end{DoxyReturn}
+Cargar registro desde NVS.
+
+Lee el string JSON almacenado en NVS para el ID especificado.
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Abre namespace "{}storage"{} en modo lectura
+\item Verifica tamaño requerido con nvs\+\_\+get\+\_\+str(\+NULL)
+\item Lee string JSON en buffer proporcionado
+\item Cierra handle NVS
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em id} & ID del registro (1-\/10) \\
+\hline
+\mbox{\texttt{out}}  & {\em buffer} & Buffer donde copiar el JSON \\
+\hline
+\mbox{\texttt{in}}  & {\em buffer\+\_\+len} & Tamaño del buffer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Lectura exitosa \\
+\hline
+{\em ESP\+\_\+\+ERR\+\_\+\+NVS\+\_\+\+NOT\+\_\+\+FOUND} & No existe registro con ese ID \\
+\hline
+{\em ESP\+\_\+\+ERR\+\_\+\+NVS\+\_\+\+INVALID\+\_\+\+LENGTH} & Buffer muy pequeño\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Nota}
+No parsea el JSON -\/ solo retorna string crudo 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{registers_8c_af28ab3c20449874dfa46acbc40b48d1b}{load\+\_\+register\+\_\+struct\+\_\+from\+\_\+nvs()} Para obtener estructura \doxylink{structreg__t}{reg\+\_\+t} directamente 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00192}{192}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00451}{api\+\_\+get\+\_\+registers()}}, \mbox{\hyperlink{http__server_8c_source_l01256}{http\+\_\+server\+\_\+read\+\_\+register\+\_\+handler()}} y \mbox{\hyperlink{registers_8c_source_l00265}{load\+\_\+register\+\_\+struct\+\_\+from\+\_\+nvs()}}.
+
+\Hypertarget{registers_8h_a02b94c84eabd1b5cc88c675a6c75b12f}\index{registers.h@{registers.h}!register\_registers\_endpoints@{register\_registers\_endpoints}}
+\index{register\_registers\_endpoints@{register\_registers\_endpoints}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{register\_registers\_endpoints()}{register\_registers\_endpoints()}}
+{\footnotesize\ttfamily \label{registers_8h_a02b94c84eabd1b5cc88c675a6c75b12f} 
+void register\+\_\+registers\+\_\+endpoints (\begin{DoxyParamCaption}\item[{httpd\+\_\+handle\+\_\+t}]{server}{}\end{DoxyParamCaption})}
+
+
+
+Registrar todos los endpoints REST en el servidor HTTP. 
+
+Debe llamarse durante la configuración del servidor HTTP para habilitar los endpoints /api/register.
+
+
+\begin{DoxyParams}{Parámetros}
+{\em server} & Handle del servidor HTTP configurado \\
+\hline
+\end{DoxyParams}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00592}{592}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{registers_8c_source_l00508}{api\+\_\+delete\+\_\+register()}}, \mbox{\hyperlink{registers_8c_source_l00451}{api\+\_\+get\+\_\+registers()}}, \mbox{\hyperlink{registers_8c_source_l00371}{api\+\_\+post\+\_\+register()}}, \mbox{\hyperlink{registers_8c_source_l00568}{registers\+\_\+scheduler\+\_\+task()}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01086}{http\+\_\+server\+\_\+configure()}}.
+
+\Hypertarget{registers_8h_adba5009ca1c63694a9f24bcbc260515e}\index{registers.h@{registers.h}!save\_register\_to\_nvs@{save\_register\_to\_nvs}}
+\index{save\_register\_to\_nvs@{save\_register\_to\_nvs}!registers.h@{registers.h}}
+\doxysubsubsection{\texorpdfstring{save\_register\_to\_nvs()}{save\_register\_to\_nvs()}}
+{\footnotesize\ttfamily \label{registers_8h_adba5009ca1c63694a9f24bcbc260515e} 
+esp\+\_\+err\+\_\+t save\+\_\+register\+\_\+to\+\_\+nvs (\begin{DoxyParamCaption}\item[{int}]{id}{, }\item[{\mbox{\hyperlink{structreg__t}{reg\+\_\+t}} \texorpdfstring{$\ast$}{*}}]{reg}{}\end{DoxyParamCaption})}
+
+
+
+Guardar registro en NVS con formato JSON. 
+
+Serializa el registro a JSON y lo almacena en NVS con clave "{}reg\+XX"{}. Si ya existe un registro con ese ID, lo sobrescribe.
+
+
+\begin{DoxyParams}{Parámetros}
+{\em id} & Identificador del registro (1-\/10) \\
+\hline
+{\em reg} & Puntero a estructura \doxylink{structreg__t}{reg\+\_\+t} con los datos del registro \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+ESP\+\_\+\+OK si se guardó correctamente 
+
+ESP\+\_\+\+ERR\+\_\+\+INVALID\+\_\+\+ARG si id está fuera de rango o reg es NULL 
+
+ESP\+\_\+\+FAIL si hubo error al escribir en NVS
+\end{DoxyReturn}
+Guardar registro en NVS con formato JSON.
+
+Serializa la estructura \doxylink{structreg__t}{reg\+\_\+t} a JSON y la guarda en NVS con clave "{}reg\+\_\+$<$id$>$"{}.
+
+{\bfseries{Proceso\+:}}
+\begin{DoxyEnumerate}
+\item Crea objeto JSON con hour, minute, days
+\item Serializa a string con c\+JSON\+\_\+\+Print()
+\item Guarda en NVS con nvs\+\_\+set\+\_\+str()
+\item Commit para escribir a flash
+\end{DoxyEnumerate}
+
+{\bfseries{Ejemplo de JSON guardado\+:}} 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\textcolor{stringliteral}{"{}hour"{}}:14,\textcolor{stringliteral}{"{}minute"{}}:30,\textcolor{stringliteral}{"{}days"{}}:[\textcolor{stringliteral}{"{}L"{}},\textcolor{stringliteral}{"{}X"{}},\textcolor{stringliteral}{"{}V"{}}]\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em id} & ID del registro (1-\/10) \\
+\hline
+\mbox{\texttt{in}}  & {\em reg} & Puntero a estructura \doxylink{structreg__t}{reg\+\_\+t} a guardar\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+esp\+\_\+err\+\_\+t 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Valores devueltos}
+{\em ESP\+\_\+\+OK} & Guardado exitoso \\
+\hline
+{\em ESP\+\_\+\+FAIL} & Error de NVS\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyWarning}{Atención}
+Sobrescribe registro existente con mismo ID 
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Máximo 10 registros soportados (IDs 1-\/10) 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{registers_8c_source_l00137}{137}} del archivo \mbox{\hyperlink{registers_8c_source}{registers.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{registers_8h_source_l00040}{reg\+\_\+t\+::day\+\_\+count}}, \mbox{\hyperlink{registers_8h_source_l00039}{reg\+\_\+t\+::days}}, \mbox{\hyperlink{registers_8h_source_l00037}{reg\+\_\+t\+::hour}}, \mbox{\hyperlink{registers_8h_source_l00038}{reg\+\_\+t\+::minute}} y \mbox{\hyperlink{http__server_8c_source_l00117}{TAG}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00371}{api\+\_\+post\+\_\+register()}}.
+

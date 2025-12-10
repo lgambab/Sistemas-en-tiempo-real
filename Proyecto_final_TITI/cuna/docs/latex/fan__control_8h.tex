@@ -1,0 +1,431 @@
+\doxysection{Referencia del archivo fan\+\_\+control.\+h}
+\hypertarget{fan__control_8h}{}\label{fan__control_8h}\index{fan\_control.h@{fan\_control.h}}
+
+
+Control automático del ventilador con múltiples modos de operación.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+\doxysubsubsection*{Enumeraciones}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t}} \{ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{FAN\+\_\+\+MODE\+\_\+\+MANUAL}} = 0
+, \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c}{FAN\+\_\+\+MODE\+\_\+\+AUTO}}
+, \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418}{FAN\+\_\+\+MODE\+\_\+\+REGISTERS}}
+ \}
+\begin{DoxyCompactList}\small\item\em Modos de operación del ventilador. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{fan__control_8h_a50dd23e7bf63c1ba17d8d81770e03186}{fan\+\_\+control\+\_\+init}} (void)
+\begin{DoxyCompactList}\small\item\em Inicializar sistema de control del ventilador. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fan__control_8h_ad70079e6a01813020cce4bb17aa7db48}{fan\+\_\+control\+\_\+set\+\_\+mode}} (\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t}} mode)
+\begin{DoxyCompactList}\small\item\em Establecer modo de operación del ventilador. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t}} \mbox{\hyperlink{fan__control_8h_aa08b3a03f8ea8e144f8ec933c5204e45}{fan\+\_\+control\+\_\+get\+\_\+mode}} (void)
+\begin{DoxyCompactList}\small\item\em Obtener modo de operación actual. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fan__control_8h_a86862beca4b5da7bd5bdb3a9973f88f6}{fan\+\_\+control\+\_\+set\+\_\+manual\+\_\+speed}} (uint8\+\_\+t percent)
+\begin{DoxyCompactList}\small\item\em Establecer velocidad manual del ventilador. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{fan__control_8h_a11f10e096c3158f9adb5d3930fab3b25}{fan\+\_\+control\+\_\+get\+\_\+speed}} (void)
+\begin{DoxyCompactList}\small\item\em Obtener velocidad actual del PWM. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}{fan\+\_\+control\+\_\+update}} (void)
+\begin{DoxyCompactList}\small\item\em Actualizar control (llamado cada 1s por fan\+\_\+task). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{fan__control_8h_a4d1476e55b973e30892503e7f955ef71}{fan\+\_\+control\+\_\+on\+\_\+register\+\_\+tick}} (bool any\+\_\+match\+\_\+now)
+\begin{DoxyCompactList}\small\item\em Notificar cambio en registros programados. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Descripción detallada}
+Control automático del ventilador con múltiples modos de operación. 
+
+\begin{DoxyAuthor}{Autor}
+Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Fecha}
+2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Versión}
+1.\+0.\+0
+\end{DoxyVersion}
+Implementa la lógica de control del ventilador con tres modos\+:
+\begin{DoxyItemize}
+\item MANUAL\+: Control directo por slider de la interfaz web
+\item AUTO\+: Control automático basado en temperatura del sensor NTC
+\item REGISTERS\+: Control programado mediante registros horarios
+\end{DoxyItemize}
+
+Universidad Nacional de Colombia -\/ Curso RTOS 
+
+Definición en el archivo \mbox{\hyperlink{fan__control_8h_source}{fan\+\_\+control.\+h}}.
+
+
+
+\label{doc-enum-members}
+\Hypertarget{fan__control_8h_doc-enum-members}
+\doxysubsection{Documentación de enumeraciones}
+\Hypertarget{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}\index{fan\_control.h@{fan\_control.h}!fan\_mode\_t@{fan\_mode\_t}}
+\index{fan\_mode\_t@{fan\_mode\_t}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_mode\_t}{fan\_mode\_t}}
+{\footnotesize\ttfamily \label{fan__control_8h_ad55164305e4bf1becf684ba008d967cb} 
+enum \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t}}}
+
+
+
+Modos de operación del ventilador. 
+
+\begin{DoxyEnumFields}[2]{Valores de enumeraciones}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FAN\_MODE\_MANUAL@{FAN\_MODE\_MANUAL}!fan\_control.h@{fan\_control.h}}\index{fan\_control.h@{fan\_control.h}!FAN\_MODE\_MANUAL@{FAN\_MODE\_MANUAL}}}\Hypertarget{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}\label{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc} 
+FAN\+\_\+\+MODE\+\_\+\+MANUAL&Control manual mediante slider web. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FAN\_MODE\_AUTO@{FAN\_MODE\_AUTO}!fan\_control.h@{fan\_control.h}}\index{fan\_control.h@{fan\_control.h}!FAN\_MODE\_AUTO@{FAN\_MODE\_AUTO}}}\Hypertarget{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c}\label{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c} 
+FAN\+\_\+\+MODE\+\_\+\+AUTO&Control automático por temperatura NTC. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FAN\_MODE\_REGISTERS@{FAN\_MODE\_REGISTERS}!fan\_control.h@{fan\_control.h}}\index{fan\_control.h@{fan\_control.h}!FAN\_MODE\_REGISTERS@{FAN\_MODE\_REGISTERS}}}\Hypertarget{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418}\label{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418} 
+FAN\+\_\+\+MODE\+\_\+\+REGISTERS&Control programado por registros horarios. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8h_source_l00026}{26}} del archivo \mbox{\hyperlink{fan__control_8h_source}{fan\+\_\+control.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{fan__control_8h_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{fan__control_8h_aa08b3a03f8ea8e144f8ec933c5204e45}\index{fan\_control.h@{fan\_control.h}!fan\_control\_get\_mode@{fan\_control\_get\_mode}}
+\index{fan\_control\_get\_mode@{fan\_control\_get\_mode}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_control\_get\_mode()}{fan\_control\_get\_mode()}}
+{\footnotesize\ttfamily \label{fan__control_8h_aa08b3a03f8ea8e144f8ec933c5204e45} 
+\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t}} fan\+\_\+control\+\_\+get\+\_\+mode (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Obtener modo de operación actual. 
+
+\begin{DoxyReturn}{Devuelve}
+\doxylink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t} Modo actual del ventilador
+\end{DoxyReturn}
+Obtener modo de operación actual.
+
+\begin{DoxyReturn}{Devuelve}
+\doxylink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t} Modo actual (MANUAL/\+AUTO/\+REGISTERS)
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Thread-\/safe\+: lectura atómica de enum 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8c_source_l00244}{244}} del archivo \mbox{\hyperlink{fan__control_8c_source}{fan\+\_\+control.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00074}{s\+\_\+mode}}.
+
+\Hypertarget{fan__control_8h_a11f10e096c3158f9adb5d3930fab3b25}\index{fan\_control.h@{fan\_control.h}!fan\_control\_get\_speed@{fan\_control\_get\_speed}}
+\index{fan\_control\_get\_speed@{fan\_control\_get\_speed}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_control\_get\_speed()}{fan\_control\_get\_speed()}}
+{\footnotesize\ttfamily \label{fan__control_8h_a11f10e096c3158f9adb5d3930fab3b25} 
+uint8\+\_\+t fan\+\_\+control\+\_\+get\+\_\+speed (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Obtener velocidad actual del PWM. 
+
+\begin{DoxyReturn}{Devuelve}
+uint8\+\_\+t Velocidad en porcentaje (0-\/100)
+\end{DoxyReturn}
+Obtener velocidad actual del PWM.
+
+Retorna s\+\_\+current\+\_\+speed, que es el duty cycle real del PWM. Puede diferir de s\+\_\+manual\+\_\+speed en modo AUTO.
+
+\begin{DoxyReturn}{Devuelve}
+uint8\+\_\+t Velocidad actual (0-\/100\%)
+\end{DoxyReturn}
+\begin{DoxyNote}{Nota}
+Thread-\/safe\+: lectura atómica de uint8\+\_\+t 
+
+Usado por OLED display y HTTP GET /api/dht\+Sensor 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8c_source_l00292}{292}} del archivo \mbox{\hyperlink{fan__control_8c_source}{fan\+\_\+control.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00090}{s\+\_\+current\+\_\+speed}}.
+
+\Hypertarget{fan__control_8h_a50dd23e7bf63c1ba17d8d81770e03186}\index{fan\_control.h@{fan\_control.h}!fan\_control\_init@{fan\_control\_init}}
+\index{fan\_control\_init@{fan\_control\_init}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_control\_init()}{fan\_control\_init()}}
+{\footnotesize\ttfamily \label{fan__control_8h_a50dd23e7bf63c1ba17d8d81770e03186} 
+void fan\+\_\+control\+\_\+init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Inicializar sistema de control del ventilador. 
+
+Inicializar sistema de control del ventilador.
+
+Secuencia de inicialización\+:
+\begin{DoxyEnumerate}
+\item Inicializa hardware PWM (\doxylink{fan__driver_8h_a648b7e106efd21e3948d16df84409906}{fan\+\_\+init()})
+\item Configura modo MANUAL por defecto
+\item Velocidades a 0\%
+\item Apaga ventilador
+\end{DoxyEnumerate}
+
+{\bfseries{Estado inicial\+:}}
+\begin{DoxyItemize}
+\item Modo\+: FAN\+\_\+\+MODE\+\_\+\+MANUAL
+\item Velocidad manual\+: 0\%
+\item Velocidad actual\+: 0\%
+\item Registro activo\+: false
+\item PWM\+: apagado
+\end{DoxyItemize}
+
+\begin{DoxyWarning}{Atención}
+Llamar antes de usar cualquier otra función de fan\+\_\+control 
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Thread-\/safe\+: solo llamar una vez durante inicialización 
+\end{DoxyNote}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8c_source_l00146}{146}} del archivo \mbox{\hyperlink{fan__control_8c_source}{fan\+\_\+control.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__driver_8c_source_l00006}{fan\+\_\+init()}}, \mbox{\hyperlink{fan__control_8h_source_l00027}{FAN\+\_\+\+MODE\+\_\+\+MANUAL}}, \mbox{\hyperlink{fan__driver_8c_source_l00043}{fan\+\_\+off()}}, \mbox{\hyperlink{fan__control_8c_source_l00090}{s\+\_\+current\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00077}{s\+\_\+manual\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00074}{s\+\_\+mode}} y \mbox{\hyperlink{fan__control_8c_source_l00099}{s\+\_\+reg\+\_\+active}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01375}{http\+\_\+server\+\_\+start()}}.
+
+\Hypertarget{fan__control_8h_a4d1476e55b973e30892503e7f955ef71}\index{fan\_control.h@{fan\_control.h}!fan\_control\_on\_register\_tick@{fan\_control\_on\_register\_tick}}
+\index{fan\_control\_on\_register\_tick@{fan\_control\_on\_register\_tick}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_control\_on\_register\_tick()}{fan\_control\_on\_register\_tick()}}
+{\footnotesize\ttfamily \label{fan__control_8h_a4d1476e55b973e30892503e7f955ef71} 
+void fan\+\_\+control\+\_\+on\+\_\+register\+\_\+tick (\begin{DoxyParamCaption}\item[{bool}]{any\+\_\+match\+\_\+now}{}\end{DoxyParamCaption})}
+
+
+
+Notificar cambio en registros programados. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em any\+\_\+match\+\_\+now} & true si algún registro está activo\\
+\hline
+\end{DoxyParams}
+Notificar cambio en registros programados.
+
+Llamado cada 10 segundos por registers\+\_\+scheduler\+\_\+task. Solo tiene efecto si el modo actual es FAN\+\_\+\+MODE\+\_\+\+REGISTERS.
+
+{\bfseries{Lógica\+:}}
+\begin{DoxyItemize}
+\item Si any\+\_\+match\+\_\+now = true\+: Enciende ventilador a velocidad del slider
+\item Si any\+\_\+match\+\_\+now = false\+: Apaga ventilador
+\end{DoxyItemize}
+
+En otros modos (MANUAL/\+AUTO), esta función no hace nada.
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em any\+\_\+match\+\_\+now} & true si hay al menos un registro activo ahora\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Llamado desde registers\+\_\+scheduler\+\_\+task (diferente tarea) 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+No es completamente thread-\/safe con cambios simultáneos de modo
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{registers_8c}{registers.\+c} Para el scheduler que llama esta función 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8c_source_l00318}{318}} del archivo \mbox{\hyperlink{fan__control_8c_source}{fan\+\_\+control.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8h_source_l00029}{FAN\+\_\+\+MODE\+\_\+\+REGISTERS}}, \mbox{\hyperlink{fan__driver_8c_source_l00043}{fan\+\_\+off()}}, \mbox{\hyperlink{fan__driver_8c_source_l00033}{fan\+\_\+set\+\_\+speed\+\_\+percent()}}, \mbox{\hyperlink{fan__control_8c_source_l00090}{s\+\_\+current\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00077}{s\+\_\+manual\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00074}{s\+\_\+mode}} y \mbox{\hyperlink{fan__control_8c_source_l00099}{s\+\_\+reg\+\_\+active}}.
+
+
+
+Referenciado por \mbox{\hyperlink{registers_8c_source_l00568}{registers\+\_\+scheduler\+\_\+task()}}.
+
+\Hypertarget{fan__control_8h_a86862beca4b5da7bd5bdb3a9973f88f6}\index{fan\_control.h@{fan\_control.h}!fan\_control\_set\_manual\_speed@{fan\_control\_set\_manual\_speed}}
+\index{fan\_control\_set\_manual\_speed@{fan\_control\_set\_manual\_speed}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_control\_set\_manual\_speed()}{fan\_control\_set\_manual\_speed()}}
+{\footnotesize\ttfamily \label{fan__control_8h_a86862beca4b5da7bd5bdb3a9973f88f6} 
+void fan\+\_\+control\+\_\+set\+\_\+manual\+\_\+speed (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{percent}{}\end{DoxyParamCaption})}
+
+
+
+Establecer velocidad manual del ventilador. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em percent} & Velocidad en porcentaje (0-\/100)\\
+\hline
+\end{DoxyParams}
+Establecer velocidad manual del ventilador.
+
+Actualiza s\+\_\+manual\+\_\+speed y aplica inmediatamente si está en modo MANUAL.
+
+{\bfseries{Comportamiento por modo\+:}}
+\begin{DoxyItemize}
+\item MANUAL\+: Actualiza PWM inmediatamente
+\item AUTO\+: Solo guarda valor (no afecta PWM)
+\item REGISTERS\+: Solo guarda valor (se aplica cuando registro activo)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em percent} & Velocidad deseada (0-\/100\%)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Nota}
+Valores \texorpdfstring{$>$}{>} 100 se limitan automáticamente a 100 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+No es thread-\/safe\+: llamar solo desde HTTP server task 
+\end{DoxyWarning}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8c_source_l00266}{266}} del archivo \mbox{\hyperlink{fan__control_8c_source}{fan\+\_\+control.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8h_source_l00027}{FAN\+\_\+\+MODE\+\_\+\+MANUAL}}, \mbox{\hyperlink{fan__driver_8c_source_l00033}{fan\+\_\+set\+\_\+speed\+\_\+percent()}}, \mbox{\hyperlink{fan__control_8c_source_l00090}{s\+\_\+current\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00077}{s\+\_\+manual\+\_\+speed}} y \mbox{\hyperlink{fan__control_8c_source_l00074}{s\+\_\+mode}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00233}{http\+\_\+server\+\_\+fan\+\_\+control\+\_\+handler()}}.
+
+\Hypertarget{fan__control_8h_ad70079e6a01813020cce4bb17aa7db48}\index{fan\_control.h@{fan\_control.h}!fan\_control\_set\_mode@{fan\_control\_set\_mode}}
+\index{fan\_control\_set\_mode@{fan\_control\_set\_mode}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_control\_set\_mode()}{fan\_control\_set\_mode()}}
+{\footnotesize\ttfamily \label{fan__control_8h_ad70079e6a01813020cce4bb17aa7db48} 
+void fan\+\_\+control\+\_\+set\+\_\+mode (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\+\_\+mode\+\_\+t}}}]{mode}{}\end{DoxyParamCaption})}
+
+
+
+Establecer modo de operación del ventilador. 
+
+
+\begin{DoxyParams}{Parámetros}
+{\em mode} & Nuevo modo (MANUAL, AUTO o REGISTERS)\\
+\hline
+\end{DoxyParams}
+Establecer modo de operación del ventilador.
+
+Actualiza el modo y aplica lógica correspondiente inmediatamente\+:
+
+{\bfseries{MANUAL\+:}}
+\begin{DoxyItemize}
+\item Aplica velocidad del slider directamente
+\item No requiere sensores
+\end{DoxyItemize}
+
+{\bfseries{AUTO\+:}}
+\begin{DoxyItemize}
+\item Lee temperatura NTC
+\item Calcula velocidad con \doxylink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{compute\+\_\+auto\+\_\+speed()}
+\item Si ADC NULL o error NTC\+: apaga ventilador
+\item PIR deshabilitado en esta versión (comentado)
+\end{DoxyItemize}
+
+{\bfseries{REGISTERS\+:}}
+\begin{DoxyItemize}
+\item Si hay registro activo\+: aplica velocidad del slider
+\item Si no hay registro\+: apaga ventilador
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}[1]{Parámetros}
+\mbox{\texttt{in}}  & {\em mode} & Nuevo modo (FAN\+\_\+\+MODE\+\_\+\+MANUAL/\+AUTO/\+REGISTERS)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Atención}
+No es thread-\/safe\+: llamar solo desde HTTP server task 
+\end{DoxyWarning}
+\begin{DoxyNote}{Nota}
+Cambio de modo aplica velocidad inmediatamente (no espera a fan\+\_\+task)
+\end{DoxyNote}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}{fan\+\_\+control\+\_\+update()} Para actualizaciones periódicas en modo AUTO 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8c_source_l00184}{184}} del archivo \mbox{\hyperlink{fan__control_8c_source}{fan\+\_\+control.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00103}{compute\+\_\+auto\+\_\+speed()}}, \mbox{\hyperlink{fan__control_8h_source_l00028}{FAN\+\_\+\+MODE\+\_\+\+AUTO}}, \mbox{\hyperlink{fan__control_8h_source_l00027}{FAN\+\_\+\+MODE\+\_\+\+MANUAL}}, \mbox{\hyperlink{fan__control_8h_source_l00029}{FAN\+\_\+\+MODE\+\_\+\+REGISTERS}}, \mbox{\hyperlink{fan__driver_8c_source_l00043}{fan\+\_\+off()}}, \mbox{\hyperlink{fan__driver_8c_source_l00033}{fan\+\_\+set\+\_\+speed\+\_\+percent()}}, \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}, \mbox{\hyperlink{pir__driver_8c_source_l00146}{pir\+\_\+is\+\_\+motion\+\_\+active()}}, \mbox{\hyperlink{fan__control_8c_source_l00090}{s\+\_\+current\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00077}{s\+\_\+manual\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00074}{s\+\_\+mode}}, \mbox{\hyperlink{http__server_8c_source_l00128}{s\+\_\+ntc\+\_\+adc\+\_\+handle}} y \mbox{\hyperlink{fan__control_8c_source_l00099}{s\+\_\+reg\+\_\+active}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l00233}{http\+\_\+server\+\_\+fan\+\_\+control\+\_\+handler()}}.
+
+\Hypertarget{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}\index{fan\_control.h@{fan\_control.h}!fan\_control\_update@{fan\_control\_update}}
+\index{fan\_control\_update@{fan\_control\_update}!fan\_control.h@{fan\_control.h}}
+\doxysubsubsection{\texorpdfstring{fan\_control\_update()}{fan\_control\_update()}}
+{\footnotesize\ttfamily \label{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872} 
+void fan\+\_\+control\+\_\+update (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Actualizar control (llamado cada 1s por fan\+\_\+task). 
+
+En modo AUTO ajusta velocidad según temperatura NTC
+
+Actualizar control (llamado cada 1s por fan\+\_\+task).
+
+Llamado cada 1 segundo por fan\+\_\+task. Solo tiene efecto si el modo actual es FAN\+\_\+\+MODE\+\_\+\+AUTO.
+
+{\bfseries{Algoritmo de actualización\+:}}
+\begin{DoxyEnumerate}
+\item Verifica que el modo sea AUTO (si no, retorna)
+\item Verifica que el ADC esté inicializado
+\item Lee temperatura del NTC
+\item Valida lectura (\texorpdfstring{$>$}{>} -\/100°C)
+\item Calcula velocidad con \doxylink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{compute\+\_\+auto\+\_\+speed()}
+\item Actualiza PWM con \doxylink{fan__driver_8h_a6637062d7800066c51c87da1198c2ce9}{fan\+\_\+set\+\_\+speed\+\_\+percent()}
+\end{DoxyEnumerate}
+
+{\bfseries{Manejo de errores\+:}}
+\begin{DoxyItemize}
+\item Si ADC handle es NULL\+: apaga ventilador
+\item Si temperatura \texorpdfstring{$<$}{<} -\/100°C\+: apaga ventilador (error NTC)
+\item PIR deshabilitado\+: no verifica movimiento (comentado)
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Nota}
+Llamado desde fan\+\_\+task cada 1 segundo 
+
+Solo procesa en modo AUTO (retorna inmediatamente en otros modos) 
+\end{DoxyNote}
+\begin{DoxyWarning}{Atención}
+No es thread-\/safe con cambios de modo simultáneos
+\end{DoxyWarning}
+\begin{DoxySeeAlso}{Ver también}
+\doxylink{http__server_8c_a81d987e42a660d479981eefd99e51d6f}{fan\+\_\+task} en \doxylink{http__server_8c}{http\+\_\+server.\+c} Para la tarea que llama esta función 
+
+\doxylink{fan__control_8c_a9b8f1759fa5b56cea3fb434f0bad16dd}{compute\+\_\+auto\+\_\+speed()} Para el algoritmo de cálculo 
+\end{DoxySeeAlso}
+
+
+Definición en la línea \mbox{\hyperlink{fan__control_8c_source_l00367}{367}} del archivo \mbox{\hyperlink{fan__control_8c_source}{fan\+\_\+control.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__control_8c_source_l00103}{compute\+\_\+auto\+\_\+speed()}}, \mbox{\hyperlink{fan__control_8h_source_l00028}{FAN\+\_\+\+MODE\+\_\+\+AUTO}}, \mbox{\hyperlink{fan__driver_8c_source_l00043}{fan\+\_\+off()}}, \mbox{\hyperlink{fan__driver_8c_source_l00033}{fan\+\_\+set\+\_\+speed\+\_\+percent()}}, \mbox{\hyperlink{ntc__driver_8c_source_l00122}{leer\+\_\+temperatura\+\_\+celsius()}}, \mbox{\hyperlink{pir__driver_8c_source_l00146}{pir\+\_\+is\+\_\+motion\+\_\+active()}}, \mbox{\hyperlink{fan__control_8c_source_l00090}{s\+\_\+current\+\_\+speed}}, \mbox{\hyperlink{fan__control_8c_source_l00074}{s\+\_\+mode}} y \mbox{\hyperlink{http__server_8c_source_l00128}{s\+\_\+ntc\+\_\+adc\+\_\+handle}}.
+
+
+
+Referenciado por \mbox{\hyperlink{http__server_8c_source_l01345}{fan\+\_\+task()}}.
+

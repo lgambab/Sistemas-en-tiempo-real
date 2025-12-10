@@ -1,0 +1,95 @@
+\doxysection{Referencia del archivo fan\+\_\+driver.\+c}
+\hypertarget{fan__driver_8c}{}\label{fan__driver_8c}\index{fan\_driver.c@{fan\_driver.c}}
+{\ttfamily \#include "{}fan\+\_\+driver.\+h"{}}\newline
+\doxysubsubsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{fan__driver_8c_a648b7e106efd21e3948d16df84409906}{fan\+\_\+init}} (void)
+\item 
+void \mbox{\hyperlink{fan__driver_8c_a6637062d7800066c51c87da1198c2ce9}{fan\+\_\+set\+\_\+speed\+\_\+percent}} (uint8\+\_\+t percent)
+\item 
+void \mbox{\hyperlink{fan__driver_8c_a46cfc38d5476fe8170f5fdcf79e7fc26}{fan\+\_\+off}} (void)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e}{s\+\_\+fan\+\_\+initialized}} = false
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{fan__driver_8c_doc-func-members}
+\doxysubsection{Documentación de funciones}
+\Hypertarget{fan__driver_8c_a648b7e106efd21e3948d16df84409906}\index{fan\_driver.c@{fan\_driver.c}!fan\_init@{fan\_init}}
+\index{fan\_init@{fan\_init}!fan\_driver.c@{fan\_driver.c}}
+\doxysubsubsection{\texorpdfstring{fan\_init()}{fan\_init()}}
+{\footnotesize\ttfamily \label{fan__driver_8c_a648b7e106efd21e3948d16df84409906} 
+void fan\+\_\+init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definición en la línea \mbox{\hyperlink{fan__driver_8c_source_l00006}{6}} del archivo \mbox{\hyperlink{fan__driver_8c_source}{fan\+\_\+driver.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__driver_8h_source_l00011}{FAN\+\_\+\+LEDC\+\_\+\+CHANNEL}}, \mbox{\hyperlink{fan__driver_8h_source_l00014}{FAN\+\_\+\+LEDC\+\_\+\+DUTY\+\_\+\+RES}}, \mbox{\hyperlink{fan__driver_8h_source_l00015}{FAN\+\_\+\+LEDC\+\_\+\+FREQ\+\_\+\+HZ}}, \mbox{\hyperlink{fan__driver_8h_source_l00012}{FAN\+\_\+\+LEDC\+\_\+\+MODE}}, \mbox{\hyperlink{fan__driver_8h_source_l00013}{FAN\+\_\+\+LEDC\+\_\+\+TIMER}}, \mbox{\hyperlink{fan__driver_8h_source_l00010}{FAN\+\_\+\+PWM\+\_\+\+GPIO}} y \mbox{\hyperlink{fan__driver_8c_source_l00004}{s\+\_\+fan\+\_\+initialized}}.
+
+
+
+Referenciado por \mbox{\hyperlink{fan__control_8c_source_l00146}{fan\+\_\+control\+\_\+init()}} y \mbox{\hyperlink{fan__driver_8c_source_l00033}{fan\+\_\+set\+\_\+speed\+\_\+percent()}}.
+
+\Hypertarget{fan__driver_8c_a46cfc38d5476fe8170f5fdcf79e7fc26}\index{fan\_driver.c@{fan\_driver.c}!fan\_off@{fan\_off}}
+\index{fan\_off@{fan\_off}!fan\_driver.c@{fan\_driver.c}}
+\doxysubsubsection{\texorpdfstring{fan\_off()}{fan\_off()}}
+{\footnotesize\ttfamily \label{fan__driver_8c_a46cfc38d5476fe8170f5fdcf79e7fc26} 
+void fan\+\_\+off (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definición en la línea \mbox{\hyperlink{fan__driver_8c_source_l00043}{43}} del archivo \mbox{\hyperlink{fan__driver_8c_source}{fan\+\_\+driver.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__driver_8c_source_l00033}{fan\+\_\+set\+\_\+speed\+\_\+percent()}}.
+
+
+
+Referenciado por \mbox{\hyperlink{fan__control_8c_source_l00146}{fan\+\_\+control\+\_\+init()}}, \mbox{\hyperlink{fan__control_8c_source_l00318}{fan\+\_\+control\+\_\+on\+\_\+register\+\_\+tick()}}, \mbox{\hyperlink{fan__control_8c_source_l00184}{fan\+\_\+control\+\_\+set\+\_\+mode()}} y \mbox{\hyperlink{fan__control_8c_source_l00367}{fan\+\_\+control\+\_\+update()}}.
+
+\Hypertarget{fan__driver_8c_a6637062d7800066c51c87da1198c2ce9}\index{fan\_driver.c@{fan\_driver.c}!fan\_set\_speed\_percent@{fan\_set\_speed\_percent}}
+\index{fan\_set\_speed\_percent@{fan\_set\_speed\_percent}!fan\_driver.c@{fan\_driver.c}}
+\doxysubsubsection{\texorpdfstring{fan\_set\_speed\_percent()}{fan\_set\_speed\_percent()}}
+{\footnotesize\ttfamily \label{fan__driver_8c_a6637062d7800066c51c87da1198c2ce9} 
+void fan\+\_\+set\+\_\+speed\+\_\+percent (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{percent}{}\end{DoxyParamCaption})}
+
+
+
+Definición en la línea \mbox{\hyperlink{fan__driver_8c_source_l00033}{33}} del archivo \mbox{\hyperlink{fan__driver_8c_source}{fan\+\_\+driver.\+c}}.
+
+
+
+Hace referencia a \mbox{\hyperlink{fan__driver_8c_source_l00006}{fan\+\_\+init()}}, \mbox{\hyperlink{fan__driver_8h_source_l00011}{FAN\+\_\+\+LEDC\+\_\+\+CHANNEL}}, \mbox{\hyperlink{fan__driver_8h_source_l00012}{FAN\+\_\+\+LEDC\+\_\+\+MODE}} y \mbox{\hyperlink{fan__driver_8c_source_l00004}{s\+\_\+fan\+\_\+initialized}}.
+
+
+
+Referenciado por \mbox{\hyperlink{fan__control_8c_source_l00318}{fan\+\_\+control\+\_\+on\+\_\+register\+\_\+tick()}}, \mbox{\hyperlink{fan__control_8c_source_l00266}{fan\+\_\+control\+\_\+set\+\_\+manual\+\_\+speed()}}, \mbox{\hyperlink{fan__control_8c_source_l00184}{fan\+\_\+control\+\_\+set\+\_\+mode()}}, \mbox{\hyperlink{fan__control_8c_source_l00367}{fan\+\_\+control\+\_\+update()}} y \mbox{\hyperlink{fan__driver_8c_source_l00043}{fan\+\_\+off()}}.
+
+
+
+\label{doc-var-members}
+\Hypertarget{fan__driver_8c_doc-var-members}
+\doxysubsection{Documentación de variables}
+\Hypertarget{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e}\index{fan\_driver.c@{fan\_driver.c}!s\_fan\_initialized@{s\_fan\_initialized}}
+\index{s\_fan\_initialized@{s\_fan\_initialized}!fan\_driver.c@{fan\_driver.c}}
+\doxysubsubsection{\texorpdfstring{s\_fan\_initialized}{s\_fan\_initialized}}
+{\footnotesize\ttfamily \label{fan__driver_8c_aaf2b64228e9d7c49c7df7775c891788e} 
+bool s\+\_\+fan\+\_\+initialized = false\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definición en la línea \mbox{\hyperlink{fan__driver_8c_source_l00004}{4}} del archivo \mbox{\hyperlink{fan__driver_8c_source}{fan\+\_\+driver.\+c}}.
+
+
+
+Referenciado por \mbox{\hyperlink{fan__driver_8c_source_l00006}{fan\+\_\+init()}} y \mbox{\hyperlink{fan__driver_8c_source_l00033}{fan\+\_\+set\+\_\+speed\+\_\+percent()}}.
+

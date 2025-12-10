@@ -1,0 +1,34 @@
+\doxysection{fan\+\_\+control.\+h}
+\hypertarget{fan__control_8h_source}{}\label{fan__control_8h_source}\mbox{\hyperlink{fan__control_8h}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00016}00016\ \textcolor{preprocessor}{\#ifndef\ MAIN\_FAN\_CONTROL\_H\_}}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00017}00017\ \textcolor{preprocessor}{\#define\ MAIN\_FAN\_CONTROL\_H\_}}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00019}00019\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00020}00020\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00026}\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{00026}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00027}\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{00027}}\ \ \ \ \ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbabb2b8a3b109c0cac14216bb918f0a1cc}{FAN\_MODE\_MANUAL}}\ =\ 0,\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00028}\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c}{00028}}\ \ \ \ \ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cbac547f9c07dc78ccc0c8a692b72cbc95c}{FAN\_MODE\_AUTO}},\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00029}\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418}{00029}}\ \ \ \ \ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cba425d5cd4460b0baec0d6410767b57418}{FAN\_MODE\_REGISTERS}}\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00030}00030\ \}\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\_mode\_t}};}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00033}00033\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8h_a50dd23e7bf63c1ba17d8d81770e03186}{fan\_control\_init}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00039}00039\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8h_ad70079e6a01813020cce4bb17aa7db48}{fan\_control\_set\_mode}}(\mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\_mode\_t}}\ mode);}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00045}00045\ \mbox{\hyperlink{fan__control_8h_ad55164305e4bf1becf684ba008d967cb}{fan\_mode\_t}}\ \mbox{\hyperlink{fan__control_8h_aa08b3a03f8ea8e144f8ec933c5204e45}{fan\_control\_get\_mode}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00051}00051\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8h_a86862beca4b5da7bd5bdb3a9973f88f6}{fan\_control\_set\_manual\_speed}}(uint8\_t\ percent);}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00057}00057\ uint8\_t\ \mbox{\hyperlink{fan__control_8h_a11f10e096c3158f9adb5d3930fab3b25}{fan\_control\_get\_speed}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00063}00063\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8h_a35e59d87579aeab44fae1a8dd1a53872}{fan\_control\_update}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00069}00069\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{fan__control_8h_a4d1476e55b973e30892503e7f955ef71}{fan\_control\_on\_register\_tick}}(\textcolor{keywordtype}{bool}\ any\_match\_now);}
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{fan__control_8h_source_l00071}00071\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ MAIN\_FAN\_CONTROL\_H\_}}
+
+\end{DoxyCode}

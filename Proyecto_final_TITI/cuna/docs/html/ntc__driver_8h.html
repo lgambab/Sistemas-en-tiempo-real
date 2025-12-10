@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Referencia del archivo ntc_driver.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('ntc__driver_8h.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo ntc_driver.h</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Driver para sensor de temperatura NTC (Negative Temperature Coefficient).  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &quot;esp_adc/adc_oneshot.h&quot;</code><br />
+</div>
+<p><a href="ntc__driver_8h_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:ac0d3ab5a8c2f8e723a1fde7e1666e419" id="r_ac0d3ab5a8c2f8e723a1fde7e1666e419"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0d3ab5a8c2f8e723a1fde7e1666e419">inicializar_ntc</a> (adc_oneshot_unit_handle_t manejador_adc)</td></tr>
+<tr class="memdesc:ac0d3ab5a8c2f8e723a1fde7e1666e419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializa el canal ADC para el sensor NTC.  <br /></td></tr>
+<tr class="memitem:ad95666f05070d139a7b670e924e5b1be" id="r_ad95666f05070d139a7b670e924e5b1be"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad95666f05070d139a7b670e924e5b1be">leer_temperatura_celsius</a> (adc_oneshot_unit_handle_t manejador_adc)</td></tr>
+<tr class="memdesc:ad95666f05070d139a7b670e924e5b1be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lee la temperatura actual del sensor NTC en grados Celsius.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Driver para sensor de temperatura NTC (Negative Temperature Coefficient). </p>
+<dl class="section author"><dt>Autor</dt><dd>Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya </dd></dl>
+<dl class="section date"><dt>Fecha</dt><dd>2025 </dd></dl>
+<dl class="section version"><dt>Versión</dt><dd>1.0</dd></dl>
+<p>Este módulo implementa el driver para leer temperatura mediante un termistor NTC 10KΩ conectado en configuración divisor de voltaje con el ADC del ESP32.</p>
+<p><b>Hardware:</b></p><ul>
+<li>Termistor NTC 10KΩ @ 25°C (Beta = 3950K)</li>
+<li>Conectado a GPIO 34 (ADC1 Canal 6)</li>
+<li>Resistencia divisor: 10KΩ</li>
+<li>Rango de medición: -40°C a 125°C</li>
+</ul>
+<p><b>Ecuación de conversión:</b> Se utiliza la ecuación simplificada de Steinhart-Hart: </p><div class="fragment"><div class="line">1/T = 1/T0 + (1/B) * ln(R/R0)</div>
+</div><!-- fragment --><p> Donde:</p><ul>
+<li>T = Temperatura absoluta en Kelvin</li>
+<li>T0 = Temperatura nominal (298.15K = 25°C)</li>
+<li>B = Coeficiente Beta (3950K)</li>
+<li>R = Resistencia actual del NTC</li>
+<li>R0 = Resistencia nominal (10kΩ)</li>
+</ul>
+<p><b>Manejo de errores:</b></p><ul>
+<li>Retorna -999.0f en caso de circuito abierto o cortocircuito</li>
+<li>Verifica voltajes fuera de rango (&gt;3.3V o &lt;0V)</li>
+<li>Valida resistencias negativas o nulas </li>
+</ul>
+
+<p class="definition">Definición en el archivo <a class="el" href="ntc__driver_8h_source.html">ntc_driver.h</a>.</p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones</h2>
+<a id="ac0d3ab5a8c2f8e723a1fde7e1666e419" name="ac0d3ab5a8c2f8e723a1fde7e1666e419"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0d3ab5a8c2f8e723a1fde7e1666e419">&#9670;&#160;</a></span>inicializar_ntc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void inicializar_ntc </td>
+          <td>(</td>
+          <td class="paramtype">adc_oneshot_unit_handle_t</td>          <td class="paramname"><span class="paramname"><em>manejador_adc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inicializa el canal ADC para el sensor NTC. </p>
+<p>Configura el canal ADC_CHANNEL_6 (GPIO 34) con las siguientes características:</p><ul>
+<li>Atenuación: 12dB (permite medir 0-3.3V)</li>
+<li>Resolución: 12 bits (valores 0-4095)</li>
+<li>Modo: Oneshot (lectura bajo demanda)</li>
+</ul>
+<p>Esta función debe llamarse antes de <a class="el" href="#ad95666f05070d139a7b670e924e5b1be" title="Lee la temperatura actual del sensor NTC en grados Celsius.">leer_temperatura_celsius()</a>. No es thread-safe - llamar solo desde una tarea o proteger con mutex.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">manejador_adc</td><td>Handle del ADC previamente inicializado con adc_oneshot_new_unit()</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Atención</dt><dd>El manejador_adc debe ser válido. No verifica NULL. </dd>
+<dd>
+Llamar solo una vez durante la inicialización del sistema.</dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="#ad95666f05070d139a7b670e924e5b1be" title="Lee la temperatura actual del sensor NTC en grados Celsius.">leer_temperatura_celsius()</a> </dd>
+<dd>
+adc_oneshot_config_channel() de ESP-IDF</dd></dl>
+<p>Inicializa el canal ADC para el sensor NTC.</p>
+<p>Establece la configuración del canal ADC con:</p><ul>
+<li>Atenuación 12dB: rango completo 0-3.3V</li>
+<li>Resolución por defecto: 12 bits (0-4095)</li>
+</ul>
+<p>La atenuación de 12dB es necesaria porque el divisor de voltaje produce voltajes en todo el rango 0-3.3V dependiendo de la temperatura.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">manejador_adc</td><td>Handle del ADC previamente inicializado </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00087">87</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="ntc__driver_8c_source.html#l00043">CANAL_ADC_NTC</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="http__server_8c_source.html#l00402">sensors_init()</a>.</p>
+
+</div>
+</div>
+<a id="ad95666f05070d139a7b670e924e5b1be" name="ad95666f05070d139a7b670e924e5b1be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad95666f05070d139a7b670e924e5b1be">&#9670;&#160;</a></span>leer_temperatura_celsius()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float leer_temperatura_celsius </td>
+          <td>(</td>
+          <td class="paramtype">adc_oneshot_unit_handle_t</td>          <td class="paramname"><span class="paramname"><em>manejador_adc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lee la temperatura actual del sensor NTC en grados Celsius. </p>
+<p>Proceso de lectura y conversión:</p><ol type="1">
+<li>Lee valor ADC raw (0-4095)</li>
+<li>Convierte a voltaje: V = (ADC_raw * 3300mV) / 4095</li>
+<li>Calcula resistencia NTC: R_ntc = R_div * V / (V_ref - V)</li>
+<li>Aplica Steinhart-Hart: 1/T = 1/T0 + (1/B)*ln(R/R0)</li>
+<li>Convierte Kelvin a Celsius: T_c = T_k - 273.15</li>
+</ol>
+<p><b>Ecuación del divisor de voltaje:</b> </p><div class="fragment"><div class="line">V_out = V_in * (R_ntc / (R_div + R_ntc))</div>
+</div><!-- fragment --><p><b>Precisión:</b></p><ul>
+<li>Resolución ADC: ~0.8mV (3300mV / 4095)</li>
+<li>Error típico: ±1°C en rango 0-50°C</li>
+<li>Error aumenta fuera del rango nominal</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">manejador_adc</td><td>Handle del ADC (debe estar inicializado)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>float Temperatura en grados Celsius </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">-999.0f</td><td>Error de lectura (circuito abierto/cortocircuito) </td></tr>
+    <tr><td class="paramname">-40.0</td><td>a 125.0 Rango válido de temperatura</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Atención</dt><dd>Retorna -999.0f si:<ul>
+<li>Voltaje &gt;= 3.3V (circuito abierto)</li>
+<li>Resistencia &lt;= 0 (cortocircuito o error de cálculo) </li>
+</ul>
+</dd>
+<dd>
+El manejador_adc debe haberse inicializado con <a class="el" href="#ac0d3ab5a8c2f8e723a1fde7e1666e419" title="Inicializa el canal ADC para el sensor NTC.">inicializar_ntc()</a></dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>No es thread-safe. Si se llama desde múltiples tareas, proteger con mutex. </dd>
+<dd>
+Tiempo de ejecución típico: ~100μs</dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="#ac0d3ab5a8c2f8e723a1fde7e1666e419" title="Inicializa el canal ADC para el sensor NTC.">inicializar_ntc()</a> </dd>
+<dd>
+<a class="el" href="sensor__task_8c.html" title="Implementación de tarea RTOS para lectura thread-safe de sensores.">sensor_task.c</a> Uso desde tarea RTOS con mutex</dd></dl>
+<p>Lee la temperatura actual del sensor NTC en grados Celsius.</p>
+<p>Algoritmo de conversión:</p><ol type="1">
+<li><b>Lectura ADC:</b> Obtiene valor digital (0-4095)</li>
+<li><b>Conversión a voltaje:</b> V = ADC_raw * (3300mV / 4095)</li>
+<li><b>Cálculo de resistencia NTC:</b> <div class="fragment"><div class="line">R_ntc = R_div * V / (V_ref - V)</div>
+</div><!-- fragment --></li>
+<li><b>Ecuación Steinhart-Hart simplificada:</b> <div class="fragment"><div class="line">1/T = 1/T0 + (1/B) * ln(R_ntc / R0)</div>
+</div><!-- fragment --></li>
+<li><b>Conversión K → °C:</b> T_celsius = T_kelvin - 273.15</li>
+</ol>
+<p><b>Detección de errores:</b></p><ul>
+<li>V ≥ V_ref: Circuito abierto (NTC desconectado)</li>
+<li>R_ntc ≤ 0: Cortocircuito o error matemático</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">manejador_adc</td><td>Handle del ADC configurado </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Temperatura en °C o -999.0f en caso de error </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00122">122</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="ntc__driver_8c_source.html#l00043">CANAL_ADC_NTC</a>, <a class="el" href="ntc__driver_8c_source.html#l00066">COEFICIENTE_BETA_NTC</a>, <a class="el" href="ntc__driver_8c_source.html#l00046">RESISTENCIA_DIVISOR</a>, <a class="el" href="ntc__driver_8c_source.html#l00049">RESISTENCIA_NOMINAL_NTC</a>, <a class="el" href="ntc__driver_8c_source.html#l00052">TEMP_NOMINAL_NTC</a> y <a class="el" href="ntc__driver_8c_source.html#l00069">VOLTAJE_REFERENCIA_MV</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="fan__control_8c_source.html#l00184">fan_control_set_mode()</a>, <a class="el" href="fan__control_8c_source.html#l00367">fan_control_update()</a>, <a class="el" href="http__server_8c_source.html#l00935">http_server_get_dht_sensor_readings_json_handler()</a> y <a class="el" href="sensor__task_8c_source.html#l00118">sensor_update_task()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="ntc__driver_8h.html">ntc_driver.h</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

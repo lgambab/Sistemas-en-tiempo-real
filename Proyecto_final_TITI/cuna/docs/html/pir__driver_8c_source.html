@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Archivo de código fuente pir_driver.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('pir__driver_8c_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">pir_driver.c</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="pir__driver_8c.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="pir__driver_8h.html">pir_driver.h</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;driver/gpio.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">   31</a></span><span class="keyword">static</span> gpio_num_t <a class="code hl_variable" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a> = GPIO_NUM_NC;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="pir__driver_8c.html#ac84d370a4a3a7e50d4d640c54ba08a99">   34</a></span><span class="keyword">static</span> QueueHandle_t <a class="code hl_variable" href="pir__driver_8c.html#ac84d370a4a3a7e50d4d640c54ba08a99">s_pir_evt_queue</a> = NULL;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
+<div class="foldopen" id="foldopen00059" data-start="{" data-end="}">
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="pir__driver_8c.html#a717c58bf39bf14aedb3a011971f640c7">   59</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> IRAM_ATTR <a class="code hl_function" href="pir__driver_8c.html#a717c58bf39bf14aedb3a011971f640c7">pir_isr_handler</a>(<span class="keywordtype">void</span> *arg)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>{</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="pir__driver_8c.html#ac84d370a4a3a7e50d4d640c54ba08a99">s_pir_evt_queue</a> == NULL) {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">int</span> level = gpio_get_level(<a class="code hl_variable" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a>);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_struct" href="structpir__event__t.html">pir_event_t</a> evt = {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        .motion = (level == 1)</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    };</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    BaseType_t xHigherPriorityTaskWoken = pdFALSE;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    xQueueSendFromISR(<a class="code hl_variable" href="pir__driver_8c.html#ac84d370a4a3a7e50d4d640c54ba08a99">s_pir_evt_queue</a>, &amp;evt, &amp;xHigherPriorityTaskWoken);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">if</span> (xHigherPriorityTaskWoken == pdTRUE) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        portYIELD_FROM_ISR();</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>}</div>
+</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="foldopen" id="foldopen00102" data-start="{" data-end="}">
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="pir__driver_8h.html#a27ed60104c030cfcf7d4d4cb5d79529d">  102</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="pir__driver_8c.html#a27ed60104c030cfcf7d4d4cb5d79529d">pir_init</a>(gpio_num_t pir_gpio, QueueHandle_t pir_queue)</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>{</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_variable" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a> = pir_gpio;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <a class="code hl_variable" href="pir__driver_8c.html#ac84d370a4a3a7e50d4d640c54ba08a99">s_pir_evt_queue</a> = pir_queue;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// Configuración del GPIO como entrada con detección de flancos</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    gpio_config_t io_conf = {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        .pin_bit_mask  = 1ULL &lt;&lt; <a class="code hl_variable" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a>,       <span class="comment">// Máscara de bits para el pin</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        .mode          = GPIO_MODE_INPUT,          <span class="comment">// Modo entrada</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        .pull_up_en    = GPIO_PULLUP_DISABLE,      <span class="comment">// Sin pull-up (sensor lo incluye)</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        .pull_down_en  = GPIO_PULLDOWN_DISABLE,    <span class="comment">// Sin pull-down</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        .intr_type     = GPIO_INTR_ANYEDGE         <span class="comment">// Interrupción en ambos flancos</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="comment">// Alternativa: GPIO_INTR_POSEDGE para solo flanco de subida</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    };</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    gpio_config(&amp;io_conf);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="comment">// Instalar servicio global de ISR (solo primera vez)</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">// Flags=0 usa valores por defecto</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    gpio_install_isr_service(0);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="comment">// Registrar ISR específica para este pin</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    gpio_isr_handler_add(<a class="code hl_variable" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a>, <a class="code hl_function" href="pir__driver_8c.html#a717c58bf39bf14aedb3a011971f640c7">pir_isr_handler</a>, NULL);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>}</div>
+</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span></div>
+<div class="foldopen" id="foldopen00146" data-start="{" data-end="}">
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="pir__driver_8h.html#a81ffd3f243f99fd46341ee96793e6310">  146</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="pir__driver_8c.html#a81ffd3f243f99fd46341ee96793e6310">pir_is_motion_active</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>{</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a> == GPIO_NUM_NC) {</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    }</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keywordtype">int</span> level = gpio_get_level(<a class="code hl_variable" href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a>);</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordflow">return</span> (level == 1);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>}</div>
+</div>
+<div class="ttc" id="apir__driver_8c_html_a27ed60104c030cfcf7d4d4cb5d79529d"><div class="ttname"><a href="pir__driver_8c.html#a27ed60104c030cfcf7d4d4cb5d79529d">pir_init</a></div><div class="ttdeci">void pir_init(gpio_num_t pir_gpio, QueueHandle_t pir_queue)</div><div class="ttdoc">Inicializa el sensor PIR configurando GPIO e ISR.</div><div class="ttdef"><b>Definition</b> <a href="#l00102">pir_driver.c:102</a></div></div>
+<div class="ttc" id="apir__driver_8c_html_a40e6d5e02e46c056df3474a8372375a2"><div class="ttname"><a href="pir__driver_8c.html#a40e6d5e02e46c056df3474a8372375a2">s_pir_gpio</a></div><div class="ttdeci">static gpio_num_t s_pir_gpio</div><div class="ttdoc">Pin GPIO configurado para el sensor PIR.</div><div class="ttdef"><b>Definition</b> <a href="#l00031">pir_driver.c:31</a></div></div>
+<div class="ttc" id="apir__driver_8c_html_a717c58bf39bf14aedb3a011971f640c7"><div class="ttname"><a href="pir__driver_8c.html#a717c58bf39bf14aedb3a011971f640c7">pir_isr_handler</a></div><div class="ttdeci">static void IRAM_ATTR pir_isr_handler(void *arg)</div><div class="ttdoc">ISR (Interrupt Service Routine) del sensor PIR.</div><div class="ttdef"><b>Definition</b> <a href="#l00059">pir_driver.c:59</a></div></div>
+<div class="ttc" id="apir__driver_8c_html_a81ffd3f243f99fd46341ee96793e6310"><div class="ttname"><a href="pir__driver_8c.html#a81ffd3f243f99fd46341ee96793e6310">pir_is_motion_active</a></div><div class="ttdeci">bool pir_is_motion_active(void)</div><div class="ttdoc">Lee estado del sensor PIR mediante polling.</div><div class="ttdef"><b>Definition</b> <a href="#l00146">pir_driver.c:146</a></div></div>
+<div class="ttc" id="apir__driver_8c_html_ac84d370a4a3a7e50d4d640c54ba08a99"><div class="ttname"><a href="pir__driver_8c.html#ac84d370a4a3a7e50d4d640c54ba08a99">s_pir_evt_queue</a></div><div class="ttdeci">static QueueHandle_t s_pir_evt_queue</div><div class="ttdoc">Cola para eventos del PIR (NULL si se usa modo polling).</div><div class="ttdef"><b>Definition</b> <a href="#l00034">pir_driver.c:34</a></div></div>
+<div class="ttc" id="apir__driver_8h_html"><div class="ttname"><a href="pir__driver_8h.html">pir_driver.h</a></div><div class="ttdoc">Driver para sensor PIR (Passive Infrared) de detección de movimiento.</div></div>
+<div class="ttc" id="astructpir__event__t_html"><div class="ttname"><a href="structpir__event__t.html">pir_event_t</a></div><div class="ttdoc">Evento enviado por la cola cuando el PIR detecta cambio.</div><div class="ttdef"><b>Definition</b> <a href="pir__driver_8h_source.html#l00062">pir_driver.h:62</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="pir__driver_8c.html">pir_driver.c</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

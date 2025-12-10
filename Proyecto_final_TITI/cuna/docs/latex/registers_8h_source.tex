@@ -1,0 +1,33 @@
+\doxysection{registers.\+h}
+\hypertarget{registers_8h_source}{}\label{registers_8h_source}\mbox{\hyperlink{registers_8h}{Ir a la documentación de este archivo.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00026}00026\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00027}00027\ \textcolor{preprocessor}{\#include\ "{}esp\_err.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00028}00028\ \textcolor{preprocessor}{\#include\ "{}esp\_http\_server.h"{}}}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00036}\mbox{\hyperlink{structreg__t}{00036}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00037}\mbox{\hyperlink{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}{00037}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreg__t_aeb386c69e74cddad5d46f2b3fcae8aae}{hour}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00038}\mbox{\hyperlink{structreg__t_a56b1597b39ecd909069388499dea1cfe}{00038}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreg__t_a56b1597b39ecd909069388499dea1cfe}{minute}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00039}\mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{00039}}\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structreg__t_a8ba86753a2ddc546dde8701cd52418d3}{days}}[7][12];\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00040}\mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{00040}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structreg__t_a5ad267e71f3b45b61fa622fb0a2168d3}{day\_count}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00041}00041\ \}\ \mbox{\hyperlink{structreg__t}{reg\_t}};}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00051}00051\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{registers_8h_aa2c353c6e3271404cdf45ce4601951c7}{init\_nvs}}();}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00065}00065\ esp\_err\_t\ \mbox{\hyperlink{registers_8h_adba5009ca1c63694a9f24bcbc260515e}{save\_register\_to\_nvs}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \mbox{\hyperlink{structreg__t}{reg\_t}}\ *reg);}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00080}00080\ esp\_err\_t\ \mbox{\hyperlink{registers_8h_aebc3357edd2c8b27aba176cfbf2a7260}{load\_register\_from\_nvs}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{char}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ buffer\_len);}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00090}00090\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{registers_8h_a96fc67199ae4e05f5cb25a0b8020573f}{delete\_register\_from\_nvs}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00101}00101\ esp\_err\_t\ \mbox{\hyperlink{registers_8h_a244791f69474ab6fe14dc90c4cf067f3}{api\_post\_register}}(httpd\_req\_t\ *req);}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00112}00112\ esp\_err\_t\ \mbox{\hyperlink{registers_8h_a17cd923ac85d45dc491784a52e765e7b}{api\_get\_registers}}(httpd\_req\_t\ *req);}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00122}00122\ esp\_err\_t\ \mbox{\hyperlink{registers_8h_aa5b423dbf986bcd5719586d9a2af9765}{api\_delete\_register}}(httpd\_req\_t\ *req);}
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{registers_8h_source_l00132}00132\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{registers_8h_a02b94c84eabd1b5cc88c675a6c75b12f}{register\_registers\_endpoints}}(httpd\_handle\_t\ server);}
+
+\end{DoxyCode}

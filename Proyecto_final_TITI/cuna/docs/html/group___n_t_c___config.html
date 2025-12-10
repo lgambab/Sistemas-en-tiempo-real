@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Configuración del Sensor NTC</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('group___n_t_c___config.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Configuración del Sensor NTC </div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Parámetros de hardware y calibración del termistor.  
+<a href="#details">Más...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+defines</h2></td></tr>
+<tr class="memitem:gaab698d1720ec12184b8f90284dfc1989" id="r_gaab698d1720ec12184b8f90284dfc1989"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaab698d1720ec12184b8f90284dfc1989">CANAL_ADC_NTC</a>&#160;&#160;&#160;ADC_CHANNEL_6</td></tr>
+<tr class="memdesc:gaab698d1720ec12184b8f90284dfc1989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Canal del ADC donde está conectado el NTC (GPIO 34).  <br /></td></tr>
+<tr class="memitem:ga0b5710d629a92ab78b76dafb7625d4c7" id="r_ga0b5710d629a92ab78b76dafb7625d4c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0b5710d629a92ab78b76dafb7625d4c7">RESISTENCIA_DIVISOR</a>&#160;&#160;&#160;10000.0f</td></tr>
+<tr class="memdesc:ga0b5710d629a92ab78b76dafb7625d4c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistencia fija del divisor de voltaje (10kΩ).  <br /></td></tr>
+<tr class="memitem:gaaf0c0341e36fba4dc5555bef640b6978" id="r_gaaf0c0341e36fba4dc5555bef640b6978"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaf0c0341e36fba4dc5555bef640b6978">RESISTENCIA_NOMINAL_NTC</a>&#160;&#160;&#160;10000.0f</td></tr>
+<tr class="memdesc:gaaf0c0341e36fba4dc5555bef640b6978"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resistencia nominal del NTC a temperatura de referencia (10kΩ @ 25°C).  <br /></td></tr>
+<tr class="memitem:ga44dc29ba897a295c6397380687a37dcd" id="r_ga44dc29ba897a295c6397380687a37dcd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga44dc29ba897a295c6397380687a37dcd">TEMP_NOMINAL_NTC</a>&#160;&#160;&#160;25.0f</td></tr>
+<tr class="memdesc:ga44dc29ba897a295c6397380687a37dcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temperatura nominal de calibración (25°C).  <br /></td></tr>
+<tr class="memitem:gaa6e2ce3f615e6caf26e6793eb737ef0f" id="r_gaa6e2ce3f615e6caf26e6793eb737ef0f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa6e2ce3f615e6caf26e6793eb737ef0f">COEFICIENTE_BETA_NTC</a>&#160;&#160;&#160;3950.0f</td></tr>
+<tr class="memdesc:gaa6e2ce3f615e6caf26e6793eb737ef0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coeficiente Beta del NTC (3950K).  <br /></td></tr>
+<tr class="memitem:gad21f063c8f3d6a454d15745fa56bd04c" id="r_gad21f063c8f3d6a454d15745fa56bd04c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad21f063c8f3d6a454d15745fa56bd04c">VOLTAJE_REFERENCIA_MV</a>&#160;&#160;&#160;3300.0f</td></tr>
+<tr class="memdesc:gad21f063c8f3d6a454d15745fa56bd04c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Voltaje de referencia del ADC (3.3V = 3300mV).  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<p>Parámetros de hardware y calibración del termistor. </p>
+<a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Documentación de «define»</h2>
+<a id="gaab698d1720ec12184b8f90284dfc1989" name="gaab698d1720ec12184b8f90284dfc1989"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab698d1720ec12184b8f90284dfc1989">&#9670;&#160;</a></span>CANAL_ADC_NTC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CANAL_ADC_NTC&#160;&#160;&#160;ADC_CHANNEL_6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Canal del ADC donde está conectado el NTC (GPIO 34). </p>
+
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00043">43</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="ntc__driver_8c_source.html#l00087">inicializar_ntc()</a> y <a class="el" href="ntc__driver_8c_source.html#l00122">leer_temperatura_celsius()</a>.</p>
+
+</div>
+</div>
+<a id="gaa6e2ce3f615e6caf26e6793eb737ef0f" name="gaa6e2ce3f615e6caf26e6793eb737ef0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa6e2ce3f615e6caf26e6793eb737ef0f">&#9670;&#160;</a></span>COEFICIENTE_BETA_NTC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define COEFICIENTE_BETA_NTC&#160;&#160;&#160;3950.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Coeficiente Beta del NTC (3950K). </p>
+<p>El coeficiente Beta caracteriza la variación de resistencia con temperatura. Se obtiene de la hoja de datos del fabricante. Un Beta típico para NTC 10K es 3950K ± 1%.</p>
+<p>La ecuación relacionada es: </p><div class="fragment"><div class="line">R(T) = R0 * exp(B * (1/T - 1/T0))</div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00066">66</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="ntc__driver_8c_source.html#l00122">leer_temperatura_celsius()</a>.</p>
+
+</div>
+</div>
+<a id="ga0b5710d629a92ab78b76dafb7625d4c7" name="ga0b5710d629a92ab78b76dafb7625d4c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0b5710d629a92ab78b76dafb7625d4c7">&#9670;&#160;</a></span>RESISTENCIA_DIVISOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RESISTENCIA_DIVISOR&#160;&#160;&#160;10000.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resistencia fija del divisor de voltaje (10kΩ). </p>
+
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00046">46</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="ntc__driver_8c_source.html#l00122">leer_temperatura_celsius()</a>.</p>
+
+</div>
+</div>
+<a id="gaaf0c0341e36fba4dc5555bef640b6978" name="gaaf0c0341e36fba4dc5555bef640b6978"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaf0c0341e36fba4dc5555bef640b6978">&#9670;&#160;</a></span>RESISTENCIA_NOMINAL_NTC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RESISTENCIA_NOMINAL_NTC&#160;&#160;&#160;10000.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resistencia nominal del NTC a temperatura de referencia (10kΩ @ 25°C). </p>
+
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00049">49</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="ntc__driver_8c_source.html#l00122">leer_temperatura_celsius()</a>.</p>
+
+</div>
+</div>
+<a id="ga44dc29ba897a295c6397380687a37dcd" name="ga44dc29ba897a295c6397380687a37dcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga44dc29ba897a295c6397380687a37dcd">&#9670;&#160;</a></span>TEMP_NOMINAL_NTC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TEMP_NOMINAL_NTC&#160;&#160;&#160;25.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Temperatura nominal de calibración (25°C). </p>
+
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00052">52</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="ntc__driver_8c_source.html#l00122">leer_temperatura_celsius()</a>.</p>
+
+</div>
+</div>
+<a id="gad21f063c8f3d6a454d15745fa56bd04c" name="gad21f063c8f3d6a454d15745fa56bd04c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad21f063c8f3d6a454d15745fa56bd04c">&#9670;&#160;</a></span>VOLTAJE_REFERENCIA_MV</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VOLTAJE_REFERENCIA_MV&#160;&#160;&#160;3300.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Voltaje de referencia del ADC (3.3V = 3300mV). </p>
+
+<p class="definition">Definición en la línea <a class="el" href="ntc__driver_8c_source.html#l00069">69</a> del archivo <a class="el" href="ntc__driver_8c_source.html">ntc_driver.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="ntc__driver_8c_source.html#l00122">leer_temperatura_celsius()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

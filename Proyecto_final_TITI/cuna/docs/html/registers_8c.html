@@ -1,0 +1,730 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sistema RTOS para Control de Cuna Inteligente: Referencia del archivo registers.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Sistema RTOS para Control de Cuna Inteligente<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Sistema embebido con ESP32 para control automático de ventilador mediante sensores y registros programados</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('registers_8c.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo registers.c</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Implementación del sistema de programación de eventos (scheduler).  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &quot;sdkconfig.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="registers_8h_source.html">registers.h</a>&quot;</code><br />
+<code>#include &quot;esp_http_server.h&quot;</code><br />
+<code>#include &quot;esp_log.h&quot;</code><br />
+<code>#include &quot;nvs_flash.h&quot;</code><br />
+<code>#include &quot;nvs.h&quot;</code><br />
+<code>#include &quot;cJSON.h&quot;</code><br />
+<code>#include &quot;freertos/FreeRTOS.h&quot;</code><br />
+<code>#include &quot;freertos/task.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="fan__control_8h_source.html">fan_control.h</a>&quot;</code><br />
+</div>
+<p><a href="registers_8c_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:aa2c353c6e3271404cdf45ce4601951c7" id="r_aa2c353c6e3271404cdf45ce4601951c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2c353c6e3271404cdf45ce4601951c7">init_nvs</a> ()</td></tr>
+<tr class="memdesc:aa2c353c6e3271404cdf45ce4601951c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializa el subsistema NVS (Non-Volatile Storage).  <br /></td></tr>
+<tr class="memitem:adba5009ca1c63694a9f24bcbc260515e" id="r_adba5009ca1c63694a9f24bcbc260515e"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adba5009ca1c63694a9f24bcbc260515e">save_register_to_nvs</a> (int id, <a class="el" href="structreg__t.html">reg_t</a> *reg)</td></tr>
+<tr class="memdesc:adba5009ca1c63694a9f24bcbc260515e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guarda un registro en NVS como JSON.  <br /></td></tr>
+<tr class="memitem:aebc3357edd2c8b27aba176cfbf2a7260" id="r_aebc3357edd2c8b27aba176cfbf2a7260"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebc3357edd2c8b27aba176cfbf2a7260">load_register_from_nvs</a> (int id, char *buffer, size_t buffer_len)</td></tr>
+<tr class="memdesc:aebc3357edd2c8b27aba176cfbf2a7260"><td class="mdescLeft">&#160;</td><td class="mdescRight">Carga un registro desde NVS como string JSON.  <br /></td></tr>
+<tr class="memitem:a96fc67199ae4e05f5cb25a0b8020573f" id="r_a96fc67199ae4e05f5cb25a0b8020573f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96fc67199ae4e05f5cb25a0b8020573f">delete_register_from_nvs</a> (int id)</td></tr>
+<tr class="memdesc:a96fc67199ae4e05f5cb25a0b8020573f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elimina un registro de NVS.  <br /></td></tr>
+<tr class="memitem:af28ab3c20449874dfa46acbc40b48d1b" id="r_af28ab3c20449874dfa46acbc40b48d1b"><td class="memItemLeft" align="right" valign="top">static esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af28ab3c20449874dfa46acbc40b48d1b">load_register_struct_from_nvs</a> (int id, <a class="el" href="structreg__t.html">reg_t</a> *out)</td></tr>
+<tr class="memdesc:af28ab3c20449874dfa46acbc40b48d1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper: Carga registro desde NVS y parsea a estructura <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a>.  <br /></td></tr>
+<tr class="memitem:a5615fb0c9761a6b382bb955ae830734d" id="r_a5615fb0c9761a6b382bb955ae830734d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5615fb0c9761a6b382bb955ae830734d">register_is_active_now</a> (const <a class="el" href="structreg__t.html">reg_t</a> *reg)</td></tr>
+<tr class="memdesc:a5615fb0c9761a6b382bb955ae830734d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determina si un registro debe activarse en este momento.  <br /></td></tr>
+<tr class="memitem:a244791f69474ab6fe14dc90c4cf067f3" id="r_a244791f69474ab6fe14dc90c4cf067f3"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a244791f69474ab6fe14dc90c4cf067f3">api_post_register</a> (httpd_req_t *req)</td></tr>
+<tr class="memdesc:a244791f69474ab6fe14dc90c4cf067f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler HTTP POST para crear/actualizar registro.  <br /></td></tr>
+<tr class="memitem:a17cd923ac85d45dc491784a52e765e7b" id="r_a17cd923ac85d45dc491784a52e765e7b"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17cd923ac85d45dc491784a52e765e7b">api_get_registers</a> (httpd_req_t *req)</td></tr>
+<tr class="memdesc:a17cd923ac85d45dc491784a52e765e7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler HTTP GET para listar todos los registros.  <br /></td></tr>
+<tr class="memitem:aa5b423dbf986bcd5719586d9a2af9765" id="r_aa5b423dbf986bcd5719586d9a2af9765"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5b423dbf986bcd5719586d9a2af9765">api_delete_register</a> (httpd_req_t *req)</td></tr>
+<tr class="memdesc:aa5b423dbf986bcd5719586d9a2af9765"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler HTTP DELETE para eliminar registro.  <br /></td></tr>
+<tr class="memitem:a2abf74292d0298531f2ae22f1ffd5bfe" id="r_a2abf74292d0298531f2ae22f1ffd5bfe"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2abf74292d0298531f2ae22f1ffd5bfe">registers_scheduler_task</a> (void *arg)</td></tr>
+<tr class="memdesc:a2abf74292d0298531f2ae22f1ffd5bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea RTOS que evalúa registros programados periódicamente.  <br /></td></tr>
+<tr class="memitem:a02b94c84eabd1b5cc88c675a6c75b12f" id="r_a02b94c84eabd1b5cc88c675a6c75b12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02b94c84eabd1b5cc88c675a6c75b12f">register_registers_endpoints</a> (httpd_handle_t server)</td></tr>
+<tr class="memdesc:a02b94c84eabd1b5cc88c675a6c75b12f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registrar todos los endpoints REST en el servidor HTTP.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a5a85b9c772bbeb480b209a3e6ea92b4c" id="r_a5a85b9c772bbeb480b209a3e6ea92b4c"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a85b9c772bbeb480b209a3e6ea92b4c">TAG</a> = &quot;REGISTERS&quot;</td></tr>
+<tr class="memdesc:a5a85b9c772bbeb480b209a3e6ea92b4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tag para logging ESP-IDF.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Implementación del sistema de programación de eventos (scheduler). </p>
+<dl class="section author"><dt>Autor</dt><dd>Jair Hernan Telpis Cuaran, Luis Fernando Gamba Bedoya </dd></dl>
+<dl class="section date"><dt>Fecha</dt><dd>2025</dd></dl>
+<p>Este módulo implementa un scheduler de eventos programados para activación automática del ventilador basado en hora y días de la semana.</p>
+<p><b>Características:</b></p><ul>
+<li>Hasta 10 registros programables</li>
+<li>Configuración por hora:minuto y días (L,M,X,J,V,S,D)</li>
+<li>Persistencia en NVS (flash) - sobrevive a reinicios</li>
+<li>Evaluación cada 10 segundos por tarea RTOS dedicada</li>
+<li>API REST completa (POST/GET/DELETE)</li>
+</ul>
+<p><b>Arquitectura:</b> </p><div class="fragment"><div class="line">[Web UI] --POST--&gt; /api/<span class="keyword">register</span> --&gt; <a class="code hl_function" href="registers_8h.html#adba5009ca1c63694a9f24bcbc260515e">save_register_to_nvs</a>()</div>
+<div class="line">    |                                        |</div>
+<div class="line">    |                                        v</div>
+<div class="line">    |                                   [NVS Flash]</div>
+<div class="line">    |                                        ^</div>
+<div class="line">    v                                        |</div>
+<div class="line">[<a class="code hl_function" href="#a2abf74292d0298531f2ae22f1ffd5bfe">registers_scheduler_task</a>] ---cada 10s---&gt; <a class="code hl_function" href="registers_8h.html#aebc3357edd2c8b27aba176cfbf2a7260">load_register_from_nvs</a>()</div>
+<div class="line">    |                                        |</div>
+<div class="line">    v                                        v</div>
+<div class="line"><a class="code hl_function" href="#a5615fb0c9761a6b382bb955ae830734d">register_is_active_now</a>() &lt;--- compara hora/día actual</div>
+<div class="line">    |</div>
+<div class="line">    v</div>
+<div class="line"><a class="code hl_function" href="fan__control_8h.html#a4d1476e55b973e30892503e7f955ef71">fan_control_on_register_tick</a>(any_match) --&gt; Enciende/apaga ventilador</div>
+<div class="ttc" id="afan__control_8h_html_a4d1476e55b973e30892503e7f955ef71"><div class="ttname"><a href="fan__control_8h.html#a4d1476e55b973e30892503e7f955ef71">fan_control_on_register_tick</a></div><div class="ttdeci">void fan_control_on_register_tick(bool any_match_now)</div><div class="ttdoc">Notificar cambio en registros programados.</div><div class="ttdef"><b>Definition</b> <a href="fan__control_8c_source.html#l00318">fan_control.c:318</a></div></div>
+<div class="ttc" id="aregisters_8c_html_a2abf74292d0298531f2ae22f1ffd5bfe"><div class="ttname"><a href="#a2abf74292d0298531f2ae22f1ffd5bfe">registers_scheduler_task</a></div><div class="ttdeci">static void registers_scheduler_task(void *arg)</div><div class="ttdoc">Tarea RTOS que evalúa registros programados periódicamente.</div><div class="ttdef"><b>Definition</b> <a href="registers_8c_source.html#l00568">registers.c:568</a></div></div>
+<div class="ttc" id="aregisters_8c_html_a5615fb0c9761a6b382bb955ae830734d"><div class="ttname"><a href="#a5615fb0c9761a6b382bb955ae830734d">register_is_active_now</a></div><div class="ttdeci">static bool register_is_active_now(const reg_t *reg)</div><div class="ttdoc">Determina si un registro debe activarse en este momento.</div><div class="ttdef"><b>Definition</b> <a href="registers_8c_source.html#l00338">registers.c:338</a></div></div>
+<div class="ttc" id="aregisters_8h_html_adba5009ca1c63694a9f24bcbc260515e"><div class="ttname"><a href="registers_8h.html#adba5009ca1c63694a9f24bcbc260515e">save_register_to_nvs</a></div><div class="ttdeci">esp_err_t save_register_to_nvs(int id, reg_t *reg)</div><div class="ttdoc">Guardar registro en NVS con formato JSON.</div><div class="ttdef"><b>Definition</b> <a href="registers_8c_source.html#l00137">registers.c:137</a></div></div>
+<div class="ttc" id="aregisters_8h_html_aebc3357edd2c8b27aba176cfbf2a7260"><div class="ttname"><a href="registers_8h.html#aebc3357edd2c8b27aba176cfbf2a7260">load_register_from_nvs</a></div><div class="ttdeci">esp_err_t load_register_from_nvs(int id, char *buffer, size_t buffer_len)</div><div class="ttdoc">Cargar registro desde NVS.</div><div class="ttdef"><b>Definition</b> <a href="registers_8c_source.html#l00192">registers.c:192</a></div></div>
+</div><!-- fragment --><p><b>Formato JSON en NVS:</b> </p><div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;hour&quot;</span>: 14,</div>
+<div class="line">  <span class="stringliteral">&quot;minute&quot;</span>: 30,</div>
+<div class="line">  <span class="stringliteral">&quot;days&quot;</span>: [<span class="stringliteral">&quot;L&quot;</span>, <span class="stringliteral">&quot;X&quot;</span>, <span class="stringliteral">&quot;V&quot;</span>]  <span class="comment">// Lunes, Miércoles, Viernes</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><p><b>Mapeo de días:</b></p><ul>
+<li>L = Lunes (tm_wday = 1)</li>
+<li>M = Martes (tm_wday = 2)</li>
+<li>X = Miércoles (tm_wday = 3)</li>
+<li>J = Jueves (tm_wday = 4)</li>
+<li>V = Viernes (tm_wday = 5)</li>
+<li>S = Sábado (tm_wday = 6)</li>
+<li>D = Domingo (tm_wday = 0)</li>
+</ul>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="registers_8h.html" title="API REST para gestión de registros programados con persistencia NVS.">registers.h</a> Para la API pública y estructura <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a> </dd>
+<dd>
+<a class="el" href="fan__control_8c.html" title="Implementación del controlador multi-modo del ventilador.">fan_control.c</a> Para activación del ventilador </dd></dl>
+
+<p class="definition">Definición en el archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones</h2>
+<a id="aa5b423dbf986bcd5719586d9a2af9765" name="aa5b423dbf986bcd5719586d9a2af9765"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5b423dbf986bcd5719586d9a2af9765">&#9670;&#160;</a></span>api_delete_register()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t api_delete_register </td>
+          <td>(</td>
+          <td class="paramtype">httpd_req_t *</td>          <td class="paramname"><span class="paramname"><em>req</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handler HTTP DELETE para eliminar registro. </p>
+<p>Endpoint: DELETE /api/register?id=5</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">req</td><td>Request HTTP del servidor </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>ESP_OK si se eliminó correctamente </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00508">508</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="registers_8c_source.html#l00229">delete_register_from_nvs()</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00592">register_registers_endpoints()</a>.</p>
+
+</div>
+</div>
+<a id="a17cd923ac85d45dc491784a52e765e7b" name="a17cd923ac85d45dc491784a52e765e7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17cd923ac85d45dc491784a52e765e7b">&#9670;&#160;</a></span>api_get_registers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t api_get_registers </td>
+          <td>(</td>
+          <td class="paramtype">httpd_req_t *</td>          <td class="paramname"><span class="paramname"><em>req</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handler HTTP GET para listar todos los registros. </p>
+<p>Endpoint: GET /api/register Response JSON: [{"id":1,"hour":14,"minute":30,"days":[...]}]</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">req</td><td>Request HTTP del servidor </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>ESP_OK si se procesó correctamente </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00451">451</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="registers_8c_source.html#l00192">load_register_from_nvs()</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00592">register_registers_endpoints()</a>.</p>
+
+</div>
+</div>
+<a id="a244791f69474ab6fe14dc90c4cf067f3" name="a244791f69474ab6fe14dc90c4cf067f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a244791f69474ab6fe14dc90c4cf067f3">&#9670;&#160;</a></span>api_post_register()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t api_post_register </td>
+          <td>(</td>
+          <td class="paramtype">httpd_req_t *</td>          <td class="paramname"><span class="paramname"><em>req</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handler HTTP POST para crear/actualizar registro. </p>
+<p>Endpoint: POST /api/register Body JSON: {"id":1, "hour":14, "minute":30, "days":["Lunes","Viernes"]}</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">req</td><td>Request HTTP del servidor </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>ESP_OK si se procesó correctamente </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00371">371</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="registers_8h_source.html#l00040">reg_t::day_count</a>, <a class="el" href="registers_8h_source.html#l00039">reg_t::days</a>, <a class="el" href="registers_8h_source.html#l00037">reg_t::hour</a>, <a class="el" href="registers_8h_source.html#l00038">reg_t::minute</a>, <a class="el" href="registers_8c_source.html#l00137">save_register_to_nvs()</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00592">register_registers_endpoints()</a>.</p>
+
+</div>
+</div>
+<a id="a96fc67199ae4e05f5cb25a0b8020573f" name="a96fc67199ae4e05f5cb25a0b8020573f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96fc67199ae4e05f5cb25a0b8020573f">&#9670;&#160;</a></span>delete_register_from_nvs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void delete_register_from_nvs </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Elimina un registro de NVS. </p>
+<p>Eliminar registro de NVS.</p>
+<p>Borra la clave "reg_&lt;id&gt;" del namespace "storage".</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">id</td><td>ID del registro a eliminar (1-10)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>No retorna error si el registro no existía (nvs_erase_key silencioso) </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>Requiere nvs_commit() para persistir (ya incluido) </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00229">229</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00508">api_delete_register()</a> y <a class="el" href="http__server_8c_source.html#l00991">http_server_register_erase_handler()</a>.</p>
+
+</div>
+</div>
+<a id="aa2c353c6e3271404cdf45ce4601951c7" name="aa2c353c6e3271404cdf45ce4601951c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2c353c6e3271404cdf45ce4601951c7">&#9670;&#160;</a></span>init_nvs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void init_nvs </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inicializa el subsistema NVS (Non-Volatile Storage). </p>
+<p>Inicializar sistema NVS para almacenamiento persistente.</p>
+<p>Inicializa la partición NVS en flash para almacenamiento persistente. Si la partición está corrupta o es versión antigua, la borra y reinicializa.</p>
+<p><b>Manejo de errores:</b></p><ul>
+<li>ESP_ERR_NVS_NO_FREE_PAGES: Partición llena → borra y reinicia</li>
+<li>ESP_ERR_NVS_NEW_VERSION_FOUND: Versión incompatible → borra y reinicia</li>
+<li>Otros errores: ESP_ERROR_CHECK causa panic</li>
+</ul>
+<dl class="section warning"><dt>Atención</dt><dd>Llamar antes de cualquier operación NVS </dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Seguro llamar múltiples veces (NVS ignora reinicializaciones) </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00100">100</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+</div>
+</div>
+<a id="aebc3357edd2c8b27aba176cfbf2a7260" name="aebc3357edd2c8b27aba176cfbf2a7260"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebc3357edd2c8b27aba176cfbf2a7260">&#9670;&#160;</a></span>load_register_from_nvs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t load_register_from_nvs </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>buffer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>buffer_len</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Carga un registro desde NVS como string JSON. </p>
+<p>Cargar registro desde NVS.</p>
+<p>Lee el string JSON almacenado en NVS para el ID especificado.</p>
+<p><b>Proceso:</b></p><ol type="1">
+<li>Abre namespace "storage" en modo lectura</li>
+<li>Verifica tamaño requerido con nvs_get_str(NULL)</li>
+<li>Lee string JSON en buffer proporcionado</li>
+<li>Cierra handle NVS</li>
+</ol>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">id</td><td>ID del registro (1-10) </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>Buffer donde copiar el JSON </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer_len</td><td>Tamaño del buffer</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>esp_err_t </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">ESP_OK</td><td>Lectura exitosa </td></tr>
+    <tr><td class="paramname">ESP_ERR_NVS_NOT_FOUND</td><td>No existe registro con ese ID </td></tr>
+    <tr><td class="paramname">ESP_ERR_NVS_INVALID_LENGTH</td><td>Buffer muy pequeño</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>No parsea el JSON - solo retorna string crudo </dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="#af28ab3c20449874dfa46acbc40b48d1b" title="Helper: Carga registro desde NVS y parsea a estructura reg_t.">load_register_struct_from_nvs()</a> Para obtener estructura <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a> directamente </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00192">192</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00451">api_get_registers()</a>, <a class="el" href="http__server_8c_source.html#l01256">http_server_read_register_handler()</a> y <a class="el" href="registers_8c_source.html#l00265">load_register_struct_from_nvs()</a>.</p>
+
+</div>
+</div>
+<a id="af28ab3c20449874dfa46acbc40b48d1b" name="af28ab3c20449874dfa46acbc40b48d1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af28ab3c20449874dfa46acbc40b48d1b">&#9670;&#160;</a></span>load_register_struct_from_nvs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t load_register_struct_from_nvs </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structreg__t.html">reg_t</a> *</td>          <td class="paramname"><span class="paramname"><em>out</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Helper: Carga registro desde NVS y parsea a estructura <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a>. </p>
+<p>Combina <a class="el" href="#aebc3357edd2c8b27aba176cfbf2a7260" title="Carga un registro desde NVS como string JSON.">load_register_from_nvs()</a> + parsing JSON.</p>
+<p><b>Proceso:</b></p><ol type="1">
+<li>Lee string JSON de NVS</li>
+<li>Parsea con cJSON_Parse()</li>
+<li>Extrae campos: hour, minute, days</li>
+<li>Valida tipos JSON (number, array)</li>
+<li>Copia a estructura <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a></li>
+</ol>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">id</td><td>ID del registro (1-10) </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out</td><td>Puntero a <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a> donde copiar datos</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>esp_err_t </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">ESP_OK</td><td>Carga y parsing exitoso </td></tr>
+    <tr><td class="paramname">ESP_ERR_NVS_NOT_FOUND</td><td>No existe registro </td></tr>
+    <tr><td class="paramname">ESP_FAIL</td><td>JSON inválido o campos faltantes</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Función estática (solo visible en este módulo) </dd>
+<dd>
+Limita días a máximo 7 </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00265">265</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="registers_8h_source.html#l00040">reg_t::day_count</a>, <a class="el" href="registers_8h_source.html#l00039">reg_t::days</a>, <a class="el" href="registers_8h_source.html#l00037">reg_t::hour</a>, <a class="el" href="registers_8c_source.html#l00192">load_register_from_nvs()</a> y <a class="el" href="registers_8h_source.html#l00038">reg_t::minute</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00568">registers_scheduler_task()</a>.</p>
+
+</div>
+</div>
+<a id="a5615fb0c9761a6b382bb955ae830734d" name="a5615fb0c9761a6b382bb955ae830734d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5615fb0c9761a6b382bb955ae830734d">&#9670;&#160;</a></span>register_is_active_now()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool register_is_active_now </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structreg__t.html">reg_t</a> *</td>          <td class="paramname"><span class="paramname"><em>reg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determina si un registro debe activarse en este momento. </p>
+<p>Compara hora actual del sistema con el registro programado.</p>
+<p><b>Algoritmo:</b></p><ol type="1">
+<li>Obtiene hora del sistema (time() + localtime_r())</li>
+<li>Compara hora:minuto exacto</li>
+<li>Compara día de la semana (tm_wday)</li>
+<li>Retorna true si hay coincidencia</li>
+</ol>
+<p><b>Mapeo de días:</b></p><ul>
+<li>tm_wday: 0=Domingo, 1=Lunes, 2=Martes, 3=Miércoles, 4=Jueves, 5=Viernes, 6=Sábado</li>
+<li>Registro: "L","M","X","J","V","S","D"</li>
+</ul>
+<p><b>Ventana de activación:</b> Solo activo durante el minuto exacto (14:30:00 a 14:30:59). Scheduler debe llamar esta función con frecuencia ≤ 60s.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">reg</td><td>Puntero a registro a evaluar</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>bool </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">true</td><td>Registro coincide con hora/día actual </td></tr>
+    <tr><td class="paramname">false</td><td>No coincide o día no incluido</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Función estática (solo visible en este módulo) </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>Requiere que el sistema tenga hora sincronizada (SNTP) </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00338">338</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="registers_8h_source.html#l00040">reg_t::day_count</a>, <a class="el" href="registers_8h_source.html#l00039">reg_t::days</a>, <a class="el" href="registers_8h_source.html#l00037">reg_t::hour</a> y <a class="el" href="registers_8h_source.html#l00038">reg_t::minute</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00568">registers_scheduler_task()</a>.</p>
+
+</div>
+</div>
+<a id="a02b94c84eabd1b5cc88c675a6c75b12f" name="a02b94c84eabd1b5cc88c675a6c75b12f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02b94c84eabd1b5cc88c675a6c75b12f">&#9670;&#160;</a></span>register_registers_endpoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void register_registers_endpoints </td>
+          <td>(</td>
+          <td class="paramtype">httpd_handle_t</td>          <td class="paramname"><span class="paramname"><em>server</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Registrar todos los endpoints REST en el servidor HTTP. </p>
+<p>Debe llamarse durante la configuración del servidor HTTP para habilitar los endpoints /api/register.</p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">server</td><td>Handle del servidor HTTP configurado </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00592">592</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="registers_8c_source.html#l00508">api_delete_register()</a>, <a class="el" href="registers_8c_source.html#l00451">api_get_registers()</a>, <a class="el" href="registers_8c_source.html#l00371">api_post_register()</a>, <a class="el" href="registers_8c_source.html#l00568">registers_scheduler_task()</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="http__server_8c_source.html#l01086">http_server_configure()</a>.</p>
+
+</div>
+</div>
+<a id="a2abf74292d0298531f2ae22f1ffd5bfe" name="a2abf74292d0298531f2ae22f1ffd5bfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2abf74292d0298531f2ae22f1ffd5bfe">&#9670;&#160;</a></span>registers_scheduler_task()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void registers_scheduler_task </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>arg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tarea RTOS que evalúa registros programados periódicamente. </p>
+<p>Scheduler que evalúa los 10 registros cada 10 segundos.</p>
+<p><b>Ciclo de ejecución:</b></p><ol type="1">
+<li>Itera sobre IDs 1-10</li>
+<li>Carga cada registro desde NVS</li>
+<li>Evalúa con <a class="el" href="#a5615fb0c9761a6b382bb955ae830734d" title="Determina si un registro debe activarse en este momento.">register_is_active_now()</a></li>
+<li>Si alguno coincide: any_match_now = true</li>
+<li>Llama fan_control_on_register_tick(any_match_now)</li>
+<li>Espera 10 segundos (vTaskDelay)</li>
+</ol>
+<p><b>Optimización:</b> Break al primer match (no evalúa registros restantes).</p>
+<p><b>Parámetros de tarea:</b></p><ul>
+<li>Nombre: "registers_scheduler"</li>
+<li>Stack: 4096 bytes</li>
+<li>Prioridad: 5 (media-alta)</li>
+<li>Periodo: 10000ms</li>
+</ul>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg</td><td>Parámetro de tarea (no usado)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Nota</dt><dd>Tarea infinita (nunca termina) </dd></dl>
+<dl class="section warning"><dt>Atención</dt><dd>Periodo de 10s significa resolución mínima de activación de 10s </dd></dl>
+<dl class="section see"><dt>Ver también</dt><dd><a class="el" href="fan__control_8h.html#a4d1476e55b973e30892503e7f955ef71" title="Notificar cambio en registros programados.">fan_control_on_register_tick()</a> Para activación del ventilador </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00568">568</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="fan__control_8c_source.html#l00318">fan_control_on_register_tick()</a>, <a class="el" href="registers_8c_source.html#l00265">load_register_struct_from_nvs()</a>, <a class="el" href="registers_8c_source.html#l00338">register_is_active_now()</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00592">register_registers_endpoints()</a>.</p>
+
+</div>
+</div>
+<a id="adba5009ca1c63694a9f24bcbc260515e" name="adba5009ca1c63694a9f24bcbc260515e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adba5009ca1c63694a9f24bcbc260515e">&#9670;&#160;</a></span>save_register_to_nvs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">esp_err_t save_register_to_nvs </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structreg__t.html">reg_t</a> *</td>          <td class="paramname"><span class="paramname"><em>reg</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Guarda un registro en NVS como JSON. </p>
+<p>Guardar registro en NVS con formato JSON.</p>
+<p>Serializa la estructura <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a> a JSON y la guarda en NVS con clave "reg_&lt;id&gt;".</p>
+<p><b>Proceso:</b></p><ol type="1">
+<li>Crea objeto JSON con hour, minute, days</li>
+<li>Serializa a string con cJSON_Print()</li>
+<li>Guarda en NVS con nvs_set_str()</li>
+<li>Commit para escribir a flash</li>
+</ol>
+<p><b>Ejemplo de JSON guardado:</b> </p><div class="fragment"><div class="line">{<span class="stringliteral">&quot;hour&quot;</span>:14,<span class="stringliteral">&quot;minute&quot;</span>:30,<span class="stringliteral">&quot;days&quot;</span>:[<span class="stringliteral">&quot;L&quot;</span>,<span class="stringliteral">&quot;X&quot;</span>,<span class="stringliteral">&quot;V&quot;</span>]}</div>
+</div><!-- fragment --><dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">id</td><td>ID del registro (1-10) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">reg</td><td>Puntero a estructura <a class="el" href="structreg__t.html" title="Estructura de un registro programado.">reg_t</a> a guardar</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>esp_err_t </dd></dl>
+<dl class="retval"><dt>Valores devueltos</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">ESP_OK</td><td>Guardado exitoso </td></tr>
+    <tr><td class="paramname">ESP_FAIL</td><td>Error de NVS</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Atención</dt><dd>Sobrescribe registro existente con mismo ID </dd></dl>
+<dl class="section note"><dt>Nota</dt><dd>Máximo 10 registros soportados (IDs 1-10) </dd></dl>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00137">137</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="registers_8h_source.html#l00040">reg_t::day_count</a>, <a class="el" href="registers_8h_source.html#l00039">reg_t::days</a>, <a class="el" href="registers_8h_source.html#l00037">reg_t::hour</a>, <a class="el" href="registers_8h_source.html#l00038">reg_t::minute</a> y <a class="el" href="http__server_8c_source.html#l00117">TAG</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="registers_8c_source.html#l00371">api_post_register()</a>.</p>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Documentación de variables</h2>
+<a id="a5a85b9c772bbeb480b209a3e6ea92b4c" name="a5a85b9c772bbeb480b209a3e6ea92b4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a85b9c772bbeb480b209a3e6ea92b4c">&#9670;&#160;</a></span>TAG</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* TAG = &quot;REGISTERS&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tag para logging ESP-IDF. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="registers_8c_source.html#l00083">83</a> del archivo <a class="el" href="registers_8c_source.html">registers.c</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="registers_8c.html">registers.c</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para Sistema RTOS para Control de Cuna Inteligente por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>
