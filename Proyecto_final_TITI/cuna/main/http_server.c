@@ -100,7 +100,7 @@
 #include "esp_sntp.h"
 
 #include "ntc_driver.h"
-#include "pir_driver.h"
+// #include "pir_driver.h"  // PIR desactivado para evitar conflictos con PWM
 #include "esp_adc/adc_oneshot.h"
 
 #include "fan_control.h"
@@ -371,6 +371,7 @@ static esp_err_t http_server_toogle_led_handler(httpd_req_t *req)
 // -----------------------------------------------------
 // LOG ERROR
 // -----------------------------------------------------
+__attribute__((unused))
 static void log_error_if_nonzero(const char *message, int error_code)
 {
     if (error_code != 0) {
@@ -415,9 +416,9 @@ static void sensors_init(void)
         ESP_LOGE(TAG, "Failed to initialize sensor_task: %d", err);
     }
 
-    // Inicializar sensor PIR en GPIO 35
-    pir_init(GPIO_NUM_35, NULL);
-    ESP_LOGI(TAG, "PIR sensor initialized on GPIO 35");
+    // PIR desactivado para evitar conflictos con PWM
+    // pir_init(GPIO_NUM_35, NULL);
+    // ESP_LOGI(TAG, "PIR sensor initialized on GPIO 35");
 }
 
 // -----------------------------------------------------
@@ -934,22 +935,21 @@ static esp_err_t http_server_wifi_connect_status_json_handler(httpd_req_t *req)
  */
 static esp_err_t http_server_get_dht_sensor_readings_json_handler(httpd_req_t *req)
 {
-    ESP_LOGI(TAG, "/dhtSensor.json requested (NTC + PIR)");
+    ESP_LOGI(TAG, "/dhtSensor.json requested (NTC only, PIR disabled)");
 
     float temp_c = leer_temperatura_celsius(s_ntc_adc_handle);
-    bool motion  = pir_is_motion_active();
+    // PIR desactivado
+    // bool motion  = pir_is_motion_active();
 
     char json[128];
 
     if (temp_c < -100.0f) {
         snprintf(json, sizeof(json),
-                 "{\"temp\":null,\"pir\":%d}",
-                 motion ? 1 : 0);
+                 "{\"temp\":null,\"pir\":0}");
     } else {
         snprintf(json, sizeof(json),
-                 "{\"temp\":%.2f,\"pir\":%d}",
-                 temp_c,
-                 motion ? 1 : 0);
+                 "{\"temp\":%.2f,\"pir\":0}",
+                 temp_c);
     }
 
     httpd_resp_set_type(req, "application/json");
@@ -1068,7 +1068,7 @@ static esp_err_t http_server_register_erase_handler(httpd_req_t *req)
  * - GET /wifiConnectStatus
  * - GET /api/registers (registers.c)
  * - POST /api/register (registers.c)
- * - DELETE /api/register/* (registers.c)
+ * - DELETE /api/register/[id] (registers.c)
  * 
  * **OTA:**
  * - POST /OTAupdate

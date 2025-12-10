@@ -57,7 +57,7 @@
 
 #include "esp_adc/adc_oneshot.h"
 #include "ntc_driver.h"
-#include "pir_driver.h"
+// #include "pir_driver.h"  // PIR desactivado para evitar conflictos con PWM
 
 /**
  * @var s_ntc_adc_handle
@@ -208,12 +208,13 @@ void fan_control_set_mode(fan_mode_t mode)
             break;
         }
 
-        bool motion = pir_is_motion_active();
-        if (!motion) {
-            s_current_speed = 0;
-            fan_off();
-            break;
-        }
+        // PIR desactivado - asumir siempre movimiento
+        // bool motion = pir_is_motion_active();
+        // if (!motion) {
+        //     s_current_speed = 0;
+        //     fan_off();
+        //     break;
+        // }
 
         uint8_t spd = compute_auto_speed(temp_c);
         s_current_speed = spd;
@@ -383,12 +384,13 @@ void fan_control_update(void)
         return;
     }
 
-    bool motion = pir_is_motion_active();
-    if (!motion) {
-        s_current_speed = 0;
-        fan_off();
-        return;
-    }
+    // PIR desactivado
+    // bool motion = pir_is_motion_active();
+    // if (!motion) {
+    //     s_current_speed = 0;
+    //     fan_off();
+    //     return;
+    // }
 
     uint8_t auto_speed = compute_auto_speed(temp_c);
     s_current_speed = auto_speed;
