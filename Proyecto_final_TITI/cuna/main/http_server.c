@@ -370,6 +370,95 @@ static esp_err_t http_server_toogle_led_handler(httpd_req_t *req)
 }
 
 // -----------------------------------------------------
+// CHANGE OLED PASSWORD (/change_oled_password.json)
+// -----------------------------------------------------
+
+/**
+ * @brief Handler POST /change_oled_password.json - Cambiar contraseña OLED
+ * 
+ * @details
+ * Endpoint para cambiar la contraseña del teclado físico del display OLED.
+ * 
+ * **Request JSON:**
+ * @code
+ * {
+ *   "password": "1234"  // 4-8 dígitos
+ * }
+ * @endcode
+ * 
+ * **Validaciones:**
+ * - Longitud: 4-8 caracteres
+ * - Solo dígitos numéricos
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t
+ * @retval ESP_OK Contraseña cambiada exitosamente
+ * @retval ESP_FAIL Error en validación o cambio
+ */
+static esp_err_t http_server_change_oled_password_handler(httpd_req_t *req)
+{
+    char content[100];
+    int ret = httpd_req_recv(req, content, sizeof(content));
+    
+    if (ret <= 0) {
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to receive data");
+        return ESP_FAIL;
+    }
+    
+    content[ret] = '\0';
+    
+    cJSON *json = cJSON_Parse(content);
+    if (json == NULL) {
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid JSON");
+        return ESP_FAIL;
+    }
+    
+    cJSON *password_item = cJSON_GetObjectItem(json, "password");
+    if (!cJSON_IsString(password_item) || password_item->valuestring == NULL) {
+        cJSON_Delete(json);
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Missing password field");
+        return ESP_FAIL;
+    }
+    
+    const char* new_password = password_item->valuestring;
+    size_t pass_len = strlen(new_password);
+    
+    // Validar longitud
+    if (pass_len < 4 || pass_len > 8) {
+        cJSON_Delete(json);
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_sendstr(req, "{\"status\":\"error\",\"message\":\"Contraseña debe tener 4-8 dígitos\"}");
+        return ESP_OK;
+    }
+    
+    // Validar que solo sean dígitos
+    for (size_t i = 0; i < pass_len; i++) {
+        if (new_password[i] < '0' || new_password[i] > '9') {
+            cJSON_Delete(json);
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_sendstr(req, "{\"status\":\"error\",\"message\":\"Solo se permiten dígitos (0-9)\"}");
+            return ESP_OK;
+        }
+    }
+    
+    // Cambiar contraseña
+    esp_err_t err = auth_display_set_password(new_password);
+    cJSON_Delete(json);
+    
+    if (err != ESP_OK) {
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_sendstr(req, "{\"status\":\"error\",\"message\":\"Error al cambiar contraseña\"}");
+        return ESP_OK;
+    }
+    
+    ESP_LOGI(TAG, "OLED password changed successfully");
+    
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_sendstr(req, "{\"status\":\"success\",\"message\":\"Contraseña cambiada exitosamente\"}");
+    return ESP_OK;
+}
+
+// -----------------------------------------------------
 // LOG ERROR
 // -----------------------------------------------------
 __attribute__((unused))
@@ -1174,6 +1263,14 @@ static httpd_handle_t http_server_configure(void)
             .user_ctx = NULL
         };
         httpd_register_uri_handler(http_server_handle, &toogle_led_uri);
+
+        httpd_uri_t change_oled_password_uri = {
+            .uri      = "/change_oled_password.json",
+            .method   = HTTP_POST,
+            .handler  = http_server_change_oled_password_handler,
+            .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &change_oled_password_uri);
 
         httpd_uri_t wifi_connect_json = {
             .uri      = "/wifiConnect.json",

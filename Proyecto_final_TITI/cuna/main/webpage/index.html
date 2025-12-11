@@ -246,6 +246,30 @@
                 </div>
             </section>
 
+            <!-- Sección: Configuración Display OLED -->
+            <section class="section">
+                <h2 class="section__title">Contraseña Display OLED</h2>
+                <div class="section__body">
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
+                        Cambia la contraseña del teclado físico (4-8 dígitos)
+                    </p>
+                    <div class="field">
+                        <label for="oled_password">Nueva contraseña</label>
+                        <input type="text" 
+                               id="oled_password" 
+                               maxlength="8" 
+                               placeholder="Ej: 1234"
+                               style="font-family: monospace; letter-spacing: 2px;">
+                    </div>
+                    <div class="field">
+                        <button class="btn primary" type="button" onclick="change_oled_password()">
+                            Cambiar contraseña
+                        </button>
+                        <span id="oled_password_status" style="margin-left:12px; font-size:13px;"></span>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 

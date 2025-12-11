@@ -683,6 +683,66 @@ function apply_fan_control() {
     });
 }
 
+/**
+ * @brief Cambia la contraseña del display OLED
+ * @details Envía nueva contraseña al endpoint /change_oled_password.json.
+ * Valida que sea de 4-8 dígitos antes de enviar.
+ * 
+ * **Validaciones frontend:**
+ * - Longitud: 4-8 caracteres
+ * - Solo dígitos numéricos (0-9)
+ * 
+ * **Feedback visual:**
+ * - Éxito: Mensaje verde
+ * - Error: Mensaje rojo
+ */
+function change_oled_password() {
+    const password = $("#oled_password").val().trim();
+    const $status = $("#oled_password_status");
+    
+    // Validar que no esté vacío
+    if (password === "") {
+        $status.css("color", "#ef4444").text("Por favor ingresa una contraseña");
+        return;
+    }
+    
+    // Validar longitud
+    if (password.length < 4 || password.length > 8) {
+        $status.css("color", "#ef4444").text("Debe tener entre 4 y 8 dígitos");
+        return;
+    }
+    
+    // Validar que solo sean dígitos
+    if (!/^\d+$/.test(password)) {
+        $status.css("color", "#ef4444").text("Solo se permiten números (0-9)");
+        return;
+    }
+    
+    // Enviar al ESP32
+    const payload = JSON.stringify({ password: password });
+    
+    $.ajax({
+        url: "/change_oled_password.json",
+        dataType: "json",
+        method: "POST",
+        cache: false,
+        data: payload,
+        contentType: "application/json",
+        success: function(resp) {
+            if (resp.status === "success") {
+                $status.css("color", "#10b981").text("✓ " + resp.message);
+                $("#oled_password").val("");  // Limpiar campo
+            } else {
+                $status.css("color", "#ef4444").text("✗ " + resp.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            $status.css("color", "#ef4444").text("✗ Error de conexión");
+        }
+    });
+}
+
 
 
 
