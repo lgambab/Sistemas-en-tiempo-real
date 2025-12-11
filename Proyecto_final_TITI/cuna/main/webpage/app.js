@@ -264,9 +264,20 @@ function getDHTSensorValues()
         } else {
             $("#pir_status").text("Sin movimiento");
         }
+
+        // ----- Estado del display -----
+        if (data["display"] === 1) {
+            $("#display_dot").addClass("active");
+            $("#display_text").text("En uso");
+        } else {
+            $("#display_dot").removeClass("active");
+            $("#display_text").text("Inactivo");
+        }
     }).fail(function() {
         $("#temperature_reading").text("--");
         $("#pir_status").text("Sin datos");
+        $("#display_dot").removeClass("active");
+        $("#display_text").text("--");
     });
 }
 

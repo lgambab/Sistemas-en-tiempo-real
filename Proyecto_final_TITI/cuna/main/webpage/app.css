@@ -60,6 +60,32 @@ body {
     font-size: 13px;
 }
 
+.top-status__indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #6b7280;
+    transition: background 0.3s ease;
+}
+
+.indicator-dot.active {
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.indicator-text {
+    font-size: 13px;
+}
+
 .top-status__device {
     display: flex;
     align-items: center;

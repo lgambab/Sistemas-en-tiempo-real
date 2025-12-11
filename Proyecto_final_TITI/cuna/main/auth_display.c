@@ -128,6 +128,10 @@ static void reset_input(void) {
     input_index = 0;
 }
 
+bool auth_display_is_active(void) {
+    return authenticated;
+}
+
 void auth_display_process_key(char key) {
     if (authenticated) {
         // En modo autenticado, # sale

@@ -105,6 +105,7 @@
 
 #include "fan_control.h"
 #include "registers.h"
+#include "auth_display.h"
 #include "sensor_task.h"
 
 
@@ -940,16 +941,20 @@ static esp_err_t http_server_get_dht_sensor_readings_json_handler(httpd_req_t *r
     float temp_c = leer_temperatura_celsius(s_ntc_adc_handle);
     // PIR desactivado
     // bool motion  = pir_is_motion_active();
+    
+    // Obtener estado del display
+    bool display_active = auth_display_is_active();
 
     char json[128];
 
     if (temp_c < -100.0f) {
         snprintf(json, sizeof(json),
-                 "{\"temp\":null,\"pir\":0}");
+                 "{\"temp\":null,\"pir\":0,\"display\":%d}",
+                 display_active ? 1 : 0);
     } else {
         snprintf(json, sizeof(json),
-                 "{\"temp\":%.2f,\"pir\":0}",
-                 temp_c);
+                 "{\"temp\":%.2f,\"pir\":0,\"display\":%d}",
+                 temp_c, display_active ? 1 : 0);
     }
 
     httpd_resp_set_type(req, "application/json");
