@@ -68,4 +68,18 @@ void fan_control_update(void);
  */
 void fan_control_on_register_tick(bool any_match_now);
 
+/**
+ * @brief Establecer umbrales de temperatura para modo AUTO
+ * @param temp_min Temperatura mínima en °C (por debajo = ventilador apagado)
+ * @param temp_max Temperatura máxima en °C (por encima = velocidad 100%)
+ */
+void fan_control_set_temp_thresholds(float temp_min, float temp_max);
+
+/**
+ * @brief Obtener umbrales de temperatura configurados
+ * @param temp_min Puntero para almacenar temperatura mínima (puede ser NULL)
+ * @param temp_max Puntero para almacenar temperatura máxima (puede ser NULL)
+ */
+void fan_control_get_temp_thresholds(float *temp_min, float *temp_max);
+
 #endif // MAIN_FAN_CONTROL_H_

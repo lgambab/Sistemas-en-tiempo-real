@@ -1052,6 +1052,150 @@ static esp_err_t http_server_get_dht_sensor_readings_json_handler(httpd_req_t *r
     return ESP_OK;
 }
 
+// -----------------------------------------------------
+// /set_temp_thresholds.json (Configurar rangos de temperatura)
+// -----------------------------------------------------
+/**
+ * @brief Handler POST /set_temp_thresholds.json - Configurar umbrales de temperatura
+ * 
+ * @details
+ * Endpoint para establecer los rangos de temperatura para modo automático del ventilador.
+ * 
+ * **Request JSON:**
+ * @code
+ * {"temp_min": 20.0, "temp_max": 35.0}
+ * @endcode
+ * 
+ * **Response JSON (éxito):**
+ * @code
+ * {"status": "ok"}
+ * @endcode
+ * 
+ * **Response JSON (error):**
+ * @code
+ * {"status": "error", "message": "temp_max must be greater than temp_min"}
+ * @endcode
+ * 
+ * **Validaciones:**
+ * - temp_min debe ser >= 0°C
+ * - temp_max debe ser > temp_min
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t
+ * @retval ESP_OK Umbrales actualizados correctamente
+ * @retval ESP_FAIL Error en parsing o validación
+ * 
+ * @note Los valores se aplican inmediatamente si el ventilador está en modo AUTO
+ */
+static esp_err_t http_server_set_temp_thresholds_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "/set_temp_thresholds.json requested");
+
+    int len = req->content_len;
+    if (len <= 0 || len > 256) {
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "invalid length");
+        return ESP_FAIL;
+    }
+
+    char *buf = malloc(len + 1);
+    if (!buf) {
+        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "no mem");
+        return ESP_FAIL;
+    }
+
+    int ret = httpd_req_recv(req, buf, len);
+    if (ret <= 0) {
+        free(buf);
+        if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+            httpd_resp_send_408(req);
+        }
+        return ESP_FAIL;
+    }
+    buf[len] = '\0';
+
+    ESP_LOGI(TAG, "Received JSON: %s", buf);
+
+    cJSON *root = cJSON_Parse(buf);
+    free(buf);
+
+    if (!root) {
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "invalid JSON");
+        return ESP_FAIL;
+    }
+
+    cJSON *temp_min_item = cJSON_GetObjectItem(root, "temp_min");
+    cJSON *temp_max_item = cJSON_GetObjectItem(root, "temp_max");
+
+    if (!cJSON_IsNumber(temp_min_item) || !cJSON_IsNumber(temp_max_item)) {
+        cJSON_Delete(root);
+        httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "missing temp_min or temp_max");
+        return ESP_FAIL;
+    }
+
+    float temp_min = (float)temp_min_item->valuedouble;
+    float temp_max = (float)temp_max_item->valuedouble;
+
+    cJSON_Delete(root);
+
+    // Validación
+    if (temp_min < 0.0f || temp_max <= temp_min) {
+        char error_msg[128];
+        snprintf(error_msg, sizeof(error_msg),
+                 "{\"status\":\"error\",\"message\":\"Invalid range: min=%.1f max=%.1f\"}",
+                 temp_min, temp_max);
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_send(req, error_msg, strlen(error_msg));
+        return ESP_FAIL;
+    }
+
+    // Establecer los umbrales
+    fan_control_set_temp_thresholds(temp_min, temp_max);
+
+    // Respuesta exitosa
+    const char *resp = "{\"status\":\"ok\"}";
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, resp, strlen(resp));
+
+    return ESP_OK;
+}
+
+// -----------------------------------------------------
+// /get_temp_thresholds.json (Obtener rangos de temperatura)
+// -----------------------------------------------------
+/**
+ * @brief Handler GET /get_temp_thresholds.json - Obtener umbrales de temperatura
+ * 
+ * @details
+ * Endpoint para leer los rangos de temperatura configurados.
+ * 
+ * **Response JSON:**
+ * @code
+ * {"temp_min": 25.0, "temp_max": 30.0}
+ * @endcode
+ * 
+ * @param[in] req Request HTTP
+ * @return esp_err_t ESP_OK siempre
+ * 
+ * @note Útil para cargar configuración actual en la interfaz web
+ */
+static esp_err_t http_server_get_temp_thresholds_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "/get_temp_thresholds.json requested");
+
+    float temp_min, temp_max;
+    fan_control_get_temp_thresholds(&temp_min, &temp_max);
+
+    char json[128];
+    snprintf(json, sizeof(json),
+             "{\"temp_min\":%.1f,\"temp_max\":%.1f}",
+             temp_min, temp_max);
+
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, json, strlen(json));
+
+    return ESP_OK;
+}
+
 
 // -----------------------------------------------------
 // /regerase.json  (compatibilidad botón "Borrar registro")
@@ -1195,7 +1339,7 @@ static httpd_handle_t http_server_configure(void)
     config.core_id           = HTTP_SERVER_TASK_CORE_ID;
     config.task_priority     = HTTP_SERVER_TASK_PRIORITY;
     config.stack_size        = HTTP_SERVER_TASK_STACK_SIZE;
-    config.max_uri_handlers  = 20;
+    config.max_uri_handlers  = 30;
     config.recv_wait_timeout = 10;
     config.send_wait_timeout = 10;
 
@@ -1322,6 +1466,22 @@ static httpd_handle_t http_server_configure(void)
             .user_ctx = NULL
         };
         httpd_register_uri_handler(http_server_handle, &dht_sensor_json);
+
+        httpd_uri_t set_temp_thresholds = {
+            .uri      = "/set_temp_thresholds.json",
+            .method   = HTTP_POST,
+            .handler  = http_server_set_temp_thresholds_handler,
+            .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &set_temp_thresholds);
+
+        httpd_uri_t get_temp_thresholds = {
+            .uri      = "/get_temp_thresholds.json",
+            .method   = HTTP_GET,
+            .handler  = http_server_get_temp_thresholds_handler,
+            .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &get_temp_thresholds);
 
         httpd_uri_t wifi_connect_status_json = {
             .uri      = "/wifiConnectStatus",

@@ -55,6 +55,7 @@ $(document).ready(function(){
 	//getUpdateStatus();
 	startDHTSensorInterval();
 	startDateTimeInterval(); 
+	get_temp_thresholds();  // Cargar valores iniciales de rangos de temperatura
 
 	// Animación genérica para todos los botones .btn
 	$(".btn").on("click", function() {
@@ -742,6 +743,94 @@ function change_oled_password() {
         }
     });
 }
+
+/**
+ * @brief Configurar umbrales de temperatura para modo automático
+ * 
+ * @details
+ * Envía POST a /set_temp_thresholds.json con los valores ingresados
+ * en los campos temp_min y temp_max. Valida que:
+ * - temp_min >= 0
+ * - temp_max > temp_min
+ * 
+ * Muestra resultado en #temp_thresholds_status con feedback visual.
+ * 
+ * @see get_temp_thresholds() Para cargar valores actuales
+ */
+function set_temp_thresholds() {
+    const $status = $("#temp_thresholds_status");
+    
+    const temp_min = parseFloat($("#temp_min").val());
+    const temp_max = parseFloat($("#temp_max").val());
+    
+    // Validación del lado del cliente
+    if (isNaN(temp_min) || isNaN(temp_max)) {
+        $status.css("color", "#ef4444").text("✗ Ingrese valores numéricos válidos");
+        return;
+    }
+    
+    if (temp_min < 0) {
+        $status.css("color", "#ef4444").text("✗ La temperatura mínima debe ser >= 0°C");
+        return;
+    }
+    
+    if (temp_max <= temp_min) {
+        $status.css("color", "#ef4444").text("✗ La temperatura máxima debe ser mayor a la mínima");
+        return;
+    }
+    
+    // Enviar al ESP32
+    const payload = JSON.stringify({ 
+        temp_min: temp_min, 
+        temp_max: temp_max 
+    });
+    
+    $.ajax({
+        url: "/set_temp_thresholds.json",
+        dataType: "json",
+        method: "POST",
+        cache: false,
+        data: payload,
+        contentType: "application/json",
+        success: function(resp) {
+            if (resp.status === "ok") {
+                $status.css("color", "#10b981").text(
+                    `✓ Rangos aplicados: ${temp_min}°C - ${temp_max}°C`
+                );
+            } else {
+                $status.css("color", "#ef4444").text(
+                    "✗ " + (resp.message || "Error al aplicar rangos")
+                );
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            $status.css("color", "#ef4444").text("✗ Error de conexión");
+        }
+    });
+}
+
+/**
+ * @brief Obtener umbrales de temperatura configurados
+ * 
+ * @details
+ * Realiza GET a /get_temp_thresholds.json y carga los valores
+ * en los campos temp_min y temp_max del formulario.
+ * Se ejecuta automáticamente al cargar la página.
+ * 
+ * @see set_temp_thresholds() Para establecer nuevos valores
+ */
+function get_temp_thresholds() {
+    $.getJSON('/get_temp_thresholds.json', function(data) {
+        if (data.temp_min !== undefined && data.temp_max !== undefined) {
+            $("#temp_min").val(data.temp_min.toFixed(1));
+            $("#temp_max").val(data.temp_max.toFixed(1));
+        }
+    }).fail(function() {
+        console.warn("No se pudieron cargar los umbrales de temperatura");
+    });
+}
+
 
 
 

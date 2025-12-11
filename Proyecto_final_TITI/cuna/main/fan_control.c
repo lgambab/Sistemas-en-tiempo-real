@@ -54,7 +54,7 @@
 #include "fan_control.h"
 #include "fan_driver.h"
 
-
+#include "esp_log.h"
 #include "esp_adc/adc_oneshot.h"
 #include "ntc_driver.h"
 // #include "pir_driver.h"  // PIR desactivado para evitar conflictos con PWM
@@ -98,27 +98,77 @@ static uint8_t    s_current_speed = 0;
  */
 static bool       s_reg_active   = false;
 
+/** 
+ * @brief Temperatura mínima para activar el ventilador en modo AUTO (°C)
+ * 
+ * @details
+ * Por debajo de este valor, el ventilador permanece apagado (0%).
+ * Valor por defecto: 25.0°C.
+ * Configurable mediante fan_control_set_temp_thresholds().
+ */
+static float      s_temp_min = 25.0f;
+
+/** 
+ * @brief Temperatura máxima para velocidad máxima en modo AUTO (°C)
+ * 
+ * @details
+ * Por encima de este valor, el ventilador funciona a 100%.
+ * Entre s_temp_min y s_temp_max, la velocidad es proporcional.
+ * Valor por defecto: 30.0°C.
+ * Configurable mediante fan_control_set_temp_thresholds().
+ */
+static float      s_temp_max = 30.0f;
 
 
+
+/**
+ * @brief Calcula velocidad del ventilador según temperatura en modo AUTO
+ * 
+ * @param[in] temp_c Temperatura leída del sensor NTC en °C
+ * @return uint8_t Velocidad calculada (0-100%)
+ * 
+ * @details
+ * Algoritmo de control proporcional:
+ * - Si temp_c < s_temp_min: retorna 0% (ventilador apagado)
+ * - Si temp_c >= s_temp_max: retorna 100% (velocidad máxima)
+ * - Si temp_c entre [s_temp_min, s_temp_max]: interpolación lineal
+ * 
+ * **Fórmula de interpolación:**
+ * \f[
+ * velocidad = \frac{temp\_c - temp\_min}{temp\_max - temp\_min} \times 100\%
+ * \f]
+ * 
+ * **Valores por defecto:**
+ * - s_temp_min = 25.0°C
+ * - s_temp_max = 30.0°C
+ * 
+ * **Ejemplo con valores por defecto:**
+ * - 20°C → 0%
+ * - 25°C → 0%
+ * - 27.5°C → 50%
+ * - 30°C → 100%
+ * - 35°C → 100%
+ * 
+ * @note Los umbrales son configurables mediante fan_control_set_temp_thresholds()
+ * @see fan_control_set_temp_thresholds() Para configurar los rangos
+ */
 static uint8_t compute_auto_speed(float temp_c)
 {
-    /*
-        Reglas:
-        - < 25°C => 0%
-        - 25–30°C => proporcional
-        - > 30°C => 100%
-    */
-
-    if (temp_c < 25.0f) {
+    if (temp_c < s_temp_min) {
         return 0;
     }
 
-    if (temp_c >= 30.0f) {
+    if (temp_c >= s_temp_max) {
         return 100;
     }
 
-    // Mapeo lineal 25 → 0%   30 → 100%
-    float scale = (temp_c - 25.0f) / 5.0f;  // 0 a 1
+    // Mapeo lineal s_temp_min → 0%   s_temp_max → 100%
+    float delta = s_temp_max - s_temp_min;
+    if (delta <= 0.1f) {  // Protección contra división por cero
+        return 100;
+    }
+    
+    float scale = (temp_c - s_temp_min) / delta;  // 0 a 1
     return (uint8_t)(scale * 100.0f);
 }
 
@@ -334,6 +384,73 @@ void fan_control_on_register_tick(bool any_match_now)
         // Ningún registro activo → ventilador apagado
         s_current_speed = 0;
         fan_off();
+    }
+}
+
+/**
+ * @brief Establecer umbrales de temperatura para modo AUTO
+ * @implements fan_control_set_temp_thresholds
+ * 
+ * @param[in] temp_min Temperatura mínima en °C (por debajo = ventilador apagado)
+ * @param[in] temp_max Temperatura máxima en °C (por encima = velocidad 100%)
+ * 
+ * @details
+ * Configura los rangos de temperatura para el algoritmo de control automático.
+ * Entre temp_min y temp_max, la velocidad es proporcional lineal.
+ * 
+ * **Validaciones:**
+ * - temp_min debe ser >= 0°C
+ * - temp_max debe ser > temp_min (al menos 1°C de diferencia)
+ * - Si temp_max <= temp_min: se mantienen valores anteriores
+ * 
+ * **Ejemplo de uso:**
+ * @code
+ * // Rango más amplio: 20-35°C
+ * fan_control_set_temp_thresholds(20.0f, 35.0f);
+ * 
+ * // Rango estrecho: 27-29°C (respuesta más sensible)
+ * fan_control_set_temp_thresholds(27.0f, 29.0f);
+ * @endcode
+ * 
+ * @warning No es thread-safe: llamar solo desde HTTP server task
+ * @note Los valores se aplican inmediatamente en próxima actualización de fan_control_update()
+ */
+void fan_control_set_temp_thresholds(float temp_min, float temp_max)
+{
+    // Validación básica
+    if (temp_min < 0.0f || temp_max <= temp_min) {
+        ESP_LOGW("fan_control", "Rangos de temperatura inválidos: min=%.1f max=%.1f (ignorados)",
+                 temp_min, temp_max);
+        return;
+    }
+    
+    s_temp_min = temp_min;
+    s_temp_max = temp_max;
+    
+    ESP_LOGI("fan_control", "Umbrales de temperatura actualizados: min=%.1f°C max=%.1f°C",
+             s_temp_min, s_temp_max);
+}
+
+/**
+ * @brief Obtener umbrales de temperatura configurados
+ * @implements fan_control_get_temp_thresholds
+ * 
+ * @param[out] temp_min Puntero para almacenar temperatura mínima (puede ser NULL)
+ * @param[out] temp_max Puntero para almacenar temperatura máxima (puede ser NULL)
+ * 
+ * @details
+ * Retorna los valores actuales de los umbrales de temperatura.
+ * Útil para mostrar configuración actual en interfaz web.
+ * 
+ * @note Thread-safe: lectura atómica de floats
+ */
+void fan_control_get_temp_thresholds(float *temp_min, float *temp_max)
+{
+    if (temp_min != NULL) {
+        *temp_min = s_temp_min;
+    }
+    if (temp_max != NULL) {
+        *temp_max = s_temp_max;
     }
 }
 

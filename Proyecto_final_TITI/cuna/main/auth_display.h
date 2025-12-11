@@ -13,6 +13,7 @@ esp_err_t auth_display_init(void);
 void auth_display_process_key(char key);
 
 // Configurar contraseña (por defecto "1234")
+// La contraseña se guarda en NVS y persiste tras reinicios
 esp_err_t auth_display_set_password(const char* password);
 
 // Obtener estado del display (true si alguien está viendo la pantalla)

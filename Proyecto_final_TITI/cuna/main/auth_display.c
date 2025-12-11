@@ -4,6 +4,8 @@
 #include "sensor_task.h"
 #include "fan_control.h"
 #include "esp_log.h"
+#include "nvs_flash.h"
+#include "nvs.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
@@ -41,14 +43,79 @@ static void info_refresh_task(void* arg) {
     }
 }
 
+/**
+ * @brief Carga la contraseña desde NVS
+ * @return esp_err_t ESP_OK si se cargó, ESP_ERR_NVS_NOT_FOUND si no existe
+ */
+static esp_err_t load_password_from_nvs(void) {
+    nvs_handle_t nvs_handle;
+    esp_err_t err = nvs_open("storage", NVS_READONLY, &nvs_handle);
+    
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Failed to open NVS for reading password");
+        return err;
+    }
+    
+    size_t required_size = MAX_PASSWORD_LEN + 1;
+    err = nvs_get_str(nvs_handle, "oled_password", stored_password, &required_size);
+    
+    nvs_close(nvs_handle);
+    
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG, "Password loaded from NVS");
+    } else if (err == ESP_ERR_NVS_NOT_FOUND) {
+        ESP_LOGI(TAG, "No saved password, using default: %s", DEFAULT_PASSWORD);
+    } else {
+        ESP_LOGW(TAG, "Error reading password from NVS: %s", esp_err_to_name(err));
+    }
+    
+    return err;
+}
+
+/**
+ * @brief Guarda la contraseña en NVS
+ * @return esp_err_t ESP_OK si se guardó correctamente
+ */
+static esp_err_t save_password_to_nvs(const char* password) {
+    nvs_handle_t nvs_handle;
+    esp_err_t err = nvs_open("storage", NVS_READWRITE, &nvs_handle);
+    
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to open NVS for writing password");
+        return err;
+    }
+    
+    err = nvs_set_str(nvs_handle, "oled_password", password);
+    
+    if (err == ESP_OK) {
+        err = nvs_commit(nvs_handle);
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "Password saved to NVS");
+        } else {
+            ESP_LOGE(TAG, "Failed to commit password to NVS");
+        }
+    } else {
+        ESP_LOGE(TAG, "Failed to set password in NVS");
+    }
+    
+    nvs_close(nvs_handle);
+    return err;
+}
+
 esp_err_t auth_display_init(void) {
     // Configurar GPIO 22 como salida para el LED
     gpio_reset_pin(INFO_LED_GPIO);
     gpio_set_direction(INFO_LED_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_level(INFO_LED_GPIO, 0);  // LED apagado inicialmente
     
+    // Intentar cargar contraseña desde NVS
+    esp_err_t err = load_password_from_nvs();
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
+        ESP_LOGW(TAG, "Using default password due to NVS error");
+    }
+    
     ESP_LOGI(TAG, "Authentication system initialized");
-    ESP_LOGI(TAG, "Default password: %s", stored_password);
+    ESP_LOGI(TAG, "Current password length: %d characters", strlen(stored_password));
     ESP_LOGI(TAG, "Info LED configured on GPIO %d", INFO_LED_GPIO);
     
     // Mostrar prompt inicial
@@ -65,9 +132,19 @@ esp_err_t auth_display_set_password(const char* password) {
     if (!password || strlen(password) > MAX_PASSWORD_LEN) {
         return ESP_ERR_INVALID_ARG;
     }
+    
+    // Actualizar en RAM
     strncpy(stored_password, password, MAX_PASSWORD_LEN);
     stored_password[MAX_PASSWORD_LEN] = '\0';
-    ESP_LOGI(TAG, "Password updated");
+    
+    // Guardar en NVS para persistencia
+    esp_err_t err = save_password_to_nvs(password);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Password updated in RAM but failed to save to NVS");
+        return err;
+    }
+    
+    ESP_LOGI(TAG, "Password updated and saved to NVS");
     return ESP_OK;
 }
 
